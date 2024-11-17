@@ -1,5 +1,6 @@
 import SignUp from "./Login/SignUp";
 
+SignUp;
 const App = () => {
   return (
     <>

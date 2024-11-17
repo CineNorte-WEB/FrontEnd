@@ -2,15 +2,33 @@ import { MdOutlinePermIdentity } from "react-icons/md";
 import { FaEye } from "react-icons/fa";
 import { IoIosLock } from "react-icons/io";
 import { FaUserGraduate } from "react-icons/fa";
+import { PiFlowerLotusLight } from "react-icons/pi";
 
 function SignUp() {
   return (
     <div className="flex items-center justify-end min-h-screen bg-rose-800">
-      <div className="p-6 mr-48 bg-white rounded-lg shadow-lg h-[600px] w-[500px]">
-        <h1 className="mt-6 mb-6 font-normal text-center text-7xl font-petemoss">
+      <div className="mx-12">
+        <p className="text-5xl text-white font-yeonsung">
+          신촌과 회기역 주변 대학가의
+        </p>
+        <p className="text-5xl text-white font-yeonsung">
+          숨겨진 맛집을 캠슐랭에서 발견하세요!
+        </p>
+        <img src="./images/연세대.jpg" alt="연세대학교" />
+        <div className="flex ml-4 space-x-8">
+          <PiFlowerLotusLight className="mt-3 text-white text-8xl" />
+          <PiFlowerLotusLight className="mt-3 text-white text-8xl" />
+          <PiFlowerLotusLight className="mt-3 text-white text-8xl" />
+        </div>
+        <h1 className="mt-3 mb-5 font-normal text-center text-white text-8xl font-petemoss">
           CamChelin
         </h1>
-        <form className="mt-8 space-y-4 ">
+      </div>
+      <div className="p-6 mr-48 bg-white rounded-lg shadow-lg h-[600px] w-[500px]">
+        <h1 className="mt-3 mb-5 font-normal text-center text-8xl font-petemoss">
+          CamChelin
+        </h1>
+        <form className="mt-6 space-y-4 ">
           <p className="ml-3 font-bold font-yeonsung">아이디</p>
           <div className="relative">
             <MdOutlinePermIdentity className="absolute mx-3 mt-3 text-2xl" />
