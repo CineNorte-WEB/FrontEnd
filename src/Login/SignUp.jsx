@@ -3,8 +3,15 @@ import { FaEye } from "react-icons/fa";
 import { IoIosLock } from "react-icons/io";
 import { FaUserGraduate } from "react-icons/fa";
 import { PiFlowerLotusLight } from "react-icons/pi";
+import { IoMdEyeOff } from "react-icons/io";
+import { useState } from "react";
 
 function SignUp() {
+  const [password, setPassword] = useState("");
+
+  const showPassword = () => {
+    setPassword((prev) => !prev);
+  };
   return (
     <div className="flex items-center justify-end min-h-screen bg-rose-800">
       <div className="mx-12">
@@ -50,7 +57,7 @@ function SignUp() {
           <PiFlowerLotusLight className="mt-3 text-white text-8xl" />
           <PiFlowerLotusLight className="mt-3 text-white text-8xl" />
         </div>
-        <h1 className="mt-8 text-white ml-36 fon2t-normal text-8xl font-petemoss">
+        <h1 className="text-white ml-36 fon2t-normal text-8xl font-petemoss">
           CamChelin
         </h1>
       </div>
@@ -76,12 +83,22 @@ function SignUp() {
               <IoIosLock className="absolute mt-3 ml-3 text-2xl" />
               <input
                 id="password"
-                type="password"
+                type={password ? "text" : "password"}
                 required
                 placeholder="비밀번호"
                 className="block w-full px-10 py-3 mt-1 border border-black rounded-md shadow-md m font-yeonsung focus:border-indigo-500 focus:ring-indigo-500"
               />
-              <FaEye className="absolute text-2xl text-black transform cursor-pointer top-12 right-4" />
+              {password ? (
+                <IoMdEyeOff
+                  onClick={showPassword}
+                  className="absolute text-2xl text-black transform cursor-pointer top-12 right-4"
+                />
+              ) : (
+                <FaEye
+                  onClick={showPassword}
+                  className="absolute text-2xl text-black transform cursor-pointer top-12 right-4"
+                />
+              )}
             </div>
           </div>
           <button
