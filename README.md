@@ -1,8 +1,4 @@
-# React + Vite
+# 맛집 리뷰 필터링 서비스 로그인 화면 ui
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+아래는 로그인 화면 ui 스크린샷 입니다!
+![alt text](image-1.png)
