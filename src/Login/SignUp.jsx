@@ -150,7 +150,7 @@ function SignUp() {
           </div>
           <button
             type="submit"
-            className="w-full px-4 py-2 text-2xl font-bold text-white border border-white rounded-md shadow-lg font-yeonsung bg-rose-500 hover:bg-pink-400 focus:outline focus:ring focus:ring-offset-2 focus:ring-pink-500"
+            className="w-full px-4 py-2 text-2xl font-bold text-white border border-white rounded-md shadow-lg font-yeonsung bg-rose-500 hover:bg-pink-400 focus:outline focus:ring focus:ring-offset-2 focus:ring-white"
           >
             로그인
           </button>
