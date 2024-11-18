@@ -117,18 +117,23 @@ function SignUp() {
                   validate: {
                     hasUppercase: (value) =>
                       /[A-Z]/.test(value) ||
-                      "Must include at least one uppercase letter",
+                      "영어 대문자는 반드시 1개 이상의 문자로 포함되어야 합니다!",
                     hasNumber: (value) =>
-                      /[0-9]/.test(value) || "Must include at least one number",
+                      /[0-9]/.test(value) ||
+                      "숫자는 반드시 1개 이상 포함되어야 합니다!",
                     hasSpecialChar: (value) =>
                       /[!@#$%^&*]/.test(value) ||
-                      "Must include at least one special character",
+                      "특수기호는 반드시 1개 이상의 문자로 포함되어야 합니다!",
                   },
                 })}
                 placeholder="비밀번호"
                 className="block w-full px-10 py-3 mt-1 border border-black rounded-md shadow-md m font-yeonsung focus:border-indigo-500 focus:ring-indigo-500"
               />
-              {errors.password && <p>{errors.password.message}</p>}
+              {errors.password && (
+                <p className="mt-2 font-bold text-red-500 font-yeonsung">
+                  {errors.password.message}
+                </p>
+              )}
 
               {password ? (
                 <IoMdEyeOff
