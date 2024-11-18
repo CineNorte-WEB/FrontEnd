@@ -19,7 +19,7 @@ function SignUp() {
   // 폼 제출 시 실행될 함수
   const onSubmit = (data) => {
     console.log(data);
-    alert("로그인 성공!");
+    alert("😎 로그인 성공!");
   };
   const showPassword = () => {
     setPassword((prev) => !prev);
