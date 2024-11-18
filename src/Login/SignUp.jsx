@@ -14,13 +14,43 @@ function SignUp() {
         <p className="text-5xl text-white font-yeonsung">
           숨겨진 맛집을 캠슐랭에서 발견하세요!
         </p>
-        <img src="./images/연세대.jpg" alt="연세대학교" />
-        <div className="flex ml-4 space-x-8">
+        <div className="flex mt-12 space-x-4">
+          <img src="/images/연대.png" alt="연세대학교" className="w-32 h-32" />
+          <img
+            src="/images/서강대.png"
+            alt="서강대학교"
+            className="w-32 h-32"
+          />
+          <img src="/images/홍대.png" alt="홍익대학교" className="w-32 h-32" />
+          <img
+            src="/images/이대.png"
+            alt="이화여자대학교"
+            className="w-32 h-32"
+          />
+        </div>
+        <div className="flex ml-14 space-x-7">
+          <img
+            src="/images/시립대.png"
+            alt="서울시립대학교"
+            className="w-32 h-32"
+          />
+          <img
+            src="/images/경희대.png"
+            alt="경희대학교"
+            className="w-32 h-32"
+          />
+          <img
+            src="/images/외대.png"
+            alt="한국외국어대학교"
+            className="w-32 h-32"
+          />
+        </div>
+        <div className="flex mt-12 ml-24 space-x-8">
           <PiFlowerLotusLight className="mt-3 text-white text-8xl" />
           <PiFlowerLotusLight className="mt-3 text-white text-8xl" />
           <PiFlowerLotusLight className="mt-3 text-white text-8xl" />
         </div>
-        <h1 className="mt-3 mb-5 font-normal text-center text-white text-8xl font-petemoss">
+        <h1 className="mt-8 text-white ml-36 fon2t-normal text-8xl font-petemoss">
           CamChelin
         </h1>
       </div>
@@ -78,12 +108,9 @@ function SignUp() {
         </a>
         <div className="relative flex mt-5">
           <FaUserGraduate className="ml-3 text-2xl" />
-          <a
-            href="/register"
-            className="absolute block text-xl font-bold text-black left-12 font-yeonsung"
-          >
+          <p className="absolute block text-xl font-bold text-black left-12 font-yeonsung">
             아직 계정이 없으신가요?
-          </a>
+          </p>
           <a
             href="/register"
             className="absolute font-bold right-8 text-rose-400 hover:underline hover:text-rose-600 font-yeonsung"
