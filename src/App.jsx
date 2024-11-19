@@ -1,7 +1,10 @@
+import SignUp from "./Login/SignUp";
+
+SignUp;
 const App = () => {
   return (
     <>
-      <h1>App Component</h1>
+      <SignUp />
     </>
   );
 };
