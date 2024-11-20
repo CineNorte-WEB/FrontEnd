@@ -150,19 +150,15 @@ function SignUp() {
           </div>
           <button
             type="submit"
-            className="w-full px-4 py-2 text-2xl font-bold text-white border border-white rounded-md shadow-lg font-yeonsung bg-rose-500 hover:bg-pink-400 focus:outline focus:ring focus:ring-offset-2 focus:ring-white"
+            className="w-full px-4 py-2 text-2xl font-bold text-white border border-white rounded-md shadow-lg font-yeonsung bg-rose-700 hover:bg-rose-400 focus:outline focus:ring focus:ring-offset-2 focus:ring-white"
           >
             로그인
           </button>
         </form>
         <div className="flex mt-4 text-center">
-          <p className="mr-12 font-bold whitespace-nowrap">
-            -------------------------
-          </p>
+          <hr className="flex-grow border-gray-500" />
           <p className="text-xl font-bold text-gray-600 font-yeonsung">OR</p>
-          <p className="ml-12 font-bold whitespace-nowrap">
-            -------------------------
-          </p>
+          <hr className="flex-grow border-gray-500" />
         </div>
         <a
           href="/register"

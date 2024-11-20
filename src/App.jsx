@@ -1,10 +1,9 @@
 import SignUp from "./Login/SignUp";
-
-SignUp;
+import SignIn from "./Login/SignIn";
 const App = () => {
   return (
     <>
-      <SignUp />
+      <SignIn />
     </>
   );
 };
