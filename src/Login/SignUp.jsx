@@ -6,8 +6,11 @@ import { PiFlowerLotusLight } from "react-icons/pi";
 import { IoMdEyeOff } from "react-icons/io";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
+  const louting = useNavigate();
+
   const [password, setPassword] = useState(false);
   // useForm 훅 초기화
   const {
@@ -163,6 +166,7 @@ function SignUp() {
         <a
           href="/register"
           className="block mt-3 font-bold text-center cursor-pointer font-yeonsung hover:underline"
+          onClick={() => louting("/password")}
         >
           비밀번호를 잊으셨나요?
         </a>

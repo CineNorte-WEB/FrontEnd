@@ -26,7 +26,7 @@ const PassWord = () => {
       />
       <div className="p-8 bg-white rounded-lg shadow-md h-[550px] w-[500px]">
         {/* 비밀번호 찾기 헤더 */}
-        <h1 className="mt-6 mb-6 text-5xl font-bold text-center cursor-pointer font-yeonsung">
+        <h1 className="mt-6 mb-6 text-5xl font-bold text-center font-yeonsung">
           비밀번호 찾기
         </h1>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -84,7 +84,7 @@ const PassWord = () => {
           <button
             type="button"
             className="w-full pl-8 text-center py-3.5 mt-6 text-xl font-bold text-white transition duration-300 rounded-lg shadow bg-rose-800 font-yeonsung hover:bg-rose-600"
-            onClick={() => louting("/signup")}
+            onClick={() => louting("/")}
           >
             로그인 화면으로 돌아가기
           </button>
