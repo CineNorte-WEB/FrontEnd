@@ -15,6 +15,7 @@ const PasswordRecovery = () => {
     console.log("전달된 데이터:", data);
     alert("😎 이메일 전송 완료!");
   };
+
   return (
     <div className="relative flex flex-col items-center justify-center h-screen bg-rose-800">
       <FaArrowLeft className="absolute text-4xl text-white left-8 top-8" />
@@ -40,21 +41,21 @@ const PasswordRecovery = () => {
                 {...register("Email", {
                   required: "이메일을 입력해주세요!",
                   pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                     message: "유효한 이메일 주소를 입력해주세요.",
                   },
                 })}
               />
-              <p className="block mt-3 font-bold font-yeonsung">
-                {errors.Email && errors.Email.message}
-              </p>
             </div>
+          </div>
+          <div className="mt-3 font-bold text-red-500 font-yeonsung">
+            {errors.Email && errors.Email.message}
           </div>
           <div className="relative flex">
             <FaPaperPlane className="absolute text-2xl text-white left-28 top-7" />
             <button
               type="submit"
-              className="w-full px-4 py-3 mt-4 text-xl font-bold text-white duration-300 rounded-lg shadow-md shawdow-lg bg-rose-700 font-yeonsung hover:bg-red-500"
+              className="w-full px-4 py-3 mt-4 text-xl font-bold text-white duration-300 rounded-lg shadow-md shadow-lg bg-rose-700 font-yeonsung hover:bg-red-500"
             >
               로그인 링크 보내기
             </button>
@@ -66,7 +67,7 @@ const PasswordRecovery = () => {
           <span className="px-2 font-bold text-gray-600 font-yeonsung">OR</span>
           <hr className="flex-grow border-gray-300" />
         </div>
-        <p className="text-2xl text-center text-black font-yeonsung">
+        <p className="text-2xl text-center text-black underline transition cursor-pointer underline-offset-4 hover:text-gray-500 font-yeonsung">
           새로운 계정 만들기
         </p>
         <div className="relative flex">
