@@ -74,7 +74,7 @@ const PasswordRecovery = () => {
           <ImExit className="absolute text-2xl font-bold text-white top-10 left-24" />
           <button
             type="button"
-            className="w-full px-4 py-3.5 mt-6 text-xl font-bold text-white transition duration-300 rounded-lg shadow bg-rose-800 font-yeonsung hover:bg-rose-600"
+            className="w-full pl-8 text-center py-3.5 mt-6 text-xl font-bold text-white transition duration-300 rounded-lg shadow bg-rose-800 font-yeonsung hover:bg-rose-600"
           >
             로그인 화면으로 돌아가기
           </button>
