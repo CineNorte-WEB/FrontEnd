@@ -163,24 +163,23 @@ function SignUp() {
           <p className="text-xl font-bold text-gray-600 font-yeonsung">OR</p>
           <hr className="flex-grow border-gray-500" />
         </div>
-        <a
-          href="/register"
+        <p
           className="block mt-3 font-bold text-center cursor-pointer font-yeonsung hover:underline"
           onClick={() => louting("/password")}
         >
           비밀번호를 잊으셨나요?
-        </a>
+        </p>
         <div className="relative flex mt-5">
           <FaUserGraduate className="ml-3 text-2xl" />
           <p className="absolute block text-xl font-bold text-black left-12 font-yeonsung">
             아직 계정이 없으신가요?
           </p>
-          <a
-            href="/register"
+          <p
+            onClick={() => louting("/signin")}
             className="absolute font-bold right-8 text-rose-400 hover:underline hover:text-rose-600 font-yeonsung"
           >
             지금, 바로 가입해보세요!
-          </a>
+          </p>
         </div>
       </div>
     </div>

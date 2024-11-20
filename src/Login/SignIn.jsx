@@ -6,6 +6,7 @@ import { MdLockPerson } from "react-icons/md";
 import { TbUser } from "react-icons/tb";
 import { MdOutlineRestaurant } from "react-icons/md";
 import { FaArrowLeft } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
   const {
@@ -22,9 +23,13 @@ function SignUp() {
 
   const password = watch("password"); // 비밀번호 값 참조
 
+  const navigate = useNavigate();
   return (
     <div className="flex items-center justify-center min-h-screen bg-red-700">
-      <FaArrowLeft className="absolute text-4xl text-white duration-300 cursor-pointer left-8 top-8" />
+      <FaArrowLeft
+        onClick={() => navigate("/")}
+        className="absolute text-4xl text-white duration-300 cursor-pointer left-8 top-8"
+      />
       {/* 왼쪽 섹션 */}
       <div className="flex flex-col items-start w-1/2 px-8">
         <h1 className="ml-32 font-normal text-white text-9xl font-petemoss">

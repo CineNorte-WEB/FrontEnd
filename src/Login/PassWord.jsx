@@ -20,10 +20,7 @@ const PassWord = () => {
   return (
     <div className="relative flex flex-col items-center justify-center h-screen bg-rose-800">
       {/* 뒤로가기 버튼 */}
-      <FaArrowLeft
-        className="absolute text-4xl text-white duration-300 cursor-pointer left-8 top-8 hover:"
-        onClick={() => louting("/signup")}
-      />
+
       <div className="p-8 bg-white rounded-lg shadow-md h-[550px] w-[500px]">
         {/* 비밀번호 찾기 헤더 */}
         <h1 className="mt-6 mb-6 text-5xl font-bold text-center font-yeonsung">
