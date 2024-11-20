@@ -4,5 +4,6 @@
 ![alt text](image-1.png)
 
 아래는 로그인 화면 UI 실행 영상 입니다!
-https://github.com/user-attachments/assets/fa035937-75c6-472a-8199-13aa1724cdd0
+https://github.com/user-attachments/assets/d05ab054-f868-4077-8e03-61ffb83a5142
+
 
