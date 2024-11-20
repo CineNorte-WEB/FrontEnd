@@ -1,9 +1,9 @@
-import SignUp from "./Login/SignUp";
-import SignIn from "./Login/SignIn";
+import PassWord from "./Login/PassWord";
+
 const App = () => {
   return (
     <>
-      <SignIn />
+      <PassWord />
     </>
   );
 };
