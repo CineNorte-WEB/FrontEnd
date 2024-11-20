@@ -5,6 +5,7 @@ import { MdLock } from "react-icons/md";
 import { MdLockPerson } from "react-icons/md";
 import { TbUser } from "react-icons/tb";
 import { MdOutlineRestaurant } from "react-icons/md";
+import { FaArrowLeft } from "react-icons/fa";
 
 function SignUp() {
   const {
@@ -23,6 +24,7 @@ function SignUp() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-red-700">
+      <FaArrowLeft className="absolute text-4xl text-white duration-300 cursor-pointer left-8 top-8" />
       {/* 왼쪽 섹션 */}
       <div className="flex flex-col items-start w-1/2 px-8">
         <h1 className="ml-32 font-normal text-white text-9xl font-petemoss">
@@ -94,7 +96,7 @@ function SignUp() {
                 type="email"
                 id="email"
                 placeholder="이메일 주소를 입력해주세요."
-                className="relative w-full px-12 py-3 border border-black rounded-lg font-yeonsung"
+                className="w-full px-12 py-3 border border-black rounded-lg font-yeonsung"
                 {...register("email", {
                   required: "이메일은 필수 입력입니다.",
                   pattern: {
@@ -196,10 +198,10 @@ function SignUp() {
 
           {/* 가입 버튼 */}
           <div className="relative">
-            <MdOutlineRestaurant className="absolute text-3xl text-white top-11 left-24" />
+            <MdOutlineRestaurant className="absolute text-3xl text-white top-7 left-24" />
             <button
               type="submit"
-              className="w-full py-3 pl-4 mt-8 text-xl font-bold text-white bg-red-700 rounded-lg font-yeonsung hover:bg-red-600"
+              className="w-full py-3 pl-4 mt-4 text-xl font-bold text-white bg-red-700 rounded-lg font-yeonsung hover:bg-red-600"
             >
               가입하여 나만의 맛집 찾기
             </button>
