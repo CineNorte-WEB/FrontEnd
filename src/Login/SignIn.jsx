@@ -13,12 +13,17 @@ import { useState } from "react";
 
 function SignUp() {
   const [confirm, setConfirm] = useState(false);
+  const [key, setKey] = useState(false);
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
+
+  const showKey = () => {
+    setKey((prev) => !prev);
+  };
 
   const confirmPassword = () => {
     setConfirm((prev) => !prev);
@@ -133,7 +138,7 @@ function SignUp() {
             </p>
             <MdLock className="absolute text-2xl text-gray-500 left-3 bottom-3" />
             <input
-              type={confirm ? "text" : "password"}
+              type={key ? "text" : "password"}
               id="password"
               placeholder="숫자 및 특수문자를 포함하여 8자 이상 작성해주세요."
               className="w-full px-12 py-3 border border-black rounded-lg font-yeonsung"
@@ -152,14 +157,14 @@ function SignUp() {
                 },
               })}
             />
-            {confirm ? (
+            {key ? (
               <FaEyeSlash
-                onClick={confirmPassword}
+                onClick={showKey}
                 className="absolute text-2xl text-black transform cursor-pointer top-12 right-4"
               />
             ) : (
               <FaEye
-                onClick={confirmPassword}
+                onClick={showKey}
                 className="absolute text-2xl text-black transform cursor-pointer top-12 right-4"
               />
             )}
