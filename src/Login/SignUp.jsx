@@ -6,8 +6,11 @@ import { PiFlowerLotusLight } from "react-icons/pi";
 import { IoMdEyeOff } from "react-icons/io";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
+  const louting = useNavigate();
+
   const [password, setPassword] = useState(false);
   // useForm 훅 초기화
   const {
@@ -150,37 +153,33 @@ function SignUp() {
           </div>
           <button
             type="submit"
-            className="w-full px-4 py-2 text-2xl font-bold text-white border border-white rounded-md shadow-lg font-yeonsung bg-rose-500 hover:bg-pink-400 focus:outline focus:ring focus:ring-offset-2 focus:ring-white"
+            className="w-full px-4 py-2 text-2xl font-bold text-white border border-white rounded-md shadow-lg font-yeonsung bg-rose-700 hover:bg-rose-400 focus:outline focus:ring focus:ring-offset-2 focus:ring-white"
           >
             로그인
           </button>
         </form>
         <div className="flex mt-4 text-center">
-          <p className="mr-12 font-bold whitespace-nowrap">
-            -------------------------
-          </p>
+          <hr className="flex-grow border-gray-500" />
           <p className="text-xl font-bold text-gray-600 font-yeonsung">OR</p>
-          <p className="ml-12 font-bold whitespace-nowrap">
-            -------------------------
-          </p>
+          <hr className="flex-grow border-gray-500" />
         </div>
-        <a
-          href="/register"
+        <p
           className="block mt-3 font-bold text-center cursor-pointer font-yeonsung hover:underline"
+          onClick={() => louting("/password")}
         >
           비밀번호를 잊으셨나요?
-        </a>
+        </p>
         <div className="relative flex mt-5">
           <FaUserGraduate className="ml-3 text-2xl" />
           <p className="absolute block text-xl font-bold text-black left-12 font-yeonsung">
             아직 계정이 없으신가요?
           </p>
-          <a
-            href="/register"
+          <p
+            onClick={() => louting("/signin")}
             className="absolute font-bold right-8 text-rose-400 hover:underline hover:text-rose-600 font-yeonsung"
           >
             지금, 바로 가입해보세요!
-          </a>
+          </p>
         </div>
       </div>
     </div>
