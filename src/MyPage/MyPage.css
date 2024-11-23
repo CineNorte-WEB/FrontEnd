@@ -1,0 +1,7 @@
+.container {
+    display: flex; /* flexbox 사용 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    min-height: 100vh; /* 최소 높이 100vh */
+    background-color: #c71585; /* bg-rose-800에 해당하는 색상 */
+}
