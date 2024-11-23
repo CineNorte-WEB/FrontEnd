@@ -6,7 +6,7 @@ import './MyPage.css';
 const MyPage = () => {
     return (
     <div className="container">
-        MyPage
+        MyPageasdfasdf
         </div>
 );
     };
