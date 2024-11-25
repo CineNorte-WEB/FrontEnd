@@ -1,7 +1,7 @@
 import PassWord from "./Login/PassWord";
 import SignUp from "./Login/SignUp";
 import SignIn from "./Login/SignIn";
-import NotFound from "./Login/NotFound";
+import NotFound from "./components/NotFound";
 import { Routes, Route } from "react-router-dom";
 const App = () => {
   return (
@@ -11,7 +11,7 @@ const App = () => {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/password" element={<PassWord />} />
         {/* 위 3개의 페이지가 아닐 시에 *로 표시된 페이지가 렌더링됨 */}
-        <Route path="/*" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
