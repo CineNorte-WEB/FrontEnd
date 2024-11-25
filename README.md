@@ -10,3 +10,6 @@ https://github.com/user-attachments/assets/161fcbd1-208f-4326-a158-cb59a8cb8295
 
 # 회원가입 화면 페이지
 ![image](https://github.com/user-attachments/assets/464f3a4a-9792-4d64-bd5f-6077a2d432a9)
+
+# 오류 화면 페이지
+![image](https://github.com/user-attachments/assets/4b8a0144-4b52-434d-99d9-efd304fcf15c)
