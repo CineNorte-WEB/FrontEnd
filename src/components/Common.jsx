@@ -6,7 +6,6 @@ const Common = () => {
     setClick(data);
     alert("클릭되었습니다!");
   };
-
   return (
     <>
       <nav className="absolute flex flex-col items-center justify-center text-center border rounded-lg right-2 border-slate-500 w-30">

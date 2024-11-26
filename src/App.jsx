@@ -4,9 +4,11 @@ import SignIn from "./Login/SignIn";
 import NotFound from "./components/NotFound";
 import Common from "./components/Common";
 import { Routes, Route } from "react-router-dom";
+import Brand from "./components/Brand";
 const App = () => {
   return (
     <>
+      <Brand />
       <Common />
       {/* <Routes>
         <Route path="/" element={<SignUp />} />
