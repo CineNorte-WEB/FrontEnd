@@ -8,7 +8,6 @@ import Brand from "./components/Brand";
 const App = () => {
   return (
     <>
-      <Brand />
       <Common />
       {/* <Routes>
         <Route path="/" element={<SignUp />} />
