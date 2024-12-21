@@ -6,16 +6,20 @@ const Common = () => {
     setClick(data);
     alert("클릭되었습니다!");
   };
+
   return (
     <>
-      <nav className="absolute flex flex-col items-center justify-center text-center border rounded-lg right-2 border-slate-500 w-30">
+      <nav
+        className="fixed flex flex-col items-center justify-center text-center border rounded-lg right-2 border-slate-500 w-30 z-50"
+        style={{ top: "35%", transform: "translateY(-100%)" }}
+      >
         <label
           onClick={() => onHandleClick(0)}
           className={`block my-2 hover:text-slate-500 hover:cursor-pointer ${
             click === 0
               ? "text-black font-bold"
               : click === null
-              ? "texty-gray-500 "
+              ? "text-gray-500 "
               : "text-gray-500 opacity-50"
           }`}
         >
@@ -33,7 +37,7 @@ const Common = () => {
             click === 1
               ? "text-black font-bold"
               : click === null
-              ? "text-black  "
+              ? "text-black "
               : "text-gray-500 opacity-50"
           }`}
         >
@@ -66,4 +70,5 @@ const Common = () => {
     </>
   );
 };
+
 export default Common;
