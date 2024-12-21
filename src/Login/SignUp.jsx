@@ -2,7 +2,6 @@ import { MdOutlinePermIdentity } from "react-icons/md";
 import { FaEye } from "react-icons/fa";
 import { IoIosLock } from "react-icons/io";
 import { FaUserGraduate } from "react-icons/fa";
-import { PiFlowerLotusLight } from "react-icons/pi";
 import { IoMdEyeOff } from "react-icons/io";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -68,9 +67,21 @@ function SignUp() {
           />
         </div>
         <div className="flex mt-12 ml-24 space-x-8">
-          <PiFlowerLotusLight className="mt-3 text-white text-8xl" />
-          <PiFlowerLotusLight className="mt-3 text-white text-8xl" />
-          <PiFlowerLotusLight className="mt-3 text-white text-8xl" />
+          <img
+            src="/images/flower.png"
+            alt="아이콘"
+            className="w-[100px] h-[100px] mt-3"
+          />
+          <img
+            src="/images/flower.png"
+            alt="아이콘"
+            className="w-[100px] h-[100px] mt-3"
+          />
+          <img
+            src="/images/flower.png"
+            alt="아이콘"
+            className="w-[100px] h-[100px] mt-3"
+          />
         </div>
         <h1 className="font-normal text-white ml-36 text-8xl font-petemoss">
           CamChelin

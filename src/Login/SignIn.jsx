@@ -52,7 +52,11 @@ function SignUp() {
           {/* 캠슐랭 소개 섹션 */}
           <div>
             <div className="flex space-x-3">
-              <PiFlowerLotus className="text-white text-7xl " />
+              <img
+                src="/images/flower.png"
+                alt="이미지"
+                className="w-[75px] h-[75px]"
+              />{" "}
               <p className="mt-4 ml-3 text-5xl font-bold text-white font-yeonsung">
                 캠슐랭 1스타
               </p>
@@ -64,8 +68,16 @@ function SignUp() {
 
           <div>
             <div className="flex space-x-3">
-              <PiFlowerLotus className="text-white text-7xl " />
-              <PiFlowerLotus className="text-white text-7xl " />
+              <img
+                src="/images/flower.png"
+                alt="이미지"
+                className="w-[75px] h-[75px]"
+              />
+              <img
+                src="/images/flower.png"
+                alt="이미지"
+                className="w-[75px] h-[75px]"
+              />
               <p className="mt-4 text-5xl font-bold text-white ml-7 font-yeonsung">
                 캠슐랭 2스타
               </p>
@@ -77,9 +89,21 @@ function SignUp() {
 
           <div>
             <div className="flex space-x-3">
-              <PiFlowerLotus className="text-white text-7xl " />
-              <PiFlowerLotus className="text-white text-7xl " />
-              <PiFlowerLotus className="text-white text-7xl " />
+              <img
+                src="/images/flower.png"
+                alt="이미지"
+                className="w-[75px] h-[75px]"
+              />
+              <img
+                src="/images/flower.png"
+                alt="이미지"
+                className="w-[75px] h-[75px]"
+              />{" "}
+              <img
+                src="/images/flower.png"
+                alt="이미지"
+                className="w-[75px] h-[75px]"
+              />
               <p className="mt-4 text-5xl font-bold text-white ml-7 font-yeonsung">
                 캠슐랭 3스타
               </p>
