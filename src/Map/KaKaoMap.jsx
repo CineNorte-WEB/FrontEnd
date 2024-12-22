@@ -5,7 +5,7 @@ function KaKaoMap() {
   useEffect(() => {
     const KAKAO_MAP_SRC = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${
       import.meta.env.VITE_KAKAO_APP_KEY
-    }&libraries=services`;
+    }&libraries=services&_=${Date.now()}`; // 캐시 방지 파라미터 추가
 
     if (!document.querySelector(`script[src="${KAKAO_MAP_SRC}"]`)) {
       const script = document.createElement("script");
@@ -13,10 +13,15 @@ function KaKaoMap() {
       script.async = true;
 
       script.onload = () => {
+        console.log("카카오 맵 스크립트 로드 성공");
+
         const waitForKakao = setInterval(() => {
-          if (window.kakao && window.kakao.maps) {
+          if (typeof window.kakao && window.kakao.maps) {
             clearInterval(waitForKakao);
+            console.log("카카오맵 객체:", window.kakao.maps); // 디버깅
             initializeMap();
+          } else {
+            console.log("카카오맵 객체가 아직 로드되지 않음...");
           }
         }, 100);
       };
@@ -27,33 +32,77 @@ function KaKaoMap() {
 
       document.head.appendChild(script);
     } else if (window.kakao && window.kakao.maps) {
-      initializeMap(); // 이미 로드된 경우 바로 초기화
+      console.log("카카오맵 스크립트 이미 로드됨");
+      initializeMap();
     }
   }, []);
 
   const initializeMap = () => {
+    if (!window.kakao || !window.kakao.maps) {
+      console.error("카카오맵 객체가 초기화되지 않았습니다.");
+      return;
+    }
+
     const container = document.getElementById("map");
+    if (!container) {
+      console.error("맵 컨테이너를 찾을 수 없습니다.");
+      return;
+    }
+
     const options = {
       center: new window.kakao.maps.LatLng(37.5665, 126.978),
-      level: 3,
+      level: 5,
     };
 
     const map = new window.kakao.maps.Map(container, options);
+    console.log("지도 초기화 성공:", map); // 디버깅
 
-    const markerPosition = new window.kakao.maps.LatLng(37.5665, 126.978);
-    const marker = new window.kakao.maps.Marker({ position: markerPosition });
-    marker.setMap(map);
+    const places = [
+      {
+        name: "현이네 고기국수",
+        lat: 37.5665,
+        lng: 126.978,
+        description: "서울 중심에 위치한 인기 맛집입니다.",
+      },
+      {
+        name: "진스시",
+        lat: 37.567,
+        lng: 126.982,
+        description: "신선한 스시를 제공하는 전문점입니다.",
+      },
+      {
+        name: "백종원의 홍콩반점",
+        lat: 37.565,
+        lng: 126.975,
+        description: "중식 요리가 유명한 곳입니다.",
+      },
+      {
+        name: "아저씨 식당",
+        lat: 37.568,
+        lng: 126.98,
+        description: "가정식을 전문으로 하는 식당입니다.",
+      },
+    ];
 
-    const infowindow = new window.kakao.maps.InfoWindow({
-      content: '<div style="padding:5px;">서울 중심입니다!</div>',
-    });
+    places.forEach((place) => {
+      const markerPosition = new window.kakao.maps.LatLng(place.lat, place.lng);
+      const marker = new window.kakao.maps.Marker({
+        position: markerPosition,
+      });
 
-    window.kakao.maps.event.addListener(marker, "click", () => {
-      infowindow.open(map, marker);
-    });
+      marker.setMap(map);
 
-    window.kakao.maps.event.addListener(map, "click", () => {
-      infowindow.close();
+      const infowindow = new window.kakao.maps.InfoWindow({
+        content: `<div style="padding:5px; font-size:12px;"><b>${place.name}</b><br>${place.description}</div>`,
+      });
+
+      window.kakao.maps.event.addListener(marker, "click", () => {
+        infowindow.open(map, marker);
+      });
+
+      window.kakao.maps.event.addListener(map, "click", () => {
+        infowindow.close();
+      });
     });
   };
 
