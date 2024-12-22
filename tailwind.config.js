@@ -11,8 +11,5 @@ export default {
       },
     },
   },
-  tailwind: {
-    config: "tailwind.config.js" | "tailwind.config.ts",
-  },
   plugins: [],
 };
