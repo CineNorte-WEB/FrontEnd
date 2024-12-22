@@ -4,14 +4,13 @@ const Common = () => {
   const [click, setClick] = useState(null);
   const onHandleClick = (data) => {
     setClick(data);
-    alert("클릭되었습니다!");
   };
 
   return (
     <>
       <nav
-        className="fixed flex flex-col items-center justify-center text-center border rounded-lg right-2 border-slate-500 w-30 z-50"
-        style={{ top: "35%", transform: "translateY(-100%)" }}
+        className="fixed z-50 flex flex-col items-center justify-center text-center border rounded-lg right-2 border-slate-500 w-30"
+        style={{ top: "32%", transform: "translateY(-100%)" }}
       >
         <label
           onClick={() => onHandleClick(0)}
