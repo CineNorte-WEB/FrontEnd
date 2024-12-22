@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 function SignUp() {
-  const louting = useNavigate();
+  const navigate = useNavigate();
 
   const [password, setPassword] = useState(false);
   // useForm 훅 초기화
@@ -22,6 +22,7 @@ function SignUp() {
   const onSubmit = (data) => {
     console.log(data);
     alert("😎 로그인 성공!");
+    navigate("/map");
   };
   const showPassword = () => {
     setPassword((prev) => !prev);
@@ -176,7 +177,7 @@ function SignUp() {
         </div>
         <p
           className="block mt-3 font-bold text-center cursor-pointer font-yeonsung hover:underline"
-          onClick={() => louting("/password")}
+          onClick={() => navigate("/password")}
         >
           비밀번호를 잊으셨나요?
         </p>
@@ -186,7 +187,7 @@ function SignUp() {
             아직 계정이 없으신가요?
           </p>
           <p
-            onClick={() => louting("/signin")}
+            onClick={() => navigate("/signin")}
             className="absolute font-bold right-8 text-rose-400 hover:underline hover:text-rose-600 font-yeonsung"
           >
             지금, 바로 가입해보세요!
