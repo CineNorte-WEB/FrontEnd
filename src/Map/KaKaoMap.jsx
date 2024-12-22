@@ -5,25 +5,23 @@ function KaKaoMap() {
   useEffect(() => {
     const KAKAO_MAP_SRC = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${
       import.meta.env.VITE_KAKAO_APP_KEY
-    }&libraries=services&_=${Date.now()}`; // 캐시 방지 파라미터 추가
+    }&libraries=services&autoload=false&_=${Date.now()}`; // 캐시 방지 파라미터 추가
 
     if (!document.querySelector(`script[src="${KAKAO_MAP_SRC}"]`)) {
       const script = document.createElement("script");
       script.src = KAKAO_MAP_SRC;
       script.async = true;
+      script.defer = true; // defer 속성 추가로 document.write 회피
 
       script.onload = () => {
-        console.log("카카오 맵 스크립트 로드 성공");
-
-        const waitForKakao = setInterval(() => {
-          if (typeof window.kakao && window.kakao.maps) {
-            clearInterval(waitForKakao);
-            console.log("카카오맵 객체:", window.kakao.maps); // 디버깅
+        if (window.kakao && window.kakao.maps) {
+          window.kakao.maps.load(() => {
+            console.log("카카오맵 객체 초기화 완료");
             initializeMap();
-          } else {
-            console.log("카카오맵 객체가 아직 로드되지 않음...");
-          }
-        }, 100);
+          });
+        } else {
+          console.error("카카오맵 객체가 로드되지 않았습니다.");
+        }
       };
 
       script.onerror = () => {
@@ -33,7 +31,10 @@ function KaKaoMap() {
       document.head.appendChild(script);
     } else if (window.kakao && window.kakao.maps) {
       console.log("카카오맵 스크립트 이미 로드됨");
-      initializeMap();
+      window.kakao.maps.load(() => {
+        console.log("카카오맵 객체 초기화 완료");
+        initializeMap();
+      });
     }
   }, []);
 
@@ -42,6 +43,7 @@ function KaKaoMap() {
       console.error("카카오맵 객체가 초기화되지 않았습니다.");
       return;
     }
+    console.log("LatLng 생성자 확인:", window.kakao.maps.LatLng);
 
     const container = document.getElementById("map");
     if (!container) {
