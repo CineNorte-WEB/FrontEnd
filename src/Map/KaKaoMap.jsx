@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import Common from "../components/Common";
-
+import LeftSide from "./LeftSide";
 function KaKaoMap() {
   useEffect(() => {
     const KAKAO_MAP_SRC = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${
@@ -52,8 +52,8 @@ function KaKaoMap() {
     }
 
     const options = {
-      center: new window.kakao.maps.LatLng(37.5665, 126.978),
-      level: 5,
+      center: new window.kakao.maps.LatLng(37.5409, 127.082), // 건국대학교 중심 좌표
+      level: 4,
     };
 
     const map = new window.kakao.maps.Map(container, options);
@@ -61,28 +61,28 @@ function KaKaoMap() {
 
     const places = [
       {
-        name: "현이네 고기국수",
-        lat: 37.5665,
-        lng: 126.978,
-        description: "서울 중심에 위치한 인기 맛집입니다.",
+        name: "건대 맛집1",
+        lat: 37.541,
+        lng: 127.081,
+        description: "건대 주변 맛집입니다.",
       },
       {
-        name: "진스시",
-        lat: 37.567,
-        lng: 126.982,
-        description: "신선한 스시를 제공하는 전문점입니다.",
+        name: "건대 카페",
+        lat: 37.542,
+        lng: 127.083,
+        description: "건대 근처 인기 카페입니다.",
       },
       {
-        name: "백종원의 홍콩반점",
-        lat: 37.565,
-        lng: 126.975,
-        description: "중식 요리가 유명한 곳입니다.",
+        name: "건대 쇼핑몰",
+        lat: 37.5405,
+        lng: 127.084,
+        description: "건대 근처 쇼핑몰입니다.",
       },
       {
-        name: "아저씨 식당",
-        lat: 37.568,
-        lng: 126.98,
-        description: "가정식을 전문으로 하는 식당입니다.",
+        name: "건대 학식",
+        lat: 37.5407,
+        lng: 127.0825,
+        description: "건대 학생들을 위한 학식 장소입니다.",
       },
     ];
 
@@ -110,6 +110,7 @@ function KaKaoMap() {
 
   return (
     <div className="relative flex items-center justify-center w-full h-screen bg-gray-100">
+      <LeftSide />
       <div
         id="map"
         className="w-full h-full border-2 border-gray-400 rounded-lg shadow-lg"
