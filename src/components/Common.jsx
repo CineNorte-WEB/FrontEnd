@@ -9,7 +9,7 @@ const Common = () => {
   return (
     <>
       <nav
-        className="fixed z-50 flex flex-col items-center justify-center text-center border rounded-lg right-2 border-slate-500 w-30"
+        className="fixed z-50 flex flex-col items-center justify-center text-center bg-white border rounded-lg shadow-lg right-2 border-slate-500 w-30"
         style={{ top: "32%", transform: "translateY(-100%)" }}
       >
         <label
