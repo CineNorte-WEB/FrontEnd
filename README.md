@@ -17,3 +17,6 @@ https://github.com/user-attachments/assets/55728e8c-6dbc-48b0-aa94-f740581db06a
 # 오류 화면 페이지
 
 ![image](https://github.com/user-attachments/assets/4b8a0144-4b52-434d-99d9-efd304fcf15c)
+
+# 지도 화면 페이지
+![image](https://github.com/user-attachments/assets/42bdad99-b50a-4731-b1eb-a6aa3e56da35)
