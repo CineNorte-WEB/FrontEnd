@@ -109,11 +109,13 @@ function KaKaoMap() {
   };
 
   return (
-    <div className="relative flex items-center justify-center w-full h-screen bg-gray-100">
-      <LeftSide />
+    <div className="relative flex w-full h-screen bg-gray-100">
+      <div className="w-1/4 h-full bg-white border-r-2 border-gray-300">
+        <LeftSide />
+      </div>
       <div
         id="map"
-        className="w-full h-full border-2 border-gray-400 rounded-lg shadow-lg"
+        className="w-3/4 h-full border-2 border-gray-400 rounded-lg"
       ></div>
       <Common />
     </div>
