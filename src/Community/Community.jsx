@@ -1,5 +1,6 @@
 import React from "react";
 import "./Community.css";
+import Common from "../components/Common";
 
 const Community = () => {
   const posts = [
@@ -31,6 +32,7 @@ const Community = () => {
 
   return (
     <div className="community-container">
+      <Common />
       <h1 className="community-title">커뮤니티</h1>
       <p className="community-subtitle">다양한 의견을 공유해보세요~</p>
       <div className="community-list">
