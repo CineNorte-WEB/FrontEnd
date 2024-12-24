@@ -4,7 +4,6 @@
     background-color: white;
     border-radius: 1rem;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    max-width: 600px;
     margin: 0 auto;
   }
   
@@ -12,7 +11,7 @@
     font-family: "Nanum Gothic", sans-serif;
     font-size: 2rem;
     color: #c02231;
-    margin-bottom: 2rem;
+    margin: 1rem;
   }
   
   .profile-content {
