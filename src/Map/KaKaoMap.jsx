@@ -433,27 +433,32 @@ function KakaoMap() {
     });
 
     const zoomControl = new window.kakao.maps.ZoomControl();
-    map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT_BOTTOM);
+    map.addControl(zoomControl, window.kakao.maps.ControlPosition.BOTTOMRIGHT);
 
     // 확대 바 제거
     map.removeControl(window.kakao.maps.ZoomControl());
 
     // 스크롤 바 제거
     map.setOptions({
-      draggable: false,
-      scrollwheel: false,
-      disableDoubleClickZoom: true,
+      draggable: true,
+      scrollwheel: true,
+      disableDoubleClick: false,
     });
   };
 
   return (
     <div className="relative flex w-full h-screen bg-gray-100">
       <div className="w-1/4 h-full bg-white border-r-2 border-gray-300">
-        <LeftSide restaurantData={restaurantData} />
+        <div className="relative h-full overflow-hidden">
+          <LeftSide
+            restaurantData={restaurantData}
+            className="absolute left-2 bottom-2"
+          />
+        </div>
       </div>
       <div
         id="map"
-        className="w-3/4 h-full border-2 border-gray-400 rounded-lg"
+        className="w-3/4 h-full overflow-hidden border-2 border-gray-400 rounded-lg"
       />
       <Common />
     </div>
