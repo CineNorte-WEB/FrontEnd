@@ -65,11 +65,11 @@ const LeftSide = ({ restaurantData }) => {
       </div>
 
       {/* 레스토랑 리스트 */}
-      <div className="h-full px-4 overflow-y-auto  font-yeonsung">
+      <div className="h-full px-4 overflow-y-auto font-yeonsung">
         {restaurantData.map((restaurant) => (
           <div
             key={restaurant.id}
-            className="p-4 mb-4 bg-white rounded-lg shadow-md cursor-pointer hover:bg-gray-50 font-yeonsung"
+            className="p-4 mb-4 bg-white border-2 border-gray-400 rounded-lg shadow-md cursor-pointer hover:bg-gray-200 font-yeonsung"
             onClick={() => handleRestaurantClick(restaurant)}
           >
             <div className="flex items-center mb-4 font-yeonsung">
