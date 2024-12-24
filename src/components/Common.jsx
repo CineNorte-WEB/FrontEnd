@@ -1,9 +1,23 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Common = () => {
   const [click, setClick] = useState(null);
+  const navigate = useNavigate();
+
   const onHandleClick = (data) => {
     setClick(data);
+
+    // 버튼에 따라 라우팅 처리
+    if (data === 0) {
+      navigate("/");
+    }
+    if (data === 1) {
+      navigate("/community");
+    }
+    if (data === 2) {
+      navigate("/mypage");
+    }
   };
 
   return (
