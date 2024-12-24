@@ -1,9 +1,21 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Common = () => {
   const [click, setClick] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // 모든 경로에 대한 처리를 useEffect에서 관리
+  useEffect(() => {
+    if (location.pathname === "/map") {
+      setClick(0);
+    } else if (location.pathname === "/community") {
+      setClick(1);
+    } else if (location.pathname === "/mypage") {
+      setClick(2);
+    }
+  }, [location.pathname]);
 
   const onHandleClick = (data) => {
     setClick(data);
@@ -31,8 +43,6 @@ const Common = () => {
           className={`block my-2 hover:text-slate-500 hover:cursor-pointer ${
             click === 0
               ? "text-black font-bold"
-              : click === null
-              ? "text-gray-500 "
               : "text-gray-500 opacity-50"
           }`}
         >
@@ -49,8 +59,6 @@ const Common = () => {
           className={`block my-2 hover:text-slate-500 hover:cursor-pointer ${
             click === 1
               ? "text-black font-bold"
-              : click === null
-              ? "text-black "
               : "text-gray-500 opacity-50"
           }`}
         >
@@ -67,8 +75,6 @@ const Common = () => {
           className={`block my-2 hover:text-slate-500 hover:cursor-pointer ${
             click === 2
               ? "text-black font-bold"
-              : click === null
-              ? "text-black "
               : "text-gray-500 opacity-50"
           }`}
         >

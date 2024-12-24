@@ -27,7 +27,7 @@ const LeftSide = ({ restaurantData }) => {
   return (
     <div className="relative h-full font-yeonsung">
       {/* 대학교 선택 헤더 */}
-      <div className="flex items-center w-4/5 h-10 mx-8 my-4 border border-black shadow-lg rounded-xl font-yeonsung">
+      <div className="flex items-center w-5/6 h-10 mx-8 my-4 border border-black shadow-lg rounded-xl font-yeonsung">
         <img src="/images/졸업.png" alt="졸업" className="w-8 h-10 ml-2" />
         <p className="ml-2 text-sm font-bold font-yeonsung">학교 정보 :</p>
         <img
@@ -36,7 +36,7 @@ const LeftSide = ({ restaurantData }) => {
           className="w-8 h-8 ml-5"
         />
         <select
-          className="py-0.5 text-center ml-2 border border-black rounded-md w-4/7 font-yeonsung"
+          className="py-1 ml-2 text-center border border-black rounded-md 2 ml- w-4/7 font-yeonsung"
           value={selectedUniversity}
           onChange={handleUniversityChange}
         >
@@ -65,11 +65,11 @@ const LeftSide = ({ restaurantData }) => {
       </div>
 
       {/* 레스토랑 리스트 */}
-      <div className="h-[calc(100vh-180px)] h-full overflow-y-auto px-4 font-yeonsung">
+      <div className="h-full px-4 overflow-y-auto font-yeonsung">
         {restaurantData.map((restaurant) => (
           <div
             key={restaurant.id}
-            className="p-4 mb-4 bg-white rounded-lg shadow-md cursor-pointer hover:bg-gray-50 font-yeonsung"
+            className="p-4 mb-4 bg-white border-2 border-gray-400 rounded-lg shadow-md cursor-pointer hover:bg-gray-200 font-yeonsung"
             onClick={() => handleRestaurantClick(restaurant)}
           >
             <div className="flex items-center mb-4 font-yeonsung">
