@@ -3,6 +3,7 @@ import "./MyPage.css";
 import MyPageProfile from "./MyPageProfile";
 import MyPageList from "./MyPageList";
 import MyPageWrite from "./MyPageWrite";
+import Common from "../components/Common";
 
 const MyPage = () => {
   const [currentComponent, setCurrentComponent] = useState("profile");
@@ -22,6 +23,7 @@ const MyPage = () => {
 
   return (
     <div className="mypage font-yeonsung">
+      <Common/>
       <div className="container">
         <div className="mypage-menubar font-yeonsung">
           <div
