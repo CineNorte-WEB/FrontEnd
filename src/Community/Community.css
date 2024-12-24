@@ -1,0 +1,98 @@
+.community-container {
+    display: flex;
+    flex-direction: column; /* 수직 정렬 */
+    justify-content: center;
+    align-items: center; /* 수평 및 수직 중앙 정렬 */
+    min-height: 100vh;
+    background-color: #c02231; /* 배경 색상 */
+    width: 100%;
+    position: relative;
+  }
+  
+  .community-title {
+    font-size: 5rem;
+    text-align: center;
+    font-weight: bold;
+    margin: 1rem;
+    color: white;
+  }
+  
+  .community-subtitle {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: white;
+  }
+  
+  .community-list {
+    width: 70%; /* 컨테이너 너비 */
+    min-height: 60vh;
+    margin: 2rem auto; /* 중앙 정렬 */
+    background-color: white; /* 배경 흰색 */
+    border-radius: 1rem; /* 모서리 둥글게 */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* 그림자 */
+    overflow: hidden; /* 콘텐츠 넘침 방지 */
+    padding: 2rem;
+  }
+  
+  .community-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: white;
+    color: #333;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+    margin: 1rem;
+  }
+  
+  .community-item:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .community-info {
+    flex: 1;
+  }
+  
+  .community-post-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .community-post-category,
+  .community-post-author {
+    font-size: 0.9rem;
+    color: #777;
+  }
+  
+  .community-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .community-post-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .community-pagination {
+    margin: 1rem;
+    text-align: center;
+  }
+  
+  .community-pagination span {
+    margin: 0 0.5rem;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  
+  .community-pagination span:hover {
+    color: #f1f1f1;
+  }
+  

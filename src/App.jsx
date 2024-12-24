@@ -6,6 +6,7 @@ import Common from "./components/Common";
 import { Routes, Route } from "react-router-dom";
 import Brand from "./components/Brand";
 import MyPage from "./MyPage/MyPage";
+import Community from "./Community/Community";
 const App = () => {
   return (
     <>
@@ -13,8 +14,9 @@ const App = () => {
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path="/password" element={<PassWord />} />
+        <Route path="/password" element={<PassWord />}/>
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/community" element={<Community/>}/>
       <Route path="*" element={<NotFound />} />
       </Routes>
     </>
