@@ -449,7 +449,7 @@ function KakaoMap() {
   return (
     <div className="relative flex w-full h-screen bg-gray-100">
       <div className="w-1/4 h-full bg-white border-r-2 border-gray-300">
-        <div className="relative h-full overflow-hidden">
+        <div className="relative h-full overflow-hidden border-2 border-black rounded-r-xl">
           <LeftSide
             restaurantData={restaurantData}
             className="absolute left-2 bottom-2"
@@ -458,7 +458,7 @@ function KakaoMap() {
       </div>
       <div
         id="map"
-        className="w-3/4 h-full overflow-hidden border-2 border-gray-400 rounded-lg"
+        className="w-3/4 h-full overflow-hidden border-2 border-gray-400 rounded-xl"
       />
       <Common />
     </div>
