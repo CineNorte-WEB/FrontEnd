@@ -10,21 +10,21 @@ const Common = () => {
 
     // 버튼에 따라 라우팅 처리
     if (data === 0) {
-      navigate("/");
+      navigate("/map");
     }
     if (data === 1) {
       navigate("/community");
-    } 
+    }
     if (data === 2) {
       navigate("/mypage");
-    }   
+    }
   };
 
   return (
     <>
       <nav
-        className="fixed flex flex-col items-center justify-center text-center border rounded-lg right-2 border-slate-500 w-30 z-50"
-        style={{ top: "35%", transform: "translateY(-100%)" }}
+        className="fixed z-50 flex flex-col items-center justify-center text-center bg-white border rounded-lg shadow-lg right-2 border-slate-500 w-30"
+        style={{ top: "32%", transform: "translateY(-100%)" }}
       >
         <label
           onClick={() => onHandleClick(0)}
