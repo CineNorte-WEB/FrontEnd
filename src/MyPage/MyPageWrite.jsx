@@ -19,22 +19,26 @@ export default function MyPageWrite() {
       author: "인생은 고기서 고기",
     },
     {
-        title: "현이네 고기국수",
-        category: "리뷰게시판",
-        author: "인생은 고기서 고기",
-      },
+      title: "현이네 고기국수",
+      category: "리뷰게시판",
+      author: "인생은 고기서 고기",
+    },
   ];
 
   return (
-    <div className="write-container">
-      <h1 className="write-title">내가 쓴 글</h1>
+    <div className="write-container font-yeonsung">
+      <h1 className="write-title font-yeonsung">내가 쓴 글</h1>
       <div className="write-list">
         {posts.map((post, index) => (
-          <div className="write-item" key={index}>
+          <div className="write-item font-yeonsung" key={index}>
             <div className="write-info">
-              <h2 className="write-post-title">{post.title}</h2>
-              <p className="write-post-category">{post.category}</p>
-              <p className="write-post-author">작성자: {post.author}</p>
+              <h2 className="write-post-title font-yeonsung">{post.title}</h2>
+              <p className="write-post-category font-yeonsung">
+                {post.category}
+              </p>
+              <p className="write-post-author font-yeonsung">
+                작성자: {post.author}
+              </p>
             </div>
             <div className="write-icon">
               <img

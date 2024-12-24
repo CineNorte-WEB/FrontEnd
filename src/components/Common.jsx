@@ -10,7 +10,7 @@ const Common = () => {
 
     // 버튼에 따라 라우팅 처리
     if (data === 0) {
-      navigate("/");
+      navigate("/map");
     }
     if (data === 1) {
       navigate("/community");

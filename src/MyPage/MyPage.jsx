@@ -21,23 +21,29 @@ const MyPage = () => {
   };
 
   return (
-    <div className="mypage">
+    <div className="mypage font-yeonsung">
       <div className="container">
-        <div className="mypage-menubar">
+        <div className="mypage-menubar font-yeonsung">
           <div
-            className="menu"
+            className="menu font-yeonsung"
             onClick={() => setCurrentComponent("profile")}
           >
             회원정보
           </div>
-          <div className="menu" onClick={() => setCurrentComponent("write")}>
+          <div
+            className="menu font-yeonsung"
+            onClick={() => setCurrentComponent("write")}
+          >
             내가 쓴 글
           </div>
-          <div className="menu" onClick={() => setCurrentComponent("mylist")}>
+          <div
+            className="menu font-yeonsung"
+            onClick={() => setCurrentComponent("mylist")}
+          >
             찜한 리스트
           </div>
         </div>
-        <div className="menu-content">{renderComponent()}</div>
+        <div className="menu-content font-yeonsung">{renderComponent()}</div>
       </div>
     </div>
   );

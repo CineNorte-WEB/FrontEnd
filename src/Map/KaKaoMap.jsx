@@ -347,59 +347,31 @@ function KakaoMap() {
 
   const createCustomOverlay = (map, place) => {
     const overlayContent = `
-      <div style="
-        position: relative;
-        width: 320px;
-        border-radius: 12px;
-        background: white;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        padding: 20px;
-      ">
-        <div style="
-          display: flex;
-          align-items: center;
-          margin-bottom: 12px;
-        ">
-          <img src="/images/${place.category}.png" 
-            style="width: 48px; height: 48px; border-radius: 8px; margin-right: 12px;"
-          />
-          <div style="flex: 1;">
-            <h3 style="
-              font-size: 18px;
-              font-weight: bold;
-              margin: 0;
-              margin-bottom: 4px;
-            ">${place.name}</h3>
-            <div style="
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-            ">
-              <span style="color: #666;">${place.category}</span>
-              <span style="color: #FFA41B;">⭐ ${place.rating}</span>
+      <div class="relative w-80 rounded-lg bg-white shadow-md p-5">
+        <div class="flex items-center mb-3">
+          <img src="/images/${place.category}.png" class="w-12 h-12 rounded-md mr-3" />
+          <div class="flex-1">
+            <h3 class="text-lg font-bold mb-1">${place.name}</h3>
+            <div class="flex items-center justify-between">
+              <span class="text-gray-600">${place.category}</span>
+              <span class="text-yellow-500">⭐ ${place.rating}</span>
             </div>
           </div>
         </div>
         
-        <div style="margin-bottom: 12px;">
-          <div style="color: #4B9EFF;">좋아요 👍</div>
-          <p style="font-size: 14px; color: #666; margin: 4px 0;">${place.goodText}</p>
+        <div class="mb-3">
+          <div class="text-blue-500">좋아요 👍</div>
+          <p class="text-gray-600 mt-1">${place.goodText}</p>
         </div>
         
-        <div style="margin-bottom: 12px;">
-          <div style="color: #FF6B6B;">싫어요 👎</div>
-          <p style="font-size: 14px; color: #666; margin: 4px 0;">${place.badText}</p>
+        <div class="mb-3">
+          <div class="text-red-500">싫어요 👎</div>
+          <p class="text-gray-600 mt-1">${place.badText}</p>
         </div>
 
-        <div style="
-          border-top: 1px solid #eee;
-          padding-top: 12px;
-          margin-top: 12px;
-          font-size: 14px;
-          color: #666;
-        ">
-          <p style="margin: 4px 0;">🏠 ${place.address}</p>
-          <p style="margin: 4px 0;">⏰ ${place.hours}</p>
+        <div class="border-t border-gray-200 pt-3 mt-3 text-gray-600 text-sm">
+          <p class="mb-1">🏠 ${place.address}</p>
+          <p class="mb-1">⏰ ${place.hours}</p>
         </div>
       </div>
     `;
@@ -461,7 +433,17 @@ function KakaoMap() {
     });
 
     const zoomControl = new window.kakao.maps.ZoomControl();
-    map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
+    map.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT_BOTTOM);
+
+    // 확대 바 제거
+    map.removeControl(window.kakao.maps.ZoomControl());
+
+    // 스크롤 바 제거
+    map.setOptions({
+      draggable: false,
+      scrollwheel: false,
+      disableDoubleClickZoom: true,
+    });
   };
 
   return (
