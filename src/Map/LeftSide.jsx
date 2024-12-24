@@ -208,7 +208,7 @@ const LeftSide = () => {
             className="w-8 h-8 ml-5"
           />
           <select
-            className="py-0.5 text-center ml-2 border border-black rounded-md w-4/7 font-yeonsung"
+            className="ml-2 text-center border border-black rounded-md pml-2 w-4/7 font-yeonsung"
             value={selectedUniversity}
             onChange={handleUniversityChange}
           >
