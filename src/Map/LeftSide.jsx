@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import RestaurantOverlay from "./RestaurantOverlay";
 
-const LeftSide = ({ restaurantData }) => {
+const LeftSide = ({ restaurantData, onSelectRestaurant }) => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [selectedUniversity, setSelectedUniversity] = useState("건대");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const universities = {
     건대: "/images/건대.png",
@@ -17,7 +17,7 @@ const LeftSide = ({ restaurantData }) => {
 
   const handleRestaurantClick = (restaurant) => {
     setSelectedRestaurant(restaurant);
-    setIsSidebarOpen(true);
+    onSelectRestaurant && onSelectRestaurant(restaurant);
   };
 
   const handleUniversityChange = (e) => {
@@ -115,50 +115,11 @@ const LeftSide = ({ restaurantData }) => {
         ))}
       </div>
 
-      {/* 상세정보 오버레이 */}
       {selectedRestaurant && (
-        <div className="absolute z-50 p-6 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg top-1/2 left-1/2 w-96 font-yeonsung">
-          <div className="flex items-center justify-between mb-4 font-yeonsung">
-            <div className="flex items-center font-yeonsung">
-              <img
-                src={`/images/${selectedRestaurant.category}.png`}
-                alt={selectedRestaurant.category}
-                className="w-10 h-10 mr-3 rounded-lg"
-              />
-              <h2 className="text-xl font-bold font-yeonsung">
-                {selectedRestaurant.name}
-              </h2>
-            </div>
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              className="text-gray-500 hover:text-gray-700 font-yeonsung"
-            >
-              ×
-            </button>
-          </div>
-          <div className="p-4 mb-4 rounded-lg bg-gray-50 font-yeonsung">
-            <p className="mb-2 text-sm font-yeonsung">
-              🏠 주소: {selectedRestaurant.address}
-            </p>
-            <p className="text-sm font-yeonsung">
-              ⏰ 영업시간: {selectedRestaurant.hours}
-            </p>
-          </div>
-          <div className="mb-4 font-yeonsung">
-            <h3 className="mb-2 font-bold font-yeonsung">메뉴</h3>
-            {selectedRestaurant.menu.map((item, index) => (
-              <div
-                key={index}
-                className="flex justify-between py-1 text-sm border-b font-yeonsung"
-              >
-                <span className="font-yeonsung">{item.item}</span>
-                <span className="font-semibold font-yeonsung">
-                  {item.price}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <RestaurantOverlay
+          restaurant={selectedRestaurant}
+          onClose={() => setSelectedRestaurant(null)}
+        />
       )}
     </div>
   );

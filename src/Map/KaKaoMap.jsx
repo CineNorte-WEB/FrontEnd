@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Common from "../components/Common";
 import LeftSide from "./LeftSide";
+import RestaurantOverlay from "./RestaurantOverlay";
 
 const restaurantData = [
   {
@@ -322,6 +323,8 @@ const restaurantData = [
 ];
 
 function KakaoMap() {
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+
   useEffect(() => {
     const KAKAO_MAP_SRC = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${
       import.meta.env.VITE_KAKAO_APP_KEY
@@ -345,49 +348,6 @@ function KakaoMap() {
     }
   }, []);
 
-  const createCustomOverlay = (map, place) => {
-    const overlayContent = `
-      <div class="relative w-80 rounded-lg bg-white shadow-md p-5">
-        <div class="flex items-center mb-3">
-          <img src="/images/${place.category}.png" class="w-12 h-12 rounded-md mr-3" />
-          <div class="flex-1">
-            <h3 class="text-lg font-bold mb-1">${place.name}</h3>
-            <div class="flex items-center justify-between">
-              <span class="text-gray-600">${place.category}</span>
-              <span class="text-yellow-500">⭐ ${place.rating}</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="mb-3">
-          <div class="text-blue-500">좋아요 👍</div>
-          <p class="text-gray-600 mt-1">${place.goodText}</p>
-        </div>
-        
-        <div class="mb-3">
-          <div class="text-red-500">싫어요 👎</div>
-          <p class="text-gray-600 mt-1">${place.badText}</p>
-        </div>
-
-        <div class="border-t border-gray-200 pt-3 mt-3 text-gray-600 text-sm">
-          <p class="mb-1">🏠 ${place.address}</p>
-          <p class="mb-1">⏰ ${place.hours}</p>
-        </div>
-      </div>
-    `;
-
-    return new window.kakao.maps.CustomOverlay({
-      position: new window.kakao.maps.LatLng(
-        place.position.lat,
-        place.position.lng
-      ),
-      content: overlayContent,
-      map: null,
-      yAnchor: 1.35,
-      zIndex: 3,
-    });
-  };
-
   const initializeMap = () => {
     if (!window.kakao || !window.kakao.maps) return;
 
@@ -400,7 +360,6 @@ function KakaoMap() {
     };
 
     const map = new window.kakao.maps.Map(container, options);
-    let activeOverlay = null;
 
     restaurantData.forEach((place) => {
       const markerPosition = new window.kakao.maps.LatLng(
@@ -413,32 +372,16 @@ function KakaoMap() {
         map: map,
       });
 
-      const overlay = createCustomOverlay(map, place);
-
       window.kakao.maps.event.addListener(marker, "click", () => {
-        if (activeOverlay) activeOverlay.setMap(null);
-        overlay.setMap(map);
-        activeOverlay = overlay;
-
-        // 부드럽게 중심 이동
+        setSelectedRestaurant(place);
         map.panTo(markerPosition);
       });
     });
 
     window.kakao.maps.event.addListener(map, "click", () => {
-      if (activeOverlay) {
-        activeOverlay.setMap(null);
-        activeOverlay = null;
-      }
+      setSelectedRestaurant(null);
     });
 
-    const zoomControl = new window.kakao.maps.ZoomControl();
-    map.addControl(zoomControl, window.kakao.maps.ControlPosition.BOTTOMRIGHT);
-
-    // 확대 바 제거
-    map.removeControl(window.kakao.maps.ZoomControl());
-
-    // 스크롤 바 제거
     map.setOptions({
       draggable: true,
       scrollwheel: true,
@@ -452,14 +395,22 @@ function KakaoMap() {
         <div className="relative h-full overflow-hidden border-2 border-black rounded-r-xl">
           <LeftSide
             restaurantData={restaurantData}
-            className="absolute left-2 bottom-2"
+            onSelectRestaurant={setSelectedRestaurant}
           />
         </div>
       </div>
-      <div
-        id="map"
-        className="w-3/4 h-full overflow-hidden border-2 border-gray-400 rounded-xl"
-      />
+      <div className="relative w-3/4 h-full">
+        <div
+          id="map"
+          className="w-full h-full overflow-hidden border-2 border-gray-400 rounded-xl"
+        />
+        {selectedRestaurant && (
+          <RestaurantOverlay
+            restaurant={selectedRestaurant}
+            onClose={() => setSelectedRestaurant(null)}
+          />
+        )}
+      </div>
       <Common />
     </div>
   );
