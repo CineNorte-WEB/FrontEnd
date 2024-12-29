@@ -31,9 +31,16 @@ const Community = () => {
   ];
 
   return (
-    <div className="community-container">
+    <div className="community-container font-yeonsung">
       <Common />
-      <h1 className="community-title">커뮤니티</h1>
+      <header className="community-header">
+        <img
+          src="/images/캠슐랭로고.png"
+          alt="캠슐랭 로고"
+          className="community-logo"
+        />
+        <h1 className="community-title">커뮤니티</h1>
+      </header>
       <p className="community-subtitle">다양한 의견을 공유해보세요~</p>
       <div className="community-list">
         {posts.map((post, index) => (

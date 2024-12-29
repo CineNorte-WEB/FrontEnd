@@ -7,7 +7,6 @@ import { IoExitOutline } from "react-icons/io5";
 export default function MyPageProfile() {
   return (
     <div className="profile-container font-yeonsung">
-      <h1 className="profile-title font-yeonsung">마이 페이지</h1>
       <div className="profile-content font-yeonsung">
         <div className="profile-row font-yeonsung">
           <span className="profile-label font-yeonsung">닉네임:</span>
