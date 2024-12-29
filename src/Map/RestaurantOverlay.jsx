@@ -8,7 +8,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
   // 리스트 클릭 시 오른쪽 상세정보 창 표시
   if (source === "list") {
     return (
-      <div className="fixed top-0 right-0 z-50 w-1/3 h-screen bg-white border-l border-gray-300 shadow-lg">
+      <div className="fixed z-50 w-1/3 h-screen bg-white border-2 border-gray-300 rounded-lg shadow-lg left-80 top-3 right-2">
         <div className="relative h-full p-8 overflow-y-auto font-yeonsung">
           <div className="flex items-center gap-4">
             <img
