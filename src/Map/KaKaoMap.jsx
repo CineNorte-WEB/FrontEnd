@@ -950,6 +950,23 @@ function KakaoMap() {
 
     const map = new window.kakao.maps.Map(container, options);
 
+    // 건국대학교 로고 이미지와 위치 설정
+    const konkukPosition = new window.kakao.maps.LatLng(37.543813, 127.077566);
+    const imageSize = new window.kakao.maps.Size(50, 50);
+    const imageOption = { offset: new window.kakao.maps.Point(30, 30) };
+
+    const markerImage = new window.kakao.maps.MarkerImage(
+      "/images/건대.png", // 로고 이미지 경로
+      imageSize,
+      imageOption
+    );
+    // 건국대학교 로고 마커 생성
+    const konkukMarker = new window.kakao.maps.Marker({
+      position: konkukPosition,
+      image: markerImage,
+      map: map,
+    });
+    // 기존 레스토랑 마커들 생성
     restaurantData.forEach((place) => {
       const markerPosition = new window.kakao.maps.LatLng(
         place.position.lat,
