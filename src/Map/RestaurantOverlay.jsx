@@ -151,7 +151,8 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
               <div>
                 <div className="flex items-center">
                   <span className="text-red-500">싫어요 👎</span>
-                  <span className="ml-2">{restaurant.dislikeRating}</span>
+                  <span className="ml-2">3.21</span>{" "}
+                  {/* 싫어요 평점을 3.21로 하드코딩 */}
                 </div>
                 <p className="mt-1 text-sm text-gray-600">
                   {restaurant.badText}
