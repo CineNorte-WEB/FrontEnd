@@ -28,12 +28,13 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
             </div>
             <button
               onClick={onClose}
-              className="absolute text-gray-400 right-4 top-4 hover:text-gray-600"
+              className="absolute text-gray-400 left-4 top-4 hover:text-gray-600"
             >
               <IoArrowBack className="w-6 h-6" />
             </button>
           </div>
 
+          {/* 나머지 코드는 그대로 유지 */}
           <div className="mt-6">
             <div className="mb-4">
               <div className="flex items-center mb-2">
@@ -163,7 +164,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
     );
   }
 
-  // 마커 클릭 시 오버레이 표시
+  // 마커 클릭 시 오버레이 표시 (변경 없음)
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
