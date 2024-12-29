@@ -1,4 +1,5 @@
 import React from "react";
+import { IoClose } from "react-icons/io5";
 
 const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
   if (!restaurant) return null;
@@ -6,7 +7,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
   // 리스트 클릭 시 오른쪽 상세정보 창 표시
   if (source === "list") {
     return (
-      <div className="absolute right-0 z-50 w-1/2 h-full transition-all duration-300 ease-in-out transform bg-white border-l border-gray-300">
+      <div className="fixed top-0 right-0 z-50 w-1/3 h-screen bg-white border-l border-gray-300 shadow-lg">
         <div className="relative h-full p-8 overflow-y-auto font-yeonsung">
           <div className="flex items-center gap-4">
             <img
@@ -28,20 +29,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
               onClick={onClose}
               className="absolute text-gray-400 right-4 top-4 hover:text-gray-600"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <IoClose className="w-6 h-6" />
             </button>
           </div>
 
@@ -159,7 +147,10 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
                 </p>
               </div>
               <div>
-                <span className="text-red-500">싫어요 👎</span>
+                <div className="flex items-center">
+                  <span className="text-red-500">싫어요 👎</span>
+                  <span className="ml-2">{restaurant.dislikeRating}</span>
+                </div>
                 <p className="mt-1 text-sm text-gray-600">
                   {restaurant.badText}
                 </p>
@@ -184,20 +175,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
             onClick={onClose}
             className="absolute text-gray-500 right-4 top-4 hover:text-gray-700"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <IoClose className="w-6 h-6" />
           </button>
 
           <div className="flex items-center mb-4">
@@ -246,13 +224,19 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
 
             <div className="pt-4 border-t">
               <div className="mb-3">
-                <span className="text-blue-500">좋아요 👍</span>
+                <div className="flex items-center">
+                  <span className="text-blue-500">좋아요 👍</span>
+                  <span className="ml-2">{restaurant.rating}</span>
+                </div>
                 <p className="mt-1 text-sm text-gray-600">
                   {restaurant.goodText}
                 </p>
               </div>
               <div>
-                <span className="text-red-500">싫어요 👎</span>
+                <div className="flex items-center">
+                  <span className="text-red-500">싫어요 👎</span>
+                  <span className="ml-2">{restaurant.dislikeRating}</span>
+                </div>
                 <p className="mt-1 text-sm text-gray-600">
                   {restaurant.badText}
                 </p>
