@@ -952,19 +952,30 @@ function KakaoMap() {
 
     // 건국대학교 로고 이미지와 위치 설정
     const konkukPosition = new window.kakao.maps.LatLng(37.543813, 127.077566);
-    const imageSize = new window.kakao.maps.Size(50, 50);
-    const imageOption = { offset: new window.kakao.maps.Point(30, 30) };
+    // CustomOverlay용 컨텐츠 생성
+    const content = document.createElement("div");
+    content.style.position = "relative";
+    content.style.width = "50px";
+    content.style.height = "50px";
+    content.style.border = "3px solid #000000";
+    content.style.borderRadius = "50%";
+    content.style.backgroundColor = "white";
+    content.style.padding = "2px";
+    content.style.boxSizing = "border-box";
 
-    const markerImage = new window.kakao.maps.MarkerImage(
-      "/images/건대.png", // 로고 이미지 경로
-      imageSize,
-      imageOption
-    );
-    // 건국대학교 로고 마커 생성
-    const konkukMarker = new window.kakao.maps.Marker({
+    const img = document.createElement("img");
+    img.src = "/images/건대.png";
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.borderRadius = "50%";
+    content.appendChild(img);
+
+    // CustomOverlay 생성 및 지도에 표시
+    const customOverlay = new window.kakao.maps.CustomOverlay({
       position: konkukPosition,
-      image: markerImage,
+      content: content,
       map: map,
+      zIndex: 3,
     });
     // 기존 레스토랑 마커들 생성
     restaurantData.forEach((place) => {
@@ -980,7 +991,7 @@ function KakaoMap() {
 
       window.kakao.maps.event.addListener(marker, "click", () => {
         setSelectedRestaurant(place);
-        setMarkerClick(true);
+        setMarkerClick(false);
         map.panTo(markerPosition);
       });
     });
