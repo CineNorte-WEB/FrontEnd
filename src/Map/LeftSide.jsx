@@ -119,6 +119,7 @@ const LeftSide = ({ restaurantData, onSelectRestaurant }) => {
         <RestaurantOverlay
           restaurant={selectedRestaurant}
           onClose={() => setSelectedRestaurant(null)}
+          source="list"
         />
       )}
     </div>

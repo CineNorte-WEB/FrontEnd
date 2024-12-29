@@ -34,7 +34,6 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
             </button>
           </div>
 
-          {/* 나머지 코드는 그대로 유지 */}
           <div className="mt-6">
             <div className="mb-4">
               <div className="flex items-center mb-2">
@@ -109,15 +108,26 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
                 </svg>
               </div>
               <div className="space-y-2">
-                {restaurant.menu.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between py-1 text-sm border-b border-gray-100 last:border-b-0"
-                  >
-                    <span>{item.item}</span>
-                    <span>{item.price}</span>
-                  </div>
-                ))}
+                {/* 전체 메뉴 표시 */}
+                {restaurant.fullMenu
+                  ? restaurant.fullMenu.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between py-1 text-sm border-b border-gray-100 last:border-b-0"
+                      >
+                        <span>{item.item}</span>
+                        <span>{item.price}</span>
+                      </div>
+                    ))
+                  : restaurant.menu.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between py-1 text-sm border-b border-gray-100 last:border-b-0"
+                      >
+                        <span>{item.item}</span>
+                        <span>{item.price}</span>
+                      </div>
+                    ))}
               </div>
             </div>
 
@@ -151,8 +161,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
               <div>
                 <div className="flex items-center">
                   <span className="text-red-500">싫어요 👎</span>
-                  <span className="ml-2">{restaurant.dislikeRating}</span>{" "}
-                  {/* 하드코딩된 3.21을 restaurant.dislikeRating으로 변경 */}
+                  <span className="ml-2">{restaurant.dislikeRating}</span>
                 </div>
                 <p className="mt-1 text-sm text-gray-600">
                   {restaurant.badText}
@@ -165,7 +174,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
     );
   }
 
-  // 마커 클릭 시 오버레이 표시 (변경 없음)
+  // 마커 클릭 시 오버레이 표시
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
@@ -211,9 +220,10 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
             </div>
 
             <div className="pt-4 border-t">
-              <h3 className="mb-3 font-bold">메뉴</h3>
+              <h3 className="mb-3 font-bold">대표 메뉴</h3>
               <div className="space-y-2">
-                {restaurant.menu.map((item, index) => (
+                {/* 상위 3개 메뉴만 표시 */}
+                {(restaurant.menu || []).slice(0, 3).map((item, index) => (
                   <div
                     key={index}
                     className="flex justify-between py-2 border-b border-gray-100"

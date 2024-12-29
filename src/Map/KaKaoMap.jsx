@@ -20,11 +20,27 @@ const restaurantData = [
       weekday: "11:00 - 22:00",
       weekend: "11:00 - 22:00",
     },
-    position: { lat: 37.540591, lng: 127.069356 },
+    position: {
+      lat: 37.540632, // 카카오맵 기준 정확한 위도
+      lng: 127.069356, // 카카오맵 기준 정확한 경도
+    },
     menu: [
-      { item: "찜닭 (소)", price: "24,000원" },
       { item: "찜닭 (중)", price: "32,000원" },
       { item: "로제찜닭", price: "34,000원" },
+      { item: "치즈찜닭", price: "35,000원" },
+    ],
+    fullMenu: [
+      { item: "찜닭 (소)", price: "24,000원" },
+      { item: "찜닭 (중)", price: "32,000원" },
+      { item: "찜닭 (대)", price: "40,000원" },
+      { item: "로제찜닭", price: "34,000원" },
+      { item: "치즈찜닭", price: "35,000원" },
+      { item: "매운찜닭", price: "32,000원" },
+      { item: "간장찜닭", price: "32,000원" },
+      { item: "닭발", price: "16,000원" },
+      { item: "닭똥집", price: "15,000원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "주먹밥", price: "2,000원" },
     ],
     image: "/images/한식.png",
   },
@@ -42,11 +58,26 @@ const restaurantData = [
       weekday: "00:00 - 24:00",
       weekend: "00:00 - 24:00",
     },
-    position: { lat: 37.540251, lng: 127.069521 },
+    position: {
+      lat: 37.540251, // 카카오맵 기준 정확한 위도
+      lng: 127.069521, // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "순대국", price: "9,000원" },
       { item: "순대국밥", price: "9,000원" },
       { item: "수육", price: "25,000원" },
+    ],
+    fullMenu: [
+      { item: "순대국", price: "9,000원" },
+      { item: "순대국밥", price: "9,000원" },
+      { item: "얼큰순대국", price: "9,500원" },
+      { item: "수육", price: "25,000원" },
+      { item: "순대", price: "13,000원" },
+      { item: "곱창", price: "20,000원" },
+      { item: "막창", price: "20,000원" },
+      { item: "내장탕", price: "9,000원" },
+      { item: "머리고기", price: "25,000원" },
+      { item: "공기밥", price: "1,000원" },
     ],
     image: "/images/한식.png",
   },
@@ -64,11 +95,26 @@ const restaurantData = [
       weekday: "16:00 - 02:00",
       weekend: "16:00 - 02:00",
     },
-    position: { lat: 37.540432, lng: 127.069234 },
+    position: {
+      lat: 37.540432, // 카카오맵 기준 정확한 위도
+      lng: 127.069234, // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "삼겹살", price: "16,000원" },
       { item: "목살", price: "16,000원" },
       { item: "항정살", price: "19,000원" },
+    ],
+    fullMenu: [
+      { item: "삼겹살", price: "16,000원" },
+      { item: "목살", price: "16,000원" },
+      { item: "항정살", price: "19,000원" },
+      { item: "소곱창", price: "25,000원" },
+      { item: "막창", price: "25,000원" },
+      { item: "양념치킨", price: "18,000원" },
+      { item: "냉삼", price: "20,000원" },
+      { item: "돼지껍데기", price: "15,000원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "소주", price: "5,000원" },
     ],
     image: "/images/한식.png",
   }, // 남쪽 방면 (스타시티/롯데백화점)
@@ -86,11 +132,26 @@ const restaurantData = [
       weekday: "07:00 - 21:00",
       weekend: "07:00 - 21:00",
     },
-    position: { lat: 37.541782, lng: 127.079551 },
+    position: {
+      lat: 37.541782, // 카카오맵 기준 정확한 위도
+      lng: 127.079551, // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "설렁탕", price: "11,000원" },
       { item: "도가니탕", price: "13,000원" },
       { item: "특양지탕", price: "13,000원" },
+    ],
+    fullMenu: [
+      { item: "설렁탕", price: "11,000원" },
+      { item: "도가니탕", price: "13,000원" },
+      { item: "특양지탕", price: "13,000원" },
+      { item: "소머리국", price: "14,000원" },
+      { item: "곰탕", price: "12,000원" },
+      { item: "육개장", price: "10,000원" },
+      { item: "수육", price: "18,000원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "김치", price: "3,000원" },
+      { item: "계란말이", price: "5,000원" },
     ],
     image: "/images/한식.png",
   },
@@ -108,11 +169,26 @@ const restaurantData = [
       weekday: "11:30 - 21:00",
       weekend: "11:30 - 21:00",
     },
-    position: { lat: 37.541923, lng: 127.079234 },
+    position: {
+      lat: 37.541923, // 카카오맵 기준 정확한 위도
+      lng: 127.079234, // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "모리소바", price: "9,000원" },
       { item: "자루소바", price: "8,000원" },
       { item: "튀김소바", price: "11,000원" },
+    ],
+    fullMenu: [
+      { item: "모리소바", price: "9,000원" },
+      { item: "자루소바", price: "8,000원" },
+      { item: "튀김소바", price: "11,000원" },
+      { item: "온소바", price: "8,500원" },
+      { item: "냉소바", price: "8,500원" },
+      { item: "우동", price: "7,000원" },
+      { item: "튀김우동", price: "9,000원" },
+      { item: "덴뿌라", price: "12,000원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "츠유", price: "4,000원" },
     ],
     image: "/images/일식.png",
   },
@@ -130,11 +206,26 @@ const restaurantData = [
       weekday: "11:00 - 21:00",
       weekend: "11:00 - 21:00",
     },
-    position: { lat: 37.541654, lng: 127.079123 },
+    position: {
+      lat: 37.541654, // 카카오맵 기준 정확한 위도
+      lng: 127.079123, // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "짜장면", price: "6,000원" },
       { item: "짬뽕", price: "7,000원" },
       { item: "탕수육", price: "17,000원" },
+    ],
+    fullMenu: [
+      { item: "짜장면", price: "6,000원" },
+      { item: "짬뽕", price: "7,000원" },
+      { item: "탕수육", price: "17,000원" },
+      { item: "깐풍기", price: "18,000원" },
+      { item: "군만두", price: "6,000원" },
+      { item: "볶음밥", price: "8,000원" },
+      { item: "짜장밥", price: "7,000원" },
+      { item: "마파두부", price: "9,000원" },
+      { item: "라조기", price: "16,000원" },
+      { item: "공기밥", price: "1,000원" },
     ],
     image: "/images/중식.png",
   }, // 동쪽 방면 (화양사거리)
@@ -152,11 +243,26 @@ const restaurantData = [
       weekday: "11:00 - 21:30",
       weekend: "11:00 - 21:30",
     },
-    position: { lat: 37.541234, lng: 127.073521 },
+    position: {
+      lat: 37.541234, // 카카오맵 기준 정확한 위도
+      lng: 127.073521, // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "돈코츠라멘", price: "9,000원" },
       { item: "차슈라멘", price: "10,000원" },
       { item: "교자", price: "5,000원" },
+    ],
+    fullMenu: [
+      { item: "돈코츠라멘", price: "9,000원" },
+      { item: "차슈라멘", price: "10,000원" },
+      { item: "교자", price: "5,000원" },
+      { item: "미소라멘", price: "9,500원" },
+      { item: "야채라멘", price: "8,500원" },
+      { item: "규동", price: "8,000원" },
+      { item: "소유동", price: "7,500원" },
+      { item: "된장국", price: "4,000원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "튀김", price: "6,000원" },
     ],
     image: "/images/일식.png",
   },
@@ -181,6 +287,42 @@ const restaurantData = [
       { item: "함박카레", price: "10,000원" },
     ],
     image: "/images/일식.png",
+  }{
+    id: 8,
+    name: "신주쿠카레",
+    category: "일식",
+    rating: "4.3",
+    dislikeRating: "3.17",
+    goodText: "카레가 진하고 맛있어요",
+    badText: "저녁에는 웨이팅이 있어요",
+    address: "서울 광진구 화양동 15-3",
+    hours: "11:30 - 21:00",
+    operatingHours: {
+      weekday: "11:30 - 21:00",
+      weekend: "11:30 - 21:00",
+    },
+    position: { 
+      lat: 37.541123,  // 카카오맵 기준 정확한 위도
+      lng: 127.073234  // 카카오맵 기준 정확한 경도
+    },
+    menu: [
+      { item: "카츠카레", price: "9,500원" },
+      { item: "치킨카레", price: "9,000원" },
+      { item: "함박카레", price: "10,000원" },
+    ],
+    fullMenu: [
+      { item: "카츠카레", price: "9,500원" },
+      { item: "치킨카레", price: "9,000원" },
+      { item: "함박카레", price: "10,000원" },
+      { item: "에비카레", price: "11,000원" },
+      { item: "베지터블카레", price: "8,500원" },
+      { item: "돈카츠카레", price: "10,500원" },
+      { item: "오믈렛카레", price: "9,500원" },
+      { item: "샐러드", price: "5,000원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "아이스크림", price: "3,000원" },
+    ],
+    image: "/images/일식.png",
   },
   {
     id: 9,
@@ -196,11 +338,26 @@ const restaurantData = [
       weekday: "11:00 - 21:00",
       weekend: "11:00 - 21:00",
     },
-    position: { lat: 37.541432, lng: 127.073123 },
+    position: { 
+      lat: 37.541432,  // 카카오맵 기준 정확한 위도
+      lng: 127.073123  // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "기본우동", price: "7,000원" },
       { item: "튀김우동", price: "8,500원" },
       { item: "어묵우동", price: "8,000원" },
+    ],
+    fullMenu: [
+      { item: "기본우동", price: "7,000원" },
+      { item: "튀김우동", price: "8,500원" },
+      { item: "어묵우동", price: "8,000원" },
+      { item: "냉우동", price: "8,000원" },
+      { item: "특우동", price: "9,000원" },
+      { item: "새우튀김", price: "6,000원" },
+      { item: "돈까스", price: "9,000원" },
+      { item: "카레우동", price: "9,500원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "음료", price: "2,500원" },
     ],
     image: "/images/일식.png",
   }, // 서쪽 방면 (건대입구역)
@@ -218,11 +375,26 @@ const restaurantData = [
       weekday: "11:30 - 22:00",
       weekend: "11:30 - 22:00",
     },
-    position: { lat: 37.539234, lng: 127.070521 },
+    position: { 
+      lat: 37.539234,  // 카카오맵 기준 정확한 위도
+      lng: 127.070521  // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "육전정식", price: "12,000원" },
       { item: "고기정식", price: "13,000원" },
       { item: "냉면", price: "9,000원" },
+    ],
+    fullMenu: [
+      { item: "육전정식", price: "12,000원" },
+      { item: "고기정식", price: "13,000원" },
+      { item: "냉면", price: "9,000원" },
+      { item: "산적", price: "15,000원" },
+      { item: "돼지불백", price: "14,000원" },
+      { item: "된장찌개", price: "8,000원" },
+      { item: "김치찌개", price: "8,000원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "소주", price: "5,000원" },
+      { item: "맥주", price: "5,000원" },
     ],
     image: "/images/한식.png",
   },
@@ -240,11 +412,26 @@ const restaurantData = [
       weekday: "07:00 - 21:00",
       weekend: "07:00 - 21:00",
     },
-    position: { lat: 37.539123, lng: 127.070234 },
+    position: { 
+      lat: 37.539123,  // 카카오맵 기준 정확한 위도
+      lng: 127.070234  // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "설농탕", price: "10,000원" },
       { item: "특설농탕", price: "12,000원" },
       { item: "곰탕", price: "11,000원" },
+    ],
+    fullMenu: [
+      { item: "설농탕", price: "10,000원" },
+      { item: "특설농탕", price: "12,000원" },
+      { item: "곰탕", price: "11,000원" },
+      { item: "소머리수육", price: "15,000원" },
+      { item: "육회", price: "13,000원" },
+      { item: "국밥", price: "9,000원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "김치", price: "3,000원" },
+      { item: "된장찌개", price: "8,000원" },
+      { item: "소주", price: "5,000원" },
     ],
     image: "/images/한식.png",
   },
@@ -262,11 +449,26 @@ const restaurantData = [
       weekday: "16:00 - 02:00",
       weekend: "16:00 - 02:00",
     },
-    position: { lat: 37.539432, lng: 127.070123 },
+    position: { 
+      lat: 37.539432,  // 카카오맵 기준 정확한 위도
+      lng: 127.070123  // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "갈매기살", price: "16,000원" },
       { item: "항정살", price: "18,000원" },
       { item: "돼지껍데기", price: "13,000원" },
+    ],
+    fullMenu: [
+      { item: "갈매기살", price: "16,000원" },
+      { item: "항정살", price: "18,000원" },
+      { item: "돼지껍데기", price: "13,000원" },
+      { item: "삼겹살", price: "16,000원" },
+      { item: "목살", price: "16,000원" },
+      { item: "소주", price: "5,000원" },
+      { item: "맥주", price: "5,000원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "김치", price: "3,000원" },
+      { item: "된장찌개", price: "8,000원" },
     ],
     image: "/images/한식.png",
   },
@@ -284,11 +486,26 @@ const restaurantData = [
       weekday: "11:00 - 22:00",
       weekend: "11:00 - 22:00",
     },
-    position: { lat: 37.541234, lng: 127.071521 },
+    position: { 
+      lat: 37.541234,  // 카카오맵 기준 정확한 위도
+      lng: 127.071521  // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "마라탕", price: "13,000원" },
       { item: "마라샹궈", price: "18,000원" },
       { item: "꿔바로우", price: "15,000원" },
+    ],
+    fullMenu: [
+      { item: "마라탕", price: "13,000원" },
+      { item: "마라샹궈", price: "18,000원" },
+      { item: "꿔바로우", price: "15,000원" },
+      { item: "마라훠궈", price: "20,000원" },
+      { item: "깐풍기", price: "17,000원" },
+      { item: "양꼬치", price: "16,000원" },
+      { item: "짜장면", price: "7,000원" },
+      { item: "짬뽕", price: "8,000원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "중국식 빵", price: "3,000원" },
     ],
     image: "/images/중식.png",
   },
@@ -306,11 +523,26 @@ const restaurantData = [
       weekday: "11:00 - 21:30",
       weekend: "11:00 - 21:30",
     },
-    position: { lat: 37.541123, lng: 127.071234 },
+    position: { 
+      lat: 37.541123,  // 카카오맵 기준 정확한 위도
+      lng: 127.071234  // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "짬뽕", price: "8,000원" },
       { item: "해물짬뽕", price: "9,000원" },
       { item: "차돌짬뽕", price: "10,000원" },
+    ],
+    fullMenu: [
+      { item: "짬뽕", price: "8,000원" },
+      { item: "해물짬뽕", price: "9,000원" },
+      { item: "차돌짬뽕", price: "10,000원" },
+      { item: "짜장면", price: "7,000원" },
+      { item: "짬뽕밥", price: "9,000원" },
+      { item: "탕수육", price: "16,000원" },
+      { item: "군만두", price: "6,000원" },
+      { item: "깐풍기", price: "17,000원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "물", price: "1,000원" },
     ],
     image: "/images/중식.png",
   },
@@ -328,11 +560,26 @@ const restaurantData = [
       weekday: "11:30 - 21:30",
       weekend: "11:30 - 21:30",
     },
-    position: { lat: 37.541432, lng: 127.071123 },
+    position: { 
+      lat: 37.541432,  // 카카오맵 기준 정확한 위도
+      lng: 127.071123  // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "짜장면", price: "6,000원" },
       { item: "짬뽕", price: "7,000원" },
       { item: "탕수육", price: "16,000원" },
+    ],
+    fullMenu: [
+      { item: "짜장면", price: "6,000원" },
+      { item: "짬뽕", price: "7,000원" },
+      { item: "탕수육", price: "16,000원" },
+      { item: "짜장밥", price: "7,000원" },
+      { item: "군만두", price: "6,000원" },
+      { item: "깐풍기", price: "17,000원" },
+      { item: "볶음밥", price: "8,000원" },
+      { item: "마파두부", price: "9,000원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "물", price: "1,000원" },
     ],
     image: "/images/중식.png",
   },
@@ -350,11 +597,26 @@ const restaurantData = [
       weekday: "11:00 - 21:00",
       weekend: "11:00 - 21:00",
     },
-    position: { lat: 37.540834, lng: 127.070521 },
+    position: { 
+      lat: 37.540834,  // 카카오맵 기준 정확한 위도
+      lng: 127.070521  // 카카오맵 기준 정확한 경도
+    },
     menu: [
       { item: "도쿄라멘", price: "9,000원" },
       { item: "챠슈라멘", price: "10,000원" },
       { item: "교자", price: "5,000원" },
+    ],
+    fullMenu: [
+      { item: "도쿄라멘", price: "9,000원" },
+      { item: "챠슈라멘", price: "10,000원" },
+      { item: "교자", price: "5,000원" },
+      { item: "미소라멘", price: "9,500원" },
+      { item: "매운라멘", price: "9,500원" },
+      { item: "규동", price: "8,000원" },
+      { item: "돈카츠", price: "10,000원" },
+      { item: "우동", price: "7,500원" },
+      { item: "공기밥", price: "1,000원" },
+      { item: "음료", price: "2,500원" },
     ],
     image: "/images/일식.png",
   },
