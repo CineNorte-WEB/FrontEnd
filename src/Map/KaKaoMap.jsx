@@ -538,6 +538,7 @@ const restaurantData = [
     image: "/images/한식.png",
   },
 ];
+
 function KakaoMap() {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [markerClick, setMarkerClick] = useState(false);
@@ -574,6 +575,9 @@ function KakaoMap() {
     const options = {
       center: new window.kakao.maps.LatLng(37.541012, 127.070798),
       level: 3,
+      draggable: true,
+      scrollwheel: true,
+      disableDoubleClick: false,
     };
 
     const map = new window.kakao.maps.Map(container, options);
@@ -599,12 +603,6 @@ function KakaoMap() {
     window.kakao.maps.event.addListener(map, "click", () => {
       setSelectedRestaurant(null);
       setMarkerClick(false);
-    });
-
-    map.setOptions({
-      draggable: true,
-      scrollwheel: true,
-      disableDoubleClick: false,
     });
   };
 
