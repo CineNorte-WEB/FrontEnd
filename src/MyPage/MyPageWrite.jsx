@@ -1,52 +1,35 @@
-import React, { useState } from "react";
+import React from "react";
 import "./MyPageWrite.css";
+import { useState } from "react";
 
-export default function MyPageWrite() {
-  const [posts, setPosts] = useState([
-    {
-      title: "현이네 고기국수",
-      category: "리뷰게시판",
-      author: "인생은 고기서 고기",
-    },
-    {
-      title: "주식 ...",
-      category: "자유게시판",
-      author: "인생은 한방",
-    },
-  ]);
+export default function MyPageWrite({ posts, setPosts }) {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [currentPostIndex, setCurrentPostIndex] = useState(null);
+  const [editedPost, setEditedPost] = useState({ title: "", category: "", author: "" });
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 삭제 모달 상태
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // 수정 모달 상태
-  const [currentPostIndex, setCurrentPostIndex] = useState(null); // 선택된 항목 인덱스
-  const [editedPost, setEditedPost] = useState({ title: "", category: "", author: "" }); // 수정된 내용
-
-  // 삭제 모달 열기
   const handleDeleteClick = (index) => {
     setCurrentPostIndex(index);
     setIsDeleteModalOpen(true);
   };
 
-  // 수정 모달 열기
   const handleEditClick = (index) => {
     setCurrentPostIndex(index);
-    setEditedPost(posts[index]); // 기존 내용 가져오기
+    setEditedPost(posts[index]);
     setIsEditModalOpen(true);
   };
 
-  // 삭제 확인
   const confirmDelete = () => {
     setPosts((prevPosts) => prevPosts.filter((_, index) => index !== currentPostIndex));
     setIsDeleteModalOpen(false);
     setCurrentPostIndex(null);
   };
 
-  // 삭제 취소
   const cancelDelete = () => {
     setIsDeleteModalOpen(false);
     setCurrentPostIndex(null);
   };
 
-  // 수정 저장
   const saveEdit = () => {
     const updatedPosts = [...posts];
     updatedPosts[currentPostIndex] = editedPost;
@@ -55,13 +38,11 @@ export default function MyPageWrite() {
     setCurrentPostIndex(null);
   };
 
-  // 수정 취소
   const cancelEdit = () => {
     setIsEditModalOpen(false);
     setCurrentPostIndex(null);
   };
 
-  // 수정된 내용 관리
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedPost((prev) => ({ ...prev, [name]: value }));
@@ -97,7 +78,6 @@ export default function MyPageWrite() {
         </div>
       )}
 
-      {/* 삭제 모달 */}
       {isDeleteModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
@@ -114,7 +94,6 @@ export default function MyPageWrite() {
         </div>
       )}
 
-      {/* 수정 모달 */}
       {isEditModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
