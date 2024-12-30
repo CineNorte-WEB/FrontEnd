@@ -8,8 +8,46 @@ import Common from "../components/Common";
 
 const MyPage = () => {
   const [currentComponent, setCurrentComponent] = useState("profile");
-  const navigate = useNavigate(); // React Router's useNavigate
-  
+  const [items, setItems] = useState([
+    {
+      title: "현이네 고기 국수",
+      menu: "한식",
+      summary: "웨이팅이 많은 집! 조금 아쉽지만 전체적으로 맛있어서 또 갈 것 같아요!",
+      image: "/images/남미식.png",
+    },
+    {
+      title: "진스시",
+      menu: "일식",
+      summary: "분위기도 좋고 가격도 적당해서 자주 올 것 같아요!",
+      image: "/images/인도식.png",
+    },
+    {
+      title: "진스시",
+      menu: "일식",
+      summary: "분위기도 좋고 가격도 적당해서 자주 올 것 같아요!",
+      image: "/images/인도식.png",
+    },
+    {
+      title: "진스시",
+      menu: "일식",
+      summary: "분위기도 좋고 가격도 적당해서 자주 올 것 같아요!",
+      image: "/images/인도식.png",
+    },
+  ]);
+  const [posts, setPosts] = useState([
+    {
+      title: "현이네 고기국수",
+      category: "리뷰게시판",
+      author: "인생은 고기서 고기",
+    },
+    {
+      title: "주식 ...",
+      category: "자유게시판",
+      author: "인생은 한방",
+    },
+  ]);
+  const navigate = useNavigate();
+
   const handleMenuClick = (menu) => {
     setCurrentComponent(menu);
   };
@@ -17,13 +55,13 @@ const MyPage = () => {
   const renderComponent = () => {
     switch (currentComponent) {
       case "profile":
-        return <MyPageProfile />;
+        return <MyPageProfile items={items} posts={posts} />;
       case "mylist":
-        return <MyPageList />;
+        return <MyPageList items={items} setItems={setItems} />;
       case "write":
-        return <MyPageWrite />;
+        return <MyPageWrite posts={posts} setPosts={setPosts} />;
       default:
-        return <MyPageProfile />;
+        return <MyPageProfile items={items} posts={posts} />;
     }
   };
 
@@ -31,12 +69,12 @@ const MyPage = () => {
     <div className="mypage font-yeonsung">
       <Common />
       <header className="mypage-header">
-      <img
-        src="/images/캠슐랭로고.png"
-        alt="캠슐랭 로고"
-        className="mypage-logo"
-        onClick={() => navigate("/map")} // 로고 클릭 시 /map으로 이동
-      />
+        <img
+          src="/images/캠슐랭로고.png"
+          alt="캠슐랭 로고"
+          className="mypage-logo"
+          onClick={() => navigate("/map")} // 로고 클릭 시 /map으로 이동
+        />
         <h1 className="mypage-title">마이 페이지</h1>
       </header>
       <p className="community-subtitle">check your profile~</p>
