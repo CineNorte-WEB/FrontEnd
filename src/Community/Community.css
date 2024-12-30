@@ -144,3 +144,78 @@
   .floating-button:hover {
     background-color: #a01b28;
   }
+
+  /* 모달 오버레이 */
+.community-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 모달 */
+.community-modal {
+  font-size: 1.5rem;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 80%; /* 기본 너비를 80%로 설정 */
+  max-width: 700px; /* 최대 너비를 600px로 설정 */
+  height: auto; /* 기본적으로 자동 높이 */
+  max-height: 90%; /* 최대 높이를 화면의 90%로 제한 */
+  text-align: center;
+  overflow-y: auto; /* 내용이 많을 경우 스크롤 추가 */
+  gap: 1rem;
+}
+
+/* 모달 입력 필드 */
+.community-modal-input,
+.community-modal-select,
+.community-modal-textarea {
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+/* 모달 버튼 */
+.community-modal-buttons {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.community-confirm-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.community-cancel-button {
+  background-color: #f44336;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.community-confirm-button:hover {
+  background-color: #388e3c;
+}
+
+.community-cancel-button:hover {
+  background-color: #d32f2f;
+}

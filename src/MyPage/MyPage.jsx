@@ -77,7 +77,7 @@ const MyPage = () => {
         />
         <h1 className="mypage-title">마이 페이지</h1>
       </header>
-      <p className="community-subtitle">check your profile~</p>
+      <p className="community-subtitle">마이 페이지 체크하삼!</p>
       <div className="container">
         <div className="mypage-menubar font-yeonsung">
           <div
