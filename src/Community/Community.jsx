@@ -1,8 +1,12 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./Community.css";
 import Common from "../components/Common";
+import { PiPencilLineDuotone } from "react-icons/pi";
 
 const Community = () => {
+  const navigate = useNavigate(); // React Router's useNavigate
+
   const posts = [
     {
       title: "주식 ...",
@@ -38,6 +42,7 @@ const Community = () => {
           src="/images/캠슐랭로고.png"
           alt="캠슐랭 로고"
           className="community-logo"
+          onClick={() => navigate("/map")} // 로고 클릭 시 /map으로 이동
         />
         <h1 className="community-title">커뮤니티</h1>
       </header>
@@ -59,14 +64,17 @@ const Community = () => {
             </div>
           </div>
         ))}
+        <div className="community-pagination">
+          <span>1</span>
+          <span>2</span>
+          <span>3</span>
+          <span>4</span>
+          <span>5</span>
+        </div>
       </div>
-      <div className="community-pagination">
-        <span>1</span>
-        <span>2</span>
-        <span>3</span>
-        <span>4</span>
-        <span>5</span>
-      </div>
+      <button className="floating-button">
+        <PiPencilLineDuotone />
+      </button>
     </div>
   );
 };

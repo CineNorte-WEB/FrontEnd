@@ -26,6 +26,9 @@
     top: 50%;
     left: 2rem; /* 왼쪽 여백 */
     transform: translateY(-50%); /* 세로 중앙 정렬 */
+    cursor: pointer;
+    border-bottom: 3px solid #ffffff; /* 하단 테두리 */
+    padding-bottom: 0.2rem; /* 테두리와 내용 간 간격 */
   }
   
   .community-title {
@@ -99,19 +102,45 @@
   }
   
   .community-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 1rem;
-    text-align: center;
   }
   
   .community-pagination span {
     margin: 0 0.5rem;
     cursor: pointer;
-    color: white;
+    color: gray;
     font-weight: bold;
     font-size: 1rem;
+    transition: color 0.3s ease;
   }
   
   .community-pagination span:hover {
-    color: #f1f1f1;
+    color: red;
   }
   
+  
+  .floating-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background-color:whitesmoke;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .floating-button:hover {
+    background-color: #a01b28;
+  }
