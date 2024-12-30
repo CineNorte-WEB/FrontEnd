@@ -33,7 +33,6 @@ export default function MyPageList() {
 
   return (
     <div className="list-container font-yeonsung">
-      <h1 className="list-title font-yeonsung">찜한 리스트</h1>
       <div className="list-content">
         {items.map((item, index) => (
           <div className="list-item font-yeonsung" key={index}>

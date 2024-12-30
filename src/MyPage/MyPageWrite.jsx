@@ -27,7 +27,6 @@ export default function MyPageWrite() {
 
   return (
     <div className="write-container font-yeonsung">
-      <h1 className="write-title font-yeonsung">내가 쓴 글</h1>
       <div className="write-list">
         {posts.map((post, index) => (
           <div className="write-item font-yeonsung" key={index}>
