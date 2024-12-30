@@ -9,26 +9,26 @@ export default function MyPageList() {
       menu: "한식",
       summary:
         "웨이팅이 많은 집! 조금 아쉽지만 전체적으로 맛있어서 또 갈 것 같아요!",
-      image: "/images/noodle.png",
+      image: "/images/남미식.png",
     },
     {
       title: "진스시",
       menu: "일식",
       summary: "분위기도 좋고 가격도 적당해서 자주 올 것 같아요!",
-      image: "/images/sushi.png",
+      image: "/images/인도식.png",
     },
     {
       title: "현이네 고기 국수",
       menu: "한식",
       summary:
         "웨이팅이 많은 집! 조금 아쉽지만 전체적으로 맛있어서 또 갈 것 같아요!",
-      image: "/images/noodle.png",
+      image: "/images/일식.png",
     },
     {
       title: "진스시",
       menu: "일식",
       summary: "분위기도 좋고 가격도 적당해서 자주 올 것 같아요!",
-      image: "/images/sushi.png",
+      image: "/images/한식.png",
     },
     
   ]);
