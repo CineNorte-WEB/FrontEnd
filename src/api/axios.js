@@ -1,39 +1,27 @@
-import axios from 'axios';
+import axios from "axios";
 
-const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3000',
-    withCredentials: true
+// 환경 변수에서 API URL 읽기
+const apiUrl = import.meta.env.VITE_API_URL;
+
+// Axios 기본 설정
+const apiClient = axios.create({
+  baseURL: apiUrl, // 기본 API URL
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-api.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        console.log('API Request:', {
-            url: config.url,
-            method: config.method,
-            headers: config.headers,
-            baseURL: config.baseURL
-        });
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
+export async function fetchData(endpoint) {
+  try {
+    const response = await apiClient.get(endpoint);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; // 필요에 따라 에러를 호출한 쪽으로 전달
+  }
+}
 
-api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        console.error('API Error:', {
-            status: error.response?.status,
-            data: error.response?.data,
-            config: error.config
-        });
-        return Promise.reject(error);
-    }
-);
+// 디버깅용
+console.log("API Client Base URL:", apiUrl);
 
-export default api;
+export default apiClient;

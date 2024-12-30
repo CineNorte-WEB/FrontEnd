@@ -27,6 +27,7 @@
   top: 50%;
   left: 2rem; /* 왼쪽 여백 */
   transform: translateY(-50%); /* 세로 중앙 정렬 */
+  cursor: pointer;
 }
 
 .mypage-title {
