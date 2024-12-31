@@ -8,7 +8,7 @@ export default function MyPageProfile({ items, posts }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 탈퇴 모달 상태
   const [profile, setProfile] = useState({
     nickname: "홍익이",
-    email: "charismayoung1993@gmail.com",
+    email: "muyaho1234@gmail.com",
   });
   const [editedProfile, setEditedProfile] = useState({ ...profile }); // 수정된 내용
 
