@@ -6,17 +6,17 @@ import { IoArrowBack } from "react-icons/io5";
 const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
   if (!restaurant) return null;
 
-  // 마커 클릭 시 오버레이 표시
+  // 마커 호버 시 오버레이 표시 (이전의 마커 클릭 로직을 수정)
   if (source === "marker") {
     return (
-      <div className="fixed z-50 bg-white rounded-lg shadow-lg w-72 font-yeonsung">
-        <button
-          onClick={onClose}
-          className="absolute text-gray-500 right-3 top-3 hover:text-gray-700"
-        >
-          <IoClose className="w-5 h-5" />
-        </button>
-
+      <div
+        className="fixed z-50 bg-white rounded-lg shadow-lg w-72 font-yeonsung"
+        style={{
+          transform: "translateX(-50%) translateY(-120%)",
+          pointerEvents: "none", // 호버 시 오버레이가 마우스 이벤트를 방해하지 않도록
+        }}
+      >
+        {" "}
         <div className="p-4">
           <div className="flex items-center gap-3">
             <img
@@ -60,13 +60,6 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
                   </div>
                 ))}
               </div>
-            </div>
-
-            <div className="flex justify-between mt-2 text-sm">
-              <span className="text-blue-500">👍 {restaurant.rating}</span>
-              <span className="text-red-500">
-                👎 {restaurant.dislikeRating}
-              </span>
             </div>
           </div>
         </div>

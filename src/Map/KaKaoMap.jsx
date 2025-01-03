@@ -1010,10 +1010,9 @@ function KakaoMap() {
         map: newMap,
       });
 
-      window.kakao.maps.event.addListener(marker, "click", () => {
+      window.kakao.maps.event.addListener(marker, "mouseover", () => {
         setSelectedRestaurant(place);
-        setMarkerClick(false);
-        newMap.panTo(markerPosition);
+        setMarkerClick(true);
       });
     });
 
