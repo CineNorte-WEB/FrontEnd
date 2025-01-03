@@ -920,6 +920,7 @@ function KakaoMap() {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [markerClick, setMarkerClick] = useState(false);
   const [map, setMap] = useState(null);
+  const [universityOverlays, setUniversityOverlays] = useState([]);
 
   useEffect(() => {
     const KAKAO_MAP_SRC = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${
@@ -961,32 +962,40 @@ function KakaoMap() {
     const newMap = new window.kakao.maps.Map(container, options);
     setMap(newMap);
 
-    // 건국대학교 로고 이미지와 위치 설정
-    const konkukPosition = new window.kakao.maps.LatLng(37.543813, 127.077566);
-    // CustomOverlay용 컨텐츠 생성
-    const content = document.createElement("div");
-    content.style.position = "relative";
-    content.style.width = "50px";
-    content.style.height = "50px";
-    content.style.border = "3px solid #000000";
-    content.style.borderRadius = "50%";
-    content.style.backgroundColor = "white";
-    content.style.padding = "2px";
-    content.style.boxSizing = "border-box";
+    // 모든 대학교에 대한 오버레이 생성
+    Object.entries(universityLocations).forEach(([university, position]) => {
+      const universityPosition = new window.kakao.maps.LatLng(
+        position.lat,
+        position.lng
+      );
 
-    const img = document.createElement("img");
-    img.src = "/images/건대.png";
-    img.style.width = "100%";
-    img.style.height = "100%";
-    img.style.borderRadius = "50%";
-    content.appendChild(img);
+      // CustomOverlay용 컨텐츠 생성
+      const content = document.createElement("div");
+      content.style.position = "relative";
+      content.style.width = "50px";
+      content.style.height = "50px";
+      content.style.border = "3px solid #000000";
+      content.style.borderRadius = "50%";
+      content.style.backgroundColor = "white";
+      content.style.padding = "2px";
+      content.style.boxSizing = "border-box";
 
-    // CustomOverlay 생성 및 지도에 표시
-    const customOverlay = new window.kakao.maps.CustomOverlay({
-      position: konkukPosition,
-      content: content,
-      map: newMap,
-      zIndex: 3,
+      const img = document.createElement("img");
+      img.src = `/images/${university}.png`;
+      img.style.width = "100%";
+      img.style.height = "100%";
+      img.style.borderRadius = "50%";
+      content.appendChild(img);
+
+      // CustomOverlay 생성 및 지도에 표시
+      const customOverlay = new window.kakao.maps.CustomOverlay({
+        position: universityPosition,
+        content: content,
+        map: newMap,
+        zIndex: 3,
+      });
+
+      setUniversityOverlays((prev) => [...prev, customOverlay]);
     });
 
     // 기존 레스토랑 마커들 생성
