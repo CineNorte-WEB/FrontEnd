@@ -912,9 +912,9 @@ const universityLocations = {
   홍대: { lat: 37.551053, lng: 126.92561 },
   시립대: { lat: 37.5849836, lng: 127.057752 },
   이대: { lat: 37.562691, lng: 126.947684 },
-  연대: { lat: 37.565773, lng: 126.938477 },
+  연대: { lat: 37.564512, lng: 126.938977 },
   외대: { lat: 37.596961, lng: 127.05249 },
-  경희대: { lat: 37.596961, lng: 127.05249 },
+  경희대: { lat: 37.597312, lng: 127.05165 },
 };
 function KakaoMap() {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
