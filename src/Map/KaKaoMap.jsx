@@ -960,6 +960,7 @@ function KakaoMap() {
     };
 
     const newMap = new window.kakao.maps.Map(container, options);
+    window.map = newMap; // 전역으로 map 객체 저장
     setMap(newMap);
 
     // 모든 대학교에 대한 오버레이 생성
@@ -1009,7 +1010,24 @@ function KakaoMap() {
         position: markerPosition,
         map: newMap,
       });
+      // mouseout 이벤트 추가
+      window.kakao.maps.event.addListener(marker, "mouseout", () => {
+        setSelectedRestaurant(null);
+        setMarkerClick(false);
+      });
 
+      // mouseover 이벤트에 마커 위치 정보 추가
+      window.kakao.maps.event.addListener(marker, "mouseover", () => {
+        const pos = marker.getPosition();
+        setSelectedRestaurant({
+          ...place,
+          markerPosition: {
+            left: pos.getLng(),
+            top: pos.getLat(),
+          },
+        });
+        setMarkerClick(true);
+      });
       window.kakao.maps.event.addListener(marker, "mouseover", () => {
         setSelectedRestaurant(place);
         setMarkerClick(true);
