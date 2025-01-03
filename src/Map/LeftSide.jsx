@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import RestaurantOverlay from "./RestaurantOverlay";
 
-const LeftSide = ({ restaurantData, onSelectRestaurant }) => {
+const LeftSide = ({
+  restaurantData,
+  onSelectRestaurant,
+  onUniversityChange,
+}) => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [selectedUniversity, setSelectedUniversity] = useState("건대");
 
@@ -21,7 +25,9 @@ const LeftSide = ({ restaurantData, onSelectRestaurant }) => {
   };
 
   const handleUniversityChange = (e) => {
-    setSelectedUniversity(e.target.value);
+    const newUniversity = e.target.value;
+    setSelectedUniversity(newUniversity);
+    onUniversityChange && onUniversityChange(newUniversity);
   };
 
   return (

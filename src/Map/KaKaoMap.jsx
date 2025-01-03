@@ -906,10 +906,20 @@ const restaurantData = [
     image: "/images/한식.png",
   },
 ];
-
+// 대학교 위치 정보 추가
+const universityLocations = {
+  건대: { lat: 37.543813, lng: 127.077566 },
+  홍대: { lat: 37.558096, lng: 126.925381 },
+  시립대: { lat: 37.583431, lng: 127.058657 },
+  이대: { lat: 37.561891, lng: 126.946684 },
+  연대: { lat: 37.565773, lng: 126.938477 },
+  외대: { lat: 37.596961, lng: 127.05249 },
+  경희대: { lat: 37.596961, lng: 127.05249 },
+};
 function KakaoMap() {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [markerClick, setMarkerClick] = useState(false);
+  const [map, setMap] = useState(null);
 
   useEffect(() => {
     const KAKAO_MAP_SRC = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${
@@ -948,7 +958,8 @@ function KakaoMap() {
       disableDoubleClick: false,
     };
 
-    const map = new window.kakao.maps.Map(container, options);
+    const newMap = new window.kakao.maps.Map(container, options);
+    setMap(newMap);
 
     // 건국대학교 로고 이미지와 위치 설정
     const konkukPosition = new window.kakao.maps.LatLng(37.543813, 127.077566);
@@ -974,9 +985,10 @@ function KakaoMap() {
     const customOverlay = new window.kakao.maps.CustomOverlay({
       position: konkukPosition,
       content: content,
-      map: map,
+      map: newMap,
       zIndex: 3,
     });
+
     // 기존 레스토랑 마커들 생성
     restaurantData.forEach((place) => {
       const markerPosition = new window.kakao.maps.LatLng(
@@ -986,17 +998,17 @@ function KakaoMap() {
 
       const marker = new window.kakao.maps.Marker({
         position: markerPosition,
-        map: map,
+        map: newMap,
       });
 
       window.kakao.maps.event.addListener(marker, "click", () => {
         setSelectedRestaurant(place);
         setMarkerClick(false);
-        map.panTo(markerPosition);
+        newMap.panTo(markerPosition);
       });
     });
 
-    window.kakao.maps.event.addListener(map, "click", () => {
+    window.kakao.maps.event.addListener(newMap, "click", () => {
       setSelectedRestaurant(null);
       setMarkerClick(false);
     });
@@ -1007,6 +1019,17 @@ function KakaoMap() {
     setMarkerClick(false);
   };
 
+  // 대학교 변경 시 지도 이동 함수
+  const handleUniversityChange = (university) => {
+    if (map && universityLocations[university]) {
+      const position = new window.kakao.maps.LatLng(
+        universityLocations[university].lat,
+        universityLocations[university].lng
+      );
+      map.panTo(position);
+    }
+  };
+
   return (
     <div className="relative flex w-full h-screen bg-gray-100">
       <div className="w-1/4 h-full bg-white border-r-2 border-gray-300">
@@ -1014,6 +1037,7 @@ function KakaoMap() {
           <LeftSide
             restaurantData={restaurantData}
             onSelectRestaurant={handleListClick}
+            onUniversityChange={handleUniversityChange}
           />
         </div>
       </div>
