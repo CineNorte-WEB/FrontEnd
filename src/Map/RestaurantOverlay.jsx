@@ -6,7 +6,7 @@ import { IoArrowBack } from "react-icons/io5";
 const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
   if (!restaurant) return null;
 
-  // 마커 호버 시 오버레이 표시 (이전의 마커 클릭 로직을 수정)
+  // 마커 호버 시 오버레이 표시
   if (source === "marker") {
     // 마커 위치를 화면 좌표로 변환
     const map = window.map;
@@ -21,7 +21,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
         className="absolute z-50 bg-white rounded-lg shadow-lg w-72 font-yeonsung"
         style={{
           left: `${map.getNode().offsetLeft + point.x}px`,
-          top: `${map.getNode().offsetTop + point.y - 50}px`, // 마커 위 130px에 위치
+          top: `${map.getNode().offsetTop + point.y - 50}px`, // 마커 위 50px에 위치
           transform: "translate(-50%, -100%)",
           pointerEvents: "none",
         }}
@@ -78,17 +78,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
 
   // 리스트 클릭 시 오른쪽 상세정보 창 표시
   return (
-    <div
-      className="fixed z-50 bg-white rounded-lg shadow-lg w-72 font-yeonsung"
-      style={{
-        position: "absolute",
-        left: `${overlayPosition.left}px`,
-        top: `${overlayPosition.top}px`,
-        transform: "translate(-50%, -120%)",
-        pointerEvents: "none",
-      }}
-    >
-      {" "}
+    <div className="fixed z-50 w-1/3 h-screen bg-white border-2 border-gray-300 rounded-lg shadow-lg left-96 top-3 right-2">
       <div className="relative h-full p-8 overflow-y-auto font-yeonsung">
         <div className="flex items-center gap-4">
           <img
