@@ -1,3 +1,4 @@
+import axios from "axios";
 import { MdOutlinePermIdentity } from "react-icons/md";
 import { FaEye } from "react-icons/fa";
 import { IoIosLock } from "react-icons/io";
@@ -9,23 +10,35 @@ import { useNavigate } from "react-router-dom";
 
 function SignUp() {
   const navigate = useNavigate();
-
   const [password, setPassword] = useState(false);
-  // useForm 훅 초기화
+  const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지 상태
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  // 폼 제출 시 실행될 함수
-  const onSubmit = (data) => {
-    console.log(data);
-    navigate("/map");
-  };
+  // 비밀번호 표시 토글
   const showPassword = () => {
     setPassword((prev) => !prev);
   };
+
+  // 로그인 요청 함수
+
+const onSubmit = async (data) => {
+  try {
+    const response = await axios.post("/api/login", {
+      email: data.email,
+      password: data.password,
+    });
+    console.log("로그인 성공:", response.data);
+  } catch (error) {
+    console.error("로그인 실패:", error);
+  }
+};
+
+
   return (
     <div className="flex items-center justify-end min-h-screen bg-rose-800">
       <div className="mx-12">
@@ -66,23 +79,6 @@ function SignUp() {
             className="w-32 h-32"
           />
         </div>
-        <div className="flex mt-12 ml-24 space-x-8">
-          <img
-            src="/images/flower.png"
-            alt="아이콘"
-            className="w-[100px] h-[100px] mt-3"
-          />
-          <img
-            src="/images/flower.png"
-            alt="아이콘"
-            className="w-[100px] h-[100px] mt-3"
-          />
-          <img
-            src="/images/flower.png"
-            alt="아이콘"
-            className="w-[100px] h-[100px] mt-3"
-          />
-        </div>
         <h1 className="font-normal text-white ml-36 text-8xl font-petemoss">
           CamChelin
         </h1>
@@ -91,16 +87,14 @@ function SignUp() {
         <h1 className="mt-3 mb-5 font-normal text-center text-8xl font-petemoss">
           CamChelin
         </h1>
-        {/* 리액트 훅 폼을 이용하여 제출하는 폼 요소 시작 부분 */}
         <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          {/* 아이디(이메일 주소)필드 */}
           <p className="ml-3 font-bold font-yeonsung">아이디</p>
           <div className="relative">
             <MdOutlinePermIdentity className="absolute mx-3 mt-3 text-2xl" />
             <input
               id="email"
               type="email"
-              {...register("name", {
+              {...register("email", {
                 required: "올바른 이메일 주소를 입력하세요.",
                 pattern: {
                   value: /^[a-zA-Z0-9_%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -109,62 +103,53 @@ function SignUp() {
                 },
               })}
               placeholder="아이디(이메일 주소)"
-              className="block w-full px-10 py-3 mt-1 border border-black rounded-md shadow-md font-yeonsung mpt focus:border-indigo-500 focus:ring-indigo-500"
+              className="block w-full px-10 py-3 mt-1 border border-black rounded-md shadow-md font-yeonsung focus:border-indigo-500 focus:ring-indigo-500"
             />
-            {/* 에러 메시지 출력 */}
-            {errors.name && <p>{errors.email.message}</p>}
+            {errors.email && (
+              <p className="mt-2 text-red-500 font-yeonsung">
+                {errors.email.message}
+              </p>
+            )}
           </div>
-          <div>
-            <div className="relative mb-7">
-              <p className="mb-3 ml-2 font-bold font-yeonsung">비밀번호</p>
-              <IoIosLock className="absolute mt-3 ml-3 text-2xl" />
-              {/* 리액트 훅 폼을 이용한 비밀번호 유효성 검증 부분 */}
-              <input
-                id="password"
-                type={password ? "text" : "password"}
-                {...register("password", {
-                  required: "비밀번호를 입력해주세요!",
-                  minLength: {
-                    value: 8,
-                    message: "비밀번호는 최소 8자리 이상이어야 합니다.",
-                  },
-                  validate: {
-                    hasUppercase: (value) =>
-                      /[A-Z]/.test(value) ||
-                      "영어 대문자는 반드시 1개 이상의 문자로 포함되어야 합니다!",
-                    hasNumber: (value) =>
-                      /[0-9]/.test(value) ||
-                      "숫자는 반드시 1개 이상 포함되어야 합니다!",
-                    hasSpecialChar: (value) =>
-                      /[!@#$%^&*]/.test(value) ||
-                      "특수기호는 반드시 1개 이상의 문자로 포함되어야 합니다!",
-                  },
-                })}
-                placeholder="비밀번호"
-                className="block w-full px-10 py-3 mt-1 border border-black rounded-md shadow-md m font-yeonsung focus:border-indigo-500 focus:ring-indigo-500"
+          <p className="mb-3 ml-3 font-bold font-yeonsung">비밀번호</p>
+          <div className="relative mb-7">
+            <IoIosLock className="absolute mt-3 ml-3 text-2xl" />
+            <input
+              id="password"
+              type={password ? "text" : "password"}
+              {...register("password", {
+                required: "비밀번호를 입력해주세요!",
+                minLength: {
+                  value: 8,
+                  message: "비밀번호는 최소 8자리 이상이어야 합니다.",
+                },
+              })}
+              placeholder="비밀번호"
+              className="block w-full px-10 py-3 mt-1 border border-black rounded-md shadow-md font-yeonsung focus:border-indigo-500 focus:ring-indigo-500"
+            />
+            {password ? (
+              <IoMdEyeOff
+                onClick={showPassword}
+                className="absolute text-2xl cursor-pointer top-12 right-4"
               />
-              {errors.password && (
-                <p className="mt-2 font-bold text-red-500 font-yeonsung">
-                  {errors.password.message}
-                </p>
-              )}
-
-              {password ? (
-                <IoMdEyeOff
-                  onClick={showPassword}
-                  className="absolute text-2xl text-black transform cursor-pointer top-12 right-4"
-                />
-              ) : (
-                <FaEye
-                  onClick={showPassword}
-                  className="absolute text-2xl text-black transform cursor-pointer top-12 right-4"
-                />
-              )}
-            </div>
+            ) : (
+              <FaEye
+                onClick={showPassword}
+                className="absolute text-2xl cursor-pointer top-12 right-4"
+              />
+            )}
+            {errors.password && (
+              <p className="mt-2 text-red-500 font-yeonsung">
+                {errors.password.message}
+              </p>
+            )}
           </div>
+          {errorMessage && (
+            <p className="text-red-500 font-yeonsung">{errorMessage}</p>
+          )}
           <button
             type="submit"
-            className="w-full px-4 py-2 text-2xl font-bold text-white border border-white rounded-md shadow-lg font-yeonsung bg-rose-700 hover:bg-rose-400 focus:outline focus:ring focus:ring-offset-2 focus:ring-white"
+            className="w-full px-4 py-2 text-2xl font-bold text-white border border-white rounded-md shadow-lg font-yeonsung bg-rose-700 hover:bg-rose-400"
           >
             로그인
           </button>
