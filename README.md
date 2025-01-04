@@ -19,4 +19,8 @@ https://github.com/user-attachments/assets/55728e8c-6dbc-48b0-aa94-f740581db06a
 ![image](https://github.com/user-attachments/assets/4b8a0144-4b52-434d-99d9-efd304fcf15c)
 
 # 지도 화면 페이지
-![image](https://github.com/user-attachments/assets/42bdad99-b50a-4731-b1eb-a6aa3e56da35)
+![image](https://github.com/user-attachments/assets/750af5e8-b1e7-417d-b3c6-94894b81db61)
+
+# 지도 화면 페이지
+https://github.com/user-attachments/assets/0aecc9bc-db2e-4cb7-9664-122f3c3f3700
+
