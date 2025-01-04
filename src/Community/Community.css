@@ -5,7 +5,7 @@
     align-items: center; /* 수평 및 수직 중앙 정렬 */
     min-height: 100vh;
     --tw-bg-opacity: 1; /* 투명도 설정 */
-    background-color: rgb(159, 18, 57, var(--tw-bg-opacity));
+    background-color: #C02231;
     width: 100%;
     position: relative;
   }
@@ -15,7 +15,7 @@
     align-items: center;
     justify-content: space-between; /* 로고는 왼쪽, 타이틀은 중앙 */
     width: 100%;
-    padding: 1rem 2rem;
+    padding: 1rem 2rem 0rem 2rem;
     position: relative;
   }
   
@@ -54,7 +54,7 @@
     border-radius: 1rem; /* 모서리 둥글게 */
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* 그림자 */
     overflow: hidden; /* 콘텐츠 넘침 방지 */
-    padding: 2rem;
+    padding: 1rem;
   }
   
   .community-item {
@@ -142,7 +142,7 @@
   }
   
   .floating-button:hover {
-    background-color: #a01b28;
+    background-color: white;
   }
 
   /* 모달 오버레이 */
