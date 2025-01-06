@@ -1,6 +1,5 @@
 // RestaurantOverlay.jsx
 import React from "react";
-import { IoClose } from "react-icons/io5";
 import { IoArrowBack } from "react-icons/io5";
 
 const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {

@@ -7,16 +7,15 @@ const LeftSide = ({
   onUniversityChange,
 }) => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
-  const [selectedUniversity, setSelectedUniversity] = useState("건대");
+  const [selectedUniversity, setSelectedUniversity] = useState("연대");
 
   const universities = {
-    서강대: "/images/서강대.png",
-    홍대: "/images/홍대.png",
-    시립대: "/images/시립대.png",
-    이대: "/images/이대.png",
     연대: "/images/연대.png",
-    외대: "/images/외대.png",
+    서강대: "/images/서강대.png",
+    이대: "/images/이대.png",
+    시립대: "/images/시립대.png",
     경희대: "/images/경희대.png",
+    외대: "/images/외대.png",
   };
 
   const handleRestaurantClick = (restaurant) => {
