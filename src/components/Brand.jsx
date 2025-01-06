@@ -1,8 +1,8 @@
 const Brand = () => {
   return (
     <>
-      <nav className="flex flex-col pt-8 pl-12 bg-black">
-        <div className="flex space-x-4">
+      <nav>
+        <div className="flex space-x-6">
           <img
             src="/images/flower.png"
             alt="아이콘"
@@ -19,7 +19,7 @@ const Brand = () => {
             className="w-[75px] h-[75px]"
           />
         </div>
-        <div className="">
+        <div>
           <h1 className="font-normal text-white text-8xl font-petemoss">
             CamChelin
           </h1>
@@ -28,4 +28,5 @@ const Brand = () => {
     </>
   );
 };
+
 export default Brand;

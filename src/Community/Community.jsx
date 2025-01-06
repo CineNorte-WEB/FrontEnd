@@ -64,7 +64,12 @@ const Community = () => {
     };
 
     setPosts([newPost, ...posts]);
-    setFormData({ category: "자유게시판", title: "", content: "", image: null });
+    setFormData({
+      category: "자유게시판",
+      title: "",
+      content: "",
+      image: null,
+    });
     closeModal();
   };
 
@@ -76,7 +81,6 @@ const Community = () => {
           src="/images/캠슐랭로고.png"
           alt="캠슐랭 로고"
           className="community-logo"
-          onClick={() => navigate("/map")}
         />
         <h1 className="community-title">커뮤니티</h1>
       </header>
@@ -106,7 +110,8 @@ const Community = () => {
       {isModalOpen && (
         <div className="community-modal-overlay">
           <div className="community-modal">
-            <h2>게시물 작성</h2><br/>
+            <h2>게시물 작성</h2>
+            <br />
             <label>카테고리</label>
             <select
               name="category"
@@ -141,7 +146,10 @@ const Community = () => {
               className="community-modal-input"
             />
             <div className="community-modal-buttons">
-              <button onClick={handleSubmit} className="community-confirm-button">
+              <button
+                onClick={handleSubmit}
+                className="community-confirm-button"
+              >
                 게시물 등록하기
               </button>
               <button onClick={closeModal} className="community-cancel-button">
