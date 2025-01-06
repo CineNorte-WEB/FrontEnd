@@ -5,7 +5,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 // Axios 기본 설정
 const apiClient = axios.create({
-  baseURL: apiUrl, // 기본 API URL
+  baseURL: "http://3.38.169.113", // 기본 API URL
   headers: {
     "Content-Type": "application/json",
   },

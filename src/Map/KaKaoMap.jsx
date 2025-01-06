@@ -1016,20 +1016,15 @@ function KakaoMap() {
         setMarkerClick(false);
       });
 
-      // mouseover 이벤트에 마커 위치 정보 추가
+      // mouseover 이벤트 (하나로 통합)
       window.kakao.maps.event.addListener(marker, "mouseover", () => {
-        const pos = marker.getPosition();
         setSelectedRestaurant({
           ...place,
           markerPosition: {
-            left: pos.getLng(),
-            top: pos.getLat(),
+            left: marker.getPosition().getLng(),
+            top: marker.getPosition().getLat(),
           },
         });
-        setMarkerClick(true);
-      });
-      window.kakao.maps.event.addListener(marker, "mouseover", () => {
-        setSelectedRestaurant(place);
         setMarkerClick(true);
       });
     });

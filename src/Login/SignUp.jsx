@@ -1,31 +1,50 @@
-import { MdOutlinePermIdentity } from "react-icons/md";
+import { MdAttachEmail } from "react-icons/md";
+import { PiFlowerLotus } from "react-icons/pi";
+import { useForm } from "react-hook-form";
+import { MdLock } from "react-icons/md";
+import { MdLockPerson } from "react-icons/md";
+import { TbUser } from "react-icons/tb";
+import { MdOutlineRestaurant } from "react-icons/md";
+import { FaArrowLeft } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
+import { useState } from "react";
+import { authApi } from "../api/authApi";
+import { MdOutlinePermIdentity } from "react-icons/md";
 import { IoIosLock } from "react-icons/io";
 import { FaUserGraduate } from "react-icons/fa";
 import { IoMdEyeOff } from "react-icons/io";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 
 function SignUp() {
   const navigate = useNavigate();
 
   const [password, setPassword] = useState(false);
-  // useForm 훅 초기화
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
 
-  // 폼 제출 시 실행될 함수
-  const onSubmit = (data) => {
-    console.log(data);
-    navigate("/map");
+  const onSubmit = async (data) => {
+    try {
+      const response = await authApi.login({
+        email: data.name,
+        password: data.password,
+      });
+      console.log("로그인 성공:", response);
+      navigate("/map");
+    } catch (error) {
+      console.error("로그인 실패:", error);
+      alert("로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.");
+    }
   };
+
   const showPassword = () => {
     setPassword((prev) => !prev);
   };
+
   return (
     <div className="flex items-center justify-end min-h-screen bg-rose-800">
       <div className="mx-12">
@@ -35,21 +54,20 @@ function SignUp() {
         <p className="text-5xl text-white font-yeonsung">
           숨겨진 맛집을 캠슐랭에서 발견하세요!
         </p>
-        <div className="flex mt-12 space-x-4">
+        <div className="flex pl-16 mt-10 space-x-6">
           <img src="/images/연대.png" alt="연세대학교" className="w-32 h-32" />
           <img
             src="/images/서강대.png"
             alt="서강대학교"
             className="w-32 h-32"
           />
-          <img src="/images/홍대.png" alt="홍익대학교" className="w-32 h-32" />
           <img
             src="/images/이대.png"
             alt="이화여자대학교"
             className="w-32 h-32"
           />
         </div>
-        <div className="flex ml-14 space-x-7">
+        <div className="flex mt-5 ml-16 space-x-7">
           <img
             src="/images/시립대.png"
             alt="서울시립대학교"
@@ -91,12 +109,10 @@ function SignUp() {
         <h1 className="mt-3 mb-5 font-normal text-center text-8xl font-petemoss">
           CamChelin
         </h1>
-        {/* 리액트 훅 폼을 이용하여 제출하는 폼 요소 시작 부분 */}
         <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          {/* 아이디(이메일 주소)필드 */}
           <p className="ml-3 font-bold font-yeonsung">아이디</p>
           <div className="relative">
-            <MdOutlinePermIdentity className="absolute mx-3 mt-3 text-2xl" />
+            <MdOutlinePermIdentity className="absolute mx-3 mt-3 text-2xl font-yeonsung" />
             <input
               id="email"
               type="email"
@@ -111,14 +127,14 @@ function SignUp() {
               placeholder="아이디(이메일 주소)"
               className="block w-full px-10 py-3 mt-1 border border-black rounded-md shadow-md font-yeonsung mpt focus:border-indigo-500 focus:ring-indigo-500"
             />
-            {/* 에러 메시지 출력 */}
-            {errors.name && <p>{errors.email.message}</p>}
+            {errors.name && (
+              <p className="text-red-500">{errors.name.message}</p>
+            )}
           </div>
           <div>
             <div className="relative mb-7">
               <p className="mb-3 ml-2 font-bold font-yeonsung">비밀번호</p>
               <IoIosLock className="absolute mt-3 ml-3 text-2xl" />
-              {/* 리액트 훅 폼을 이용한 비밀번호 유효성 검증 부분 */}
               <input
                 id="password"
                 type={password ? "text" : "password"}
