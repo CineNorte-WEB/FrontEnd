@@ -7,9 +7,10 @@ const LeftSide = ({
   onUniversityChange,
 }) => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
-  const [selectedUniversity, setSelectedUniversity] = useState("연대");
+  const [selectedUniversity, setSelectedUniversity] = useState("건국대");
 
   const universities = {
+    건국대: "/images/건대.png",
     연대: "/images/연대.png",
     서강대: "/images/서강대.png",
     이대: "/images/이대.png",
@@ -45,6 +46,9 @@ const LeftSide = ({
           value={selectedUniversity}
           onChange={handleUniversityChange}
         >
+          <option value="건국대" className="fontn-yeonsung">
+            건국대학교
+          </option>
           <option value="서강대" className="font-yeonsung">
             서강대학교
           </option>

@@ -36,7 +36,7 @@ const Common = () => {
     <>
       <nav
         className="fixed z-50 flex flex-col items-center justify-center text-center bg-white border rounded-lg shadow-lg right-2 border-slate-500 w-30"
-        style={{ top: "32%", transform: "translateY(-100%)" }}
+        style={{ top: "35%", transform: "translateY(-100%)" }}
       >
         <label
           onClick={() => onHandleClick(0)}
@@ -49,7 +49,7 @@ const Common = () => {
           <img
             src="/images/지도.png"
             alt="지도"
-            className="w-[30px] h-[30px]"
+            className="w-[40px] h-[40px]"
           />
           <p className="font-yeonsung">지도</p>
         </label>
@@ -65,7 +65,7 @@ const Common = () => {
           <img
             src="/images/커뮤니티.png"
             alt="커뮤니티"
-            className="w-[30px] h-[30px] ml-1"
+            className="w-[40px] h-[40px] ml-1"
           />
           <p className="font-yeonsung">커뮤니티</p>
         </label>
@@ -81,7 +81,7 @@ const Common = () => {
           <img
             src="/images/사람.png"
             alt="사람"
-            className="w-[30px] h-[30px] ml-3"
+            className="w-[40px] h-[40px] ml-2"
           />
           <p className="font-yeonsung">마이페이지</p>
         </label>
