@@ -1,19 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @font-face {
-  font-family: "YeonSung";
-  src: url("/fonts/YeonSung-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
+ font-family: "YeonSung";
+ src: url("/fonts/YeonSung-Regular.ttf") format("truetype");
+ font-weight: normal;
+ font-style: normal;
 }
+
 @font-face {
-  font-family: "Petemoss";
-  src: url("/fonts/Petemoss-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
+ font-family: "Petemoss";
+ src: url("/fonts/Petemoss-Regular.ttf") format("truetype"); 
+ font-weight: normal;
+ font-style: normal;
+}
+
+@font-face {
+ font-family: "Jua";
+ src: url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
+ font-weight: normal;
+ font-style: normal;
 }
 
 .root{
-  background-color: #C02231;
+ background-color: #C02231;
 }
