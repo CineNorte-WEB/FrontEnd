@@ -5,7 +5,7 @@ import MyPageProfile from "./MyPageProfile";
 import MyPageList from "./MyPageList";
 import MyPageWrite from "./MyPageWrite";
 import Common from "../components/Common";
-
+import Brand from "../components/Brand";
 const MyPage = () => {
   const [currentComponent, setCurrentComponent] = useState("profile");
   const [items, setItems] = useState([
@@ -70,11 +70,7 @@ const MyPage = () => {
     <div className="mypage font-yeonsung">
       <Common />
       <header className="mypage-header">
-        <img
-          src="/images/캠슐랭로고.png"
-          alt="캠슐랭 로고"
-          className="mypage-logo"
-        />
+        <Brand />
         <h1 className="mypage-title">마이 페이지</h1>
       </header>
       <p className="community-subtitle">마이 페이지 체크하삼!</p>
