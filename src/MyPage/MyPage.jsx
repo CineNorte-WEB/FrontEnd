@@ -6,6 +6,7 @@ import MyPageList from "./MyPageList";
 import MyPageWrite from "./MyPageWrite";
 import Common from "../components/Common";
 import Brand from "../components/Brand";
+
 const MyPage = () => {
   const [currentComponent, setCurrentComponent] = useState("profile");
   const [items, setItems] = useState([
@@ -47,6 +48,7 @@ const MyPage = () => {
       author: "인생은 한방",
     },
   ]);
+
   const navigate = useNavigate();
 
   const handleMenuClick = (menu) => {
@@ -67,7 +69,7 @@ const MyPage = () => {
   };
 
   return (
-    <div className="mypage font-yeonsung">
+    <div className="mypage font-['Song Myung']">
       <Common />
       <header className="mypage-header">
         <Brand />
@@ -75,9 +77,9 @@ const MyPage = () => {
       </header>
       <p className="community-subtitle">마이 페이지 체크하삼!</p>
       <div className="container">
-        <div className="mypage-menubar font-yeonsung">
+        <div className="mypage-menubar font-['Song Myung']">
           <div
-            className={`menu font-yeonsung ${
+            className={`menu font-['Song Myung'] ${
               currentComponent === "profile" ? "active" : ""
             }`}
             onClick={() => handleMenuClick("profile")}
@@ -85,7 +87,7 @@ const MyPage = () => {
             회원정보
           </div>
           <div
-            className={`menu font-yeonsung ${
+            className={`menu font-['Song Myung'] ${
               currentComponent === "write" ? "active" : ""
             }`}
             onClick={() => handleMenuClick("write")}
@@ -93,7 +95,7 @@ const MyPage = () => {
             내가 쓴 글
           </div>
           <div
-            className={`menu font-yeonsung ${
+            className={`menu font-['Song Myung'] ${
               currentComponent === "mylist" ? "active" : ""
             }`}
             onClick={() => handleMenuClick("mylist")}
@@ -101,7 +103,9 @@ const MyPage = () => {
             찜한 리스트
           </div>
         </div>
-        <div className="menu-content font-yeonsung">{renderComponent()}</div>
+        <div className="menu-content font-['Song Myung']">
+          {renderComponent()}
+        </div>
       </div>
     </div>
   );

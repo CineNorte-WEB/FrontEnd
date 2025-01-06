@@ -8,7 +8,7 @@ export default function MyPageList({ items, setItems }) {
   };
 
   return (
-    <div className="list-container font-yeonsung">
+    <div className="list-container font-['Song Myung']">
       {items.length === 0 ? (
         <div className="empty-message">
           찜한 리스트가 존재하지 않습니다.
@@ -18,21 +18,25 @@ export default function MyPageList({ items, setItems }) {
       ) : (
         <div className="list-content">
           {items.map((item, index) => (
-            <div className="list-item font-yeonsung" key={index}>
+            <div className="list-item font-['Song Myung']" key={index}>
               <img
                 src={item.image}
                 alt={item.title}
                 className="list-item-image"
               />
               <div className="list-item-info">
-                <h2 className="list-item-title font-yeonsung">{item.title}</h2>
-                <p className="list-item-menu font-yeonsung">메뉴: {item.menu}</p>
-                <p className="list-item-summary font-yeonsung">
+                <h2 className="list-item-title font-['Song Myung']">
+                  {item.title}
+                </h2>
+                <p className="list-item-menu font-['Song Myung']">
+                  메뉴: {item.menu}
+                </p>
+                <p className="list-item-summary font-['Song Myung']">
                   {item.summary}
                 </p>
               </div>
               <div
-                className="list-item-heart font-yeonsung"
+                className="list-item-heart font-['Song Myung']"
                 onClick={() => handleDelete(index)}
               >
                 ❤️

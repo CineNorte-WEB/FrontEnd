@@ -74,7 +74,7 @@ const Community = () => {
   };
 
   return (
-    <div className="community-container font-yeonsung">
+    <div className="community-container font-['Song Myung']">
       <Common />
       <header className="community-header">
         <Brand />
@@ -105,7 +105,7 @@ const Community = () => {
 
       {isModalOpen && (
         <div className="community-modal-overlay">
-          <div className="community-modal">
+          <div className="community-modal font-['Song Myung']">
             <h2>게시물 작성</h2>
             <br />
             <label>카테고리</label>
@@ -113,7 +113,7 @@ const Community = () => {
               name="category"
               value={formData.category}
               onChange={handleInputChange}
-              className="community-modal-select"
+              className="community-modal-select font-['Song Myung']"
             >
               <option value="자유게시판">자유게시판</option>
               <option value="리뷰게시판">리뷰게시판</option>
@@ -125,7 +125,7 @@ const Community = () => {
               value={formData.title}
               onChange={handleInputChange}
               placeholder="제목을 입력하세요"
-              className="community-modal-input"
+              className="community-modal-input font-['Song Myung']"
             />
             <label>글 내용</label>
             <textarea
@@ -133,22 +133,25 @@ const Community = () => {
               value={formData.content}
               onChange={handleInputChange}
               placeholder="내용을 입력하세요"
-              className="community-modal-textarea"
+              className="community-modal-textarea font-['Song Myung']"
             />
             <label>사진 등록</label>
             <input
               type="file"
               onChange={handleImageUpload}
-              className="community-modal-input"
+              className="community-modal-input font-['Song Myung']"
             />
             <div className="community-modal-buttons">
               <button
                 onClick={handleSubmit}
-                className="community-confirm-button"
+                className="community-confirm-button font-['Song Myung']"
               >
                 게시물 등록하기
               </button>
-              <button onClick={closeModal} className="community-cancel-button">
+              <button
+                onClick={closeModal}
+                className="community-cancel-button font-['Song Myung']"
+              >
                 취소
               </button>
             </div>
