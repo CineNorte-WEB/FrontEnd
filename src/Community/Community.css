@@ -35,9 +35,11 @@
   font-size: 5rem;
   font-weight: bold;
   color: white;
-  margin: 0 auto;
-  margin-left: 19rem;
-  text-align: center;
+  text-align: center; /* 텍스트를 중앙 정렬 */
+  position: absolute; /* 위치를 조정하기 위해 absolute 사용 */
+  left: 50%; /* 부모 컨테이너 기준으로 왼쪽에서 50% 이동 */
+  transform: translateX(-50%); /* 수평으로 가운데 정렬 */
+  margin: 0; /* 여백 제거 */
 }
 
 .community-subtitle {
