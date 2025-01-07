@@ -1,12 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @font-face {
   font-family: "YeonSung";
   src: url("/fonts/YeonSung-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: "Petemoss";
   src: url("/fonts/Petemoss-Regular.ttf") format("truetype");
@@ -14,6 +16,13 @@
   font-style: normal;
 }
 
-.root{
-  background-color: #C02231;
+@font-face {
+  font-family: "Song Myung";
+  src: url("https://fonts.googleapis.com/css2?family=Song+Myung&display=swap");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.root {
+  background-color: #c02231;
 }

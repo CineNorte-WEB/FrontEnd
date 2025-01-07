@@ -1,151 +1,151 @@
 .community-container {
-    display: flex;
-    flex-direction: column; /* 수직 정렬 */
-    justify-content: center;
-    align-items: center; /* 수평 및 수직 중앙 정렬 */
-    min-height: 100vh;
-    --tw-bg-opacity: 1; /* 투명도 설정 */
-    background-color: #C02231;
-    width: 100%;
-    position: relative;
-  }
+  display: flex;
+  flex-direction: column; /* 수직 정렬 */
+  justify-content: center;
+  align-items: center; /* 수평 및 수직 중앙 정렬 */
+  min-height: 100vh;
+  --tw-bg-opacity: 1; /* 투명도 설정 */
+  background-color: #c02231;
+  width: 100%;
+  position: relative;
+}
 
-  .community-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* 로고는 왼쪽, 타이틀은 중앙 */
-    width: 100%;
-    padding: 1rem 2rem 0rem 2rem;
-    position: relative;
-  }
-  
-  .community-logo {
-    width: 200px; /* 로고 크기 */
-    aspect-ratio: 2; /* 가로 세로 비율 */
-    position: absolute;
-    top: 50%;
-    left: 2rem; /* 왼쪽 여백 */
-    transform: translateY(-50%); /* 세로 중앙 정렬 */
-    cursor: pointer;
-    border-bottom: 3px solid #ffffff; /* 하단 테두리 */
-    padding-bottom: 0.2rem; /* 테두리와 내용 간 간격 */
-  }
-  
-  .community-title {
-    font-size: 5rem;
-    font-weight: bold;
-    color: white;
-    margin: 0 auto;
-    text-align: center;
-  }
-  
-  .community-subtitle {
-    font-size: 1.5rem;
-    text-align: center;
-    margin-bottom: 0.5rem;
-    color: white;
-  }
-  
-  .community-list {
-    width: 70%; /* 컨테이너 너비 */
-    min-height: 60vh;
-    margin: 1rem auto; /* 중앙 정렬 */
-    background-color: white; /* 배경 흰색 */
-    border-radius: 1rem; /* 모서리 둥글게 */
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* 그림자 */
-    overflow: hidden; /* 콘텐츠 넘침 방지 */
-    padding: 1rem;
-  }
-  
-  .community-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background-color: white;
-    color: #333;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-    margin: 1rem;
-  }
-  
-  .community-item:hover {
-    background-color: #f1f1f1;
-  }
-  
-  .community-info {
-    flex: 1;
-  }
-  
-  .community-post-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-  
-  .community-post-category,
-  .community-post-author {
-    font-size: 0.9rem;
-    color: #777;
-  }
-  
-  .community-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .community-post-icon {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .community-pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 1rem;
-  }
-  
-  .community-pagination span {
-    margin: 0 0.5rem;
-    cursor: pointer;
-    color: gray;
-    font-weight: bold;
-    font-size: 1rem;
-    transition: color 0.3s ease;
-  }
-  
-  .community-pagination span:hover {
-    color: red;
-  }
-  
-  
-  .floating-button {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    background-color:whitesmoke;
-    color: black;
-    border: none;
-    border-radius: 5px;
-    width: 60px;
-    height: 60px;
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .floating-button:hover {
-    background-color: white;
-  }
+.community-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 로고는 왼쪽, 타이틀은 중앙 */
+  width: 100%;
+  padding: 1rem 2rem 0rem 2rem;
+  position: relative;
+}
 
-  /* 모달 오버레이 */
+.community-logo {
+  width: 200px; /* 로고 크기 */
+  aspect-ratio: 2; /* 가로 세로 비율 */
+  position: absolute;
+  top: 50%;
+  left: 2rem; /* 왼쪽 여백 */
+  transform: translateY(-50%); /* 세로 중앙 정렬 */
+  cursor: pointer;
+  border-bottom: 3px solid #ffffff; /* 하단 테두리 */
+  padding-bottom: 0.2rem; /* 테두리와 내용 간 간격 */
+}
+
+.community-title {
+  font-size: 5rem;
+  font-weight: bold;
+  color: white;
+  margin: 0 auto;
+  margin-left: 19rem;
+  text-align: center;
+}
+
+.community-subtitle {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.community-list {
+  width: 70%; /* 컨테이너 너비 */
+  min-height: 60vh;
+  margin: 1rem auto; /* 중앙 정렬 */
+  background-color: white; /* 배경 흰색 */
+  border-radius: 1rem; /* 모서리 둥글게 */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* 그림자 */
+  overflow: hidden; /* 콘텐츠 넘침 방지 */
+  padding: 1rem;
+}
+
+.community-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: white;
+  color: #333;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  margin: 1rem;
+}
+
+.community-item:hover {
+  background-color: #f1f1f1;
+}
+
+.community-info {
+  flex: 1;
+}
+
+.community-post-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.community-post-category,
+.community-post-author {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.community-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.community-post-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.community-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+
+.community-pagination span {
+  margin: 0 0.5rem;
+  cursor: pointer;
+  color: gray;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.community-pagination span:hover {
+  color: red;
+}
+
+.floating-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: whitesmoke;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.floating-button:hover {
+  background-color: white;
+}
+
+/* 모달 오버레이 */
 .community-modal-overlay {
   position: fixed;
   top: 0;

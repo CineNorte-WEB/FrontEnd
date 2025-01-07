@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Community.css";
 import Common from "../components/Common";
 import { PiPencilLineDuotone } from "react-icons/pi";
-
+import Brand from "../components/Brand";
 const Community = () => {
   const navigate = useNavigate();
 
@@ -64,20 +64,20 @@ const Community = () => {
     };
 
     setPosts([newPost, ...posts]);
-    setFormData({ category: "자유게시판", title: "", content: "", image: null });
+    setFormData({
+      category: "자유게시판",
+      title: "",
+      content: "",
+      image: null,
+    });
     closeModal();
   };
 
   return (
-    <div className="community-container font-yeonsung">
+    <div className="community-container font-['Song Myung']">
       <Common />
       <header className="community-header">
-        <img
-          src="/images/캠슐랭로고.png"
-          alt="캠슐랭 로고"
-          className="community-logo"
-          onClick={() => navigate("/map")}
-        />
+        <Brand />
         <h1 className="community-title">커뮤니티</h1>
       </header>
       <p className="community-subtitle">맛집부터 일상까지, 자유롭게 소통해요!</p>
@@ -105,14 +105,15 @@ const Community = () => {
 
       {isModalOpen && (
         <div className="community-modal-overlay">
-          <div className="community-modal">
-            <h2>게시물 작성</h2><br/>
+          <div className="community-modal font-['Song Myung']">
+            <h2>게시물 작성</h2>
+            <br />
             <label>카테고리</label>
             <select
               name="category"
               value={formData.category}
               onChange={handleInputChange}
-              className="community-modal-select"
+              className="community-modal-select font-['Song Myung']"
             >
               <option value="자유게시판">자유게시판</option>
               <option value="리뷰게시판">리뷰게시판</option>
@@ -124,7 +125,7 @@ const Community = () => {
               value={formData.title}
               onChange={handleInputChange}
               placeholder="제목을 입력하세요"
-              className="community-modal-input"
+              className="community-modal-input font-['Song Myung']"
             />
             <label>글 내용</label>
             <textarea
@@ -132,19 +133,25 @@ const Community = () => {
               value={formData.content}
               onChange={handleInputChange}
               placeholder="내용을 입력하세요"
-              className="community-modal-textarea"
+              className="community-modal-textarea font-['Song Myung']"
             />
             <label>사진 등록</label>
             <input
               type="file"
               onChange={handleImageUpload}
-              className="community-modal-input"
+              className="community-modal-input font-['Song Myung']"
             />
             <div className="community-modal-buttons">
-              <button onClick={handleSubmit} className="community-confirm-button">
+              <button
+                onClick={handleSubmit}
+                className="community-confirm-button font-['Song Myung']"
+              >
                 게시물 등록하기
               </button>
-              <button onClick={closeModal} className="community-cancel-button">
+              <button
+                onClick={closeModal}
+                className="community-cancel-button font-['Song Myung']"
+              >
                 취소
               </button>
             </div>

@@ -908,8 +908,8 @@ const restaurantData = [
 ];
 // 대학교 위치 정보 추가
 const universityLocations = {
+  서강대: { lat: 37.551292, lng: 126.940108 },
   건대: { lat: 37.543717, lng: 127.077443 },
-  홍대: { lat: 37.551053, lng: 126.92561 },
   시립대: { lat: 37.5849836, lng: 127.057752 },
   이대: { lat: 37.562691, lng: 126.947684 },
   연대: { lat: 37.564512, lng: 126.938977 },
@@ -1016,20 +1016,15 @@ function KakaoMap() {
         setMarkerClick(false);
       });
 
-      // mouseover 이벤트에 마커 위치 정보 추가
+      // mouseover 이벤트 (하나로 통합)
       window.kakao.maps.event.addListener(marker, "mouseover", () => {
-        const pos = marker.getPosition();
         setSelectedRestaurant({
           ...place,
           markerPosition: {
-            left: pos.getLng(),
-            top: pos.getLat(),
+            left: marker.getPosition().getLng(),
+            top: marker.getPosition().getLat(),
           },
         });
-        setMarkerClick(true);
-      });
-      window.kakao.maps.event.addListener(marker, "mouseover", () => {
-        setSelectedRestaurant(place);
         setMarkerClick(true);
       });
     });

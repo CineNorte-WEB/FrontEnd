@@ -1,6 +1,5 @@
 // RestaurantOverlay.jsx
 import React from "react";
-import { IoClose } from "react-icons/io5";
 import { IoArrowBack } from "react-icons/io5";
 
 const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
@@ -21,13 +20,13 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
         className="absolute z-50 bg-white rounded-lg shadow-lg w-72 font-yeonsung"
         style={{
           left: `${map.getNode().offsetLeft + point.x}px`,
-          top: `${map.getNode().offsetTop + point.y - 50}px`, // 마커 위 50px에 위치
+          top: `${map.getNode().offsetTop + point.y - 40}px`,
           transform: "translate(-50%, -100%)",
           pointerEvents: "none",
         }}
       >
         <div className="p-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 mb-3">
             <img
               src={`/images/${restaurant.category}.png`}
               alt={restaurant.category}
@@ -78,8 +77,8 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
 
   // 리스트 클릭 시 오른쪽 상세정보 창 표시
   return (
-    <div className="fixed z-50 w-1/3 h-screen bg-white border-2 border-gray-300 rounded-lg shadow-lg left-96 top-3 right-2">
-      <div className="relative h-full p-8 overflow-y-auto font-yeonsung">
+    <div className="fixed z-50 w-1/3 h-[calc(100vh-24px)] bg-white border-2 border-gray-300 rounded-lg shadow-lg left-96 top-3 right-2 overflow-hidden">
+      <div className="relative h-full p-8 overflow-y-scroll font-yeonsung scrollbar-none">
         <div className="flex items-center gap-4">
           <img
             src={`/images/${restaurant.category}.png`}

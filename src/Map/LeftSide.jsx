@@ -7,16 +7,16 @@ const LeftSide = ({
   onUniversityChange,
 }) => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
-  const [selectedUniversity, setSelectedUniversity] = useState("건대");
+  const [selectedUniversity, setSelectedUniversity] = useState("건국대");
 
   const universities = {
-    건대: "/images/건대.png",
-    홍대: "/images/홍대.png",
-    시립대: "/images/시립대.png",
-    이대: "/images/이대.png",
+    건국대: "/images/건대.png",
     연대: "/images/연대.png",
-    외대: "/images/외대.png",
+    서강대: "/images/서강대.png",
+    이대: "/images/이대.png",
+    시립대: "/images/시립대.png",
     경희대: "/images/경희대.png",
+    외대: "/images/외대.png",
   };
 
   const handleRestaurantClick = (restaurant) => {
@@ -46,11 +46,11 @@ const LeftSide = ({
           value={selectedUniversity}
           onChange={handleUniversityChange}
         >
-          <option value="건대" className="font-yeonsung">
+          <option value="건국대" className="fontn-yeonsung">
             건국대학교
           </option>
-          <option value="홍대" className="font-yeonsung">
-            홍익대학교
+          <option value="서강대" className="font-yeonsung">
+            서강대학교
           </option>
           <option value="시립대" className="font-yeonsung">
             서울시립대학교

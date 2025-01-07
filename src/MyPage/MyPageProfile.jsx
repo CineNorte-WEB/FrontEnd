@@ -4,88 +4,96 @@ import { GoPencil } from "react-icons/go";
 import { IoExitOutline } from "react-icons/io5";
 
 export default function MyPageProfile({ items, posts }) {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // 수정 모달 상태
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 탈퇴 모달 상태
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [profile, setProfile] = useState({
     nickname: "홍익이",
     email: "muyaho1234@gmail.com",
   });
-  const [editedProfile, setEditedProfile] = useState({ ...profile }); // 수정된 내용
+  const [editedProfile, setEditedProfile] = useState({ ...profile });
 
-  // 수정 모달 열기
   const handleEditClick = () => {
-    setEditedProfile(profile); // 현재 프로필 내용 복사
+    setEditedProfile(profile);
     setIsEditModalOpen(true);
   };
 
-  // 수정 저장
   const saveEdit = () => {
-    setProfile(editedProfile); // 수정된 내용을 저장
+    setProfile(editedProfile);
     setIsEditModalOpen(false);
   };
 
-  // 수정 취소
   const cancelEdit = () => {
     setIsEditModalOpen(false);
   };
 
-  // 탈퇴 모달 열기
   const handleDeleteClick = () => {
     setIsDeleteModalOpen(true);
   };
 
-  // 탈퇴 확인
   const confirmDelete = () => {
-    console.log("탈퇴가 완료되었습니다."); // 실제 탈퇴 로직 추가
+    console.log("탈퇴가 완료되었습니다.");
     setIsDeleteModalOpen(false);
   };
 
-  // 탈퇴 취소
   const cancelDelete = () => {
     setIsDeleteModalOpen(false);
   };
 
-  // 수정된 내용 관리
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditedProfile((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
-    <div className="profile-container font-yeonsung">
-      <div className="profile-content font-yeonsung">
-        <div className="profile-row font-yeonsung">
-          <span className="profile-label font-yeonsung">닉네임:</span>
-          <span className="profile-value font-yeonsung">{profile.nickname}</span>
+    <div className="profile-container font-['Song Myung']">
+      <div className="profile-content font-['Song Myung']">
+        <div className="profile-row font-['Song Myung']">
+          <span className="profile-label font-['Song Myung']">닉네임:</span>
+          <span className="profile-value font-['Song Myung']">
+            {profile.nickname}
+          </span>
         </div>
-        <div className="profile-row font-yeonsung">
-          <span className="profile-label font-yeonsung">ID(이메일):</span>
-          <span className="profile-value font-yeonsung">{profile.email}</span>
+        <div className="profile-row font-['Song Myung']">
+          <span className="profile-label font-['Song Myung']">ID(이메일):</span>
+          <span className="profile-value font-['Song Myung']">
+            {profile.email}
+          </span>
         </div>
-        <div className="profile-row font-yeonsung">
-          <span className="profile-label font-yeonsung">내가 쓴 글:</span>
-          <span className="profile-value font-yeonsung">{posts.length}개</span>
+        <div className="profile-row font-['Song Myung']">
+          <span className="profile-label font-['Song Myung']">내가 쓴 글:</span>
+          <span className="profile-value font-['Song Myung']">
+            {posts.length}개
+          </span>
         </div>
-        <div className="profile-row font-yeonsung">
-          <span className="profile-label font-yeonsung">내가 찜한 리스트:</span>
-          <span className="profile-value font-yeonsung">{items.length}곳</span>
+        <div className="profile-row font-['Song Myung']">
+          <span className="profile-label font-['Song Myung']">
+            내가 찜한 리스트:
+          </span>
+          <span className="profile-value font-['Song Myung']">
+            {items.length}곳
+          </span>
         </div>
-        <div className="profile-buttons font-yeonsung">
-          <button className="edit-button font-yeonsung" onClick={handleEditClick}>
+        <div className="profile-buttons font-['Song Myung']">
+          <button
+            className="edit-button font-['Song Myung']"
+            onClick={handleEditClick}
+          >
             <GoPencil />
             수정하기
           </button>
-          <button className="logout-button font-yeonsung" onClick={handleDeleteClick}>
+          <button
+            className="logout-button font-['Song Myung']"
+            onClick={handleDeleteClick}
+          >
             <IoExitOutline />
             탈퇴하기
           </button>
         </div>
       </div>
 
-      {/* 수정 모달 */}
       {isEditModalOpen && (
         <div className="modal-overlay">
-          <div className="modal">
+          <div className="modal font-['Song Myung']">
             <h2>프로필 수정</h2>
             <div className="modal-input-group">
               <label>닉네임</label>
@@ -94,7 +102,7 @@ export default function MyPageProfile({ items, posts }) {
                 name="nickname"
                 value={editedProfile.nickname}
                 onChange={handleInputChange}
-                className="modal-input"
+                className="modal-input font-['Song Myung']"
               />
             </div>
             <div className="modal-input-group">
@@ -104,14 +112,20 @@ export default function MyPageProfile({ items, posts }) {
                 name="email"
                 value={editedProfile.email}
                 onChange={handleInputChange}
-                className="modal-input"
+                className="modal-input font-['Song Myung']"
               />
             </div>
             <div className="modal-buttons">
-              <button onClick={saveEdit} className="confirm-button">
+              <button
+                onClick={saveEdit}
+                className="confirm-button font-['Song Myung']"
+              >
                 저장
               </button>
-              <button onClick={cancelEdit} className="cancel-button">
+              <button
+                onClick={cancelEdit}
+                className="cancel-button font-['Song Myung']"
+              >
                 취소
               </button>
             </div>
@@ -119,16 +133,21 @@ export default function MyPageProfile({ items, posts }) {
         </div>
       )}
 
-      {/* 탈퇴 모달 */}
       {isDeleteModalOpen && (
         <div className="modal-overlay">
-          <div className="modal">
+          <div className="modal font-['Song Myung']">
             <h2>ㄹㅇ 탈퇴?</h2>
             <div className="modal-buttons">
-              <button onClick={confirmDelete} className="confirm-button">
+              <button
+                onClick={confirmDelete}
+                className="confirm-button font-['Song Myung']"
+              >
                 탈퇴
               </button>
-              <button onClick={cancelDelete} className="cancel-button">
+              <button
+                onClick={cancelDelete}
+                className="cancel-button font-['Song Myung']"
+              >
                 취소
               </button>
             </div>

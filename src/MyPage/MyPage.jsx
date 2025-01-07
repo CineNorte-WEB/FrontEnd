@@ -5,6 +5,7 @@ import MyPageProfile from "./MyPageProfile";
 import MyPageList from "./MyPageList";
 import MyPageWrite from "./MyPageWrite";
 import Common from "../components/Common";
+import Brand from "../components/Brand";
 
 const MyPage = () => {
   const [currentComponent, setCurrentComponent] = useState("profile");
@@ -12,7 +13,8 @@ const MyPage = () => {
     {
       title: "현이네 고기 국수",
       menu: "한식",
-      summary: "웨이팅이 많은 집! 조금 아쉽지만 전체적으로 맛있어서 또 갈 것 같아요!",
+      summary:
+        "웨이팅이 많은 집! 조금 아쉽지만 전체적으로 맛있어서 또 갈 것 같아요!",
       image: "/images/남미식.png",
     },
     {
@@ -46,6 +48,7 @@ const MyPage = () => {
       author: "인생은 한방",
     },
   ]);
+
   const navigate = useNavigate();
 
   const handleMenuClick = (menu) => {
@@ -66,40 +69,43 @@ const MyPage = () => {
   };
 
   return (
-    <div className="mypage font-yeonsung">
+    <div className="mypage font-['Song Myung']">
       <Common />
       <header className="mypage-header">
-        <img
-          src="/images/캠슐랭로고.png"
-          alt="캠슐랭 로고"
-          className="mypage-logo"
-          onClick={() => navigate("/map")} // 로고 클릭 시 /map으로 이동
-        />
+        <Brand />
         <h1 className="mypage-title">마이 페이지</h1>
       </header>
       <p className="community-subtitle">내 정보와 맛집 기록을 확인해보세요!</p>
       <div className="container">
-        <div className="mypage-menubar font-yeonsung">
+        <div className="mypage-menubar font-['Song Myung']">
           <div
-            className={`menu font-yeonsung ${currentComponent === "profile" ? "active" : ""}`}
+            className={`menu font-['Song Myung'] ${
+              currentComponent === "profile" ? "active" : ""
+            }`}
             onClick={() => handleMenuClick("profile")}
           >
             회원정보
           </div>
           <div
-            className={`menu font-yeonsung ${currentComponent === "write" ? "active" : ""}`}
+            className={`menu font-['Song Myung'] ${
+              currentComponent === "write" ? "active" : ""
+            }`}
             onClick={() => handleMenuClick("write")}
           >
             내가 쓴 글
           </div>
           <div
-            className={`menu font-yeonsung ${currentComponent === "mylist" ? "active" : ""}`}
+            className={`menu font-['Song Myung'] ${
+              currentComponent === "mylist" ? "active" : ""
+            }`}
             onClick={() => handleMenuClick("mylist")}
           >
             찜한 리스트
           </div>
         </div>
-        <div className="menu-content font-yeonsung">{renderComponent()}</div>
+        <div className="menu-content font-['Song Myung']">
+          {renderComponent()}
+        </div>
       </div>
     </div>
   );
