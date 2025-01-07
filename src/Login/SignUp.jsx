@@ -55,7 +55,6 @@ const onSubmit = async (data) => {
             alt="서강대학교"
             className="w-32 h-32"
           />
-          <img src="/images/홍대.png" alt="홍익대학교" className="w-32 h-32" />
           <img
             src="/images/이대.png"
             alt="이화여자대학교"
