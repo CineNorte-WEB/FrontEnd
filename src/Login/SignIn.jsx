@@ -1,19 +1,14 @@
-import { MdAttachEmail } from "react-icons/md";
-import { PiFlowerLotus } from "react-icons/pi";
-import { useForm } from "react-hook-form";
-import { MdLock } from "react-icons/md";
-import { MdLockPerson } from "react-icons/md";
+import axios from "axios";
+import { MdAttachEmail, MdLock, MdLockPerson, MdOutlineRestaurant } from "react-icons/md";
 import { TbUser } from "react-icons/tb";
-import { MdOutlineRestaurant } from "react-icons/md";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 
-function SignUp() {
-  const [confirm, setConfirm] = useState(false);
-  const [key, setKey] = useState(false);
+function SignIn() {
+  const [keyVisible, setKeyVisible] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
   const {
     register,
     handleSubmit,
@@ -21,122 +16,74 @@ function SignUp() {
     formState: { errors },
   } = useForm();
 
-  const showKey = () => {
-    setKey((prev) => !prev);
-  };
-
-  const confirmPassword = () => {
-    setConfirm((prev) => !prev);
-  };
-
-  const onSubmit = (data) => {
-    console.log("회원가입 데이터:", data);
-    alert("😎 회원가입 성공!");
-  };
-
-  const password = watch("password"); // 비밀번호 값 참조
-
+  const password = watch("password");
   const navigate = useNavigate();
+
+  // 비밀번호 보기 토글
+  const toggleKeyVisibility = () => setKeyVisible((prev) => !prev);
+  const toggleConfirmVisibility = () => setConfirmVisible((prev) => !prev);
+
+  // 회원가입 요청 함수
+  const onSubmit = async (data) => {
+    const requestData = {
+      email: data.email,
+      password: data.password,
+      nickname: data.nickname,
+    };
+
+    try {
+      const response = await axios.post("/api/register", requestData);
+      console.log("회원가입 성공:", response.data);
+      alert("🎉 회원가입이 성공적으로 완료되었습니다!");
+      navigate("/"); // 성공 시 메인 페이지로 이동
+    } catch (error) {
+      console.error("회원가입 실패:", error.response?.data || error.message);
+      alert("❌ 회원가입에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-rose-800">
+      {/* 뒤로가기 버튼 */}
       <FaArrowLeft
         onClick={() => navigate("/")}
-        className="absolute text-4xl text-white duration-300 cursor-pointer left-8 top-8"
+        className="absolute text-4xl text-white cursor-pointer left-8 top-8 hover:text-gray-300"
       />
-      {/* 왼쪽 섹션 */}
+
+      {/* 왼쪽 설명 섹션 */}
       <div className="flex flex-col items-start w-1/2 px-8">
-        <h1 className="ml-32 font-normal text-white text-9xl font-petemoss">
-          CamChelin
-        </h1>
+        <h1 className="ml-32 text-white text-9xl font-petemoss">CamChelin</h1>
         <div className="mt-8 ml-12 space-y-12">
-          {/* 캠슐랭 소개 섹션 */}
           <div>
             <div className="flex space-x-3">
-              <img
-                src="/images/flower.png"
-                alt="이미지"
-                className="w-[75px] h-[75px]"
-              />{" "}
-              <p className="mt-4 ml-3 text-5xl font-bold text-white font-yeonsung">
+              <img src="/images/flower.png" alt="스타" className="w-[75px] h-[75px]" />
+              <p className="mt-4 text-5xl font-bold text-white font-yeonsung">
                 캠슐랭 1스타
               </p>
             </div>
-            <p className="mt-3 ml-16 text-4xl text-white font-yeonsung">
+            <p className="mt-3 text-4xl text-white ml-16 font-yeonsung">
               가성비와 맛을 모두 잡은 실속 맛집
             </p>
           </div>
-
-          <div>
-            <div className="flex space-x-3">
-              <img
-                src="/images/flower.png"
-                alt="이미지"
-                className="w-[75px] h-[75px]"
-              />
-              <img
-                src="/images/flower.png"
-                alt="이미지"
-                className="w-[75px] h-[75px]"
-              />
-              <p className="mt-4 text-5xl font-bold text-white ml-7 font-yeonsung">
-                캠슐랭 2스타
-              </p>
-            </div>
-            <p className="mt-3 text-4xl text-white ml-14 font-yeonsung">
-              맛뿐만 아니라 분위기까지 특별한 곳
-            </p>
-          </div>
-
-          <div>
-            <div className="flex space-x-3">
-              <img
-                src="/images/flower.png"
-                alt="이미지"
-                className="w-[75px] h-[75px]"
-              />
-              <img
-                src="/images/flower.png"
-                alt="이미지"
-                className="w-[75px] h-[75px]"
-              />{" "}
-              <img
-                src="/images/flower.png"
-                alt="이미지"
-                className="w-[75px] h-[75px]"
-              />
-              <p className="mt-4 text-5xl font-bold text-white ml-7 font-yeonsung">
-                캠슐랭 3스타
-              </p>
-            </div>
-            <p className="mt-3 text-4xl text-white ml-14 font-yeonsung">
-              여기를 가기 위해선 먼 길도 마다하지 않을
-            </p>
-            <p className="mt-3 text-4xl text-white ml-14 font-yeonsung">
-              가치 있는 레전드 맛집!
-            </p>
-          </div>
+          {/* 추가 설명 */}
         </div>
       </div>
 
-      {/* 오른쪽 섹션 */}
+      {/* 회원가입 폼 */}
       <div className="w-[550px] h-[650px] px-12 py-8 mr-32 bg-white rounded-lg shadow-lg">
-        <h2 className="text-5xl font-bold text-center font-yeonsung">
-          회원가입
-        </h2>
-        <form
-          className="mt-5 space-y-4"
-          onSubmit={handleSubmit(onSubmit)} // 유효성 검증 및 데이터 제출
-        >
+        <h2 className="text-5xl font-bold text-center font-yeonsung">회원가입</h2>
+        <form className="mt-5 space-y-4" onSubmit={handleSubmit(onSubmit)}>
           {/* 이메일 입력 */}
           <div>
-            <p className="block mb-2 text-lg font-bold text-gray-700 font-yeonsung">
+            <p className="mb-2 text-lg font-bold text-gray-700 font-yeonsung">
               아이디(이메일 주소)
             </p>
             <div className="relative">
-              <MdAttachEmail className="absolute text-2xl text-gray-500 bottom-3 left-3" />
+              <MdAttachEmail className="absolute text-2xl text-gray-500 left-3 bottom-3" />
               <input
                 type="email"
-                id="email"
                 placeholder="이메일 주소를 입력해주세요."
                 className="w-full px-12 py-3 border border-black rounded-lg font-yeonsung"
                 {...register("email", {
@@ -157,13 +104,10 @@ function SignUp() {
 
           {/* 비밀번호 입력 */}
           <div className="relative">
-            <p className="block mb-2 text-lg font-bold text-gray-700 font-yeonsung">
-              비밀번호
-            </p>
+            <p className="mb-2 text-lg font-bold text-gray-700 font-yeonsung">비밀번호</p>
             <MdLock className="absolute text-2xl text-gray-500 left-3 bottom-3" />
             <input
-              type={key ? "text" : "password"}
-              id="password"
+              type={keyVisible ? "text" : "password"}
               placeholder="숫자 및 특수문자를 포함하여 8자 이상 작성해주세요."
               className="w-full px-12 py-3 border border-black rounded-lg font-yeonsung"
               {...register("password", {
@@ -172,24 +116,17 @@ function SignUp() {
                   value: 8,
                   message: "비밀번호는 최소 8자 이상이어야 합니다.",
                 },
-                validate: {
-                  hasNumber: (value) =>
-                    /\d/.test(value) || "비밀번호에 숫자가 포함되어야 합니다.",
-                  hasSpecialChar: (value) =>
-                    /[!@#$%^&*(),.?":{}|<>]/.test(value) ||
-                    "특수문자를 포함해야 합니다.",
-                },
               })}
             />
-            {key ? (
+            {keyVisible ? (
               <FaEyeSlash
-                onClick={showKey}
-                className="absolute text-2xl text-black transform cursor-pointer top-12 right-4"
+                onClick={toggleKeyVisibility}
+                className="absolute text-2xl text-black top-3 right-4 cursor-pointer"
               />
             ) : (
               <FaEye
-                onClick={showKey}
-                className="absolute text-2xl text-black transform cursor-pointer top-12 right-4"
+                onClick={toggleKeyVisibility}
+                className="absolute text-2xl text-black top-3 right-4 cursor-pointer"
               />
             )}
           </div>
@@ -198,32 +135,31 @@ function SignUp() {
               {errors.password.message}
             </p>
           )}
+
           {/* 비밀번호 확인 */}
           <div className="relative">
-            <p className="block mb-2 text-lg font-bold text-gray-700 font-yeonsung">
+            <p className="mb-2 text-lg font-bold text-gray-700 font-yeonsung">
               비밀번호 확인
             </p>
             <MdLockPerson className="absolute text-2xl text-gray-500 left-3 bottom-3" />
             <input
-              type={confirm ? "text" : "password"}
-              id="passwordConfirm"
+              type={confirmVisible ? "text" : "password"}
               placeholder="입력한 비밀번호를 다시 한 번 입력해주세요."
               className="w-full px-12 py-3 border border-black rounded-lg font-yeonsung"
               {...register("passwordConfirm", {
                 required: "비밀번호 확인은 필수입니다.",
-                validate: (value) =>
-                  value === password || "비밀번호가 일치하지 않습니다.",
+                validate: (value) => value === password || "비밀번호가 일치하지 않습니다.",
               })}
             />
-            {confirm ? (
+            {confirmVisible ? (
               <FaEyeSlash
-                onClick={confirmPassword}
-                className="absolute text-2xl text-black transform cursor-pointer top-12 right-4"
+                onClick={toggleConfirmVisibility}
+                className="absolute text-2xl text-black top-3 right-4 cursor-pointer"
               />
             ) : (
               <FaEye
-                onClick={confirmPassword}
-                className="absolute text-2xl text-black transform cursor-pointer top-12 right-4"
+                onClick={toggleConfirmVisibility}
+                className="absolute text-2xl text-black top-3 right-4 cursor-pointer"
               />
             )}
           </div>
@@ -232,16 +168,14 @@ function SignUp() {
               {errors.passwordConfirm.message}
             </p>
           )}
+
           {/* 닉네임 입력 */}
           <div className="relative">
-            <p className="block mb-2 text-lg font-bold text-gray-700 font-yeonsung">
-              닉네임
-            </p>
+            <p className="mb-2 text-lg font-bold text-gray-700 font-yeonsung">닉네임</p>
             <TbUser className="absolute text-2xl text-gray-500 left-3 bottom-3" />
             <input
               type="text"
-              id="nickname"
-              placeholder="커뮤니티에서 활동할 닉네임을 적어주세요."
+              placeholder="닉네임을 입력해주세요."
               className="w-full px-12 py-3 border border-black rounded-lg font-yeonsung"
               {...register("nickname", {
                 required: "닉네임은 필수 입력입니다.",
@@ -259,19 +193,16 @@ function SignUp() {
           </div>
 
           {/* 가입 버튼 */}
-          <div className="relative">
-            <MdOutlineRestaurant className="absolute text-3xl text-white top-7 left-24" />
-            <button
-              type="submit"
-              className="w-full py-3 pl-4 mt-4 text-xl font-bold text-white bg-red-700 rounded-lg font-yeonsung hover:bg-red-600"
-            >
-              가입하여 나만의 맛집 찾기
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="w-full py-3 mt-4 text-xl font-bold text-white bg-red-700 rounded-lg font-yeonsung hover:bg-red-600"
+          >
+            가입하여 나만의 맛집 찾기
+          </button>
         </form>
       </div>
     </div>
   );
 }
 
-export default SignUp;
+export default SignIn;

@@ -9,7 +9,7 @@ const apiClient = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-});
+}); 
 
 export async function fetchData(endpoint) {
   try {

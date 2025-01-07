@@ -8,6 +8,7 @@ import KaKaoMap from "./Map/KaKaoMap";
 import Community from "./Community/Community";
 const App = () => {
   return (
+
     <>
       <Routes>
         <Route path="/" element={<SignUp />} />

@@ -80,7 +80,7 @@ const Community = () => {
         <Brand />
         <h1 className="community-title">커뮤니티</h1>
       </header>
-      <p className="community-subtitle">다양한 의견을 공유해보세요~</p>
+      <p className="community-subtitle">맛집부터 일상까지, 자유롭게 소통해요!</p>
       <div className="community-list">
         {posts.map((post, index) => (
           <div className="community-item" key={index}>

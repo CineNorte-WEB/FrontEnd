@@ -9,6 +9,9 @@ export default {
         yeonsung: ["YeonSung", ...defaultTheme.fontFamily.sans],
         petemoss: ["Petemoss", ...defaultTheme.fontFamily.sans],
       },
+      width: {
+        '35': '70px',
+      },
     },
   },
   plugins: [],
