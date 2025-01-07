@@ -17,7 +17,7 @@ export default defineConfig({
       },
       // 백엔드 API 프록시 추가
       "/api": {
-        target: "http://3.38.169.113:8080", // 백엔드 서버 URL
+        target: "http://43.203.118.59:8080", // 백엔드 서버 URL
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""), // "/api" 제거
       },
