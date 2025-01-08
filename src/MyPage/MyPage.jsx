@@ -6,9 +6,12 @@ import MyPageList from "./MyPageList";
 import MyPageWrite from "./MyPageWrite";
 import Common from "../components/Common";
 import Brand from "../components/Brand";
+import axios from "axios";
 
 const MyPage = () => {
   const [currentComponent, setCurrentComponent] = useState("profile");
+
+  
   const [items, setItems] = useState([
     {
       title: "현이네 고기 국수",
