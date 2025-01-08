@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Common from "../components/Common";
 import { PiPencilLineDuotone } from "react-icons/pi";
@@ -6,36 +6,68 @@ import Brand from "../components/Brand";
 
 const Community = () => {
   const navigate = useNavigate();
+  const POSTS_PER_PAGE = 5; // 페이지당 게시글 수
 
-  const [posts, setPosts] = useState([
+  // 현재 페이지 상태 추가
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const initialPosts = [
     {
+      id: 1,
       title: "주식 ...",
       category: "자유게시판",
       author: "인생은 한방",
       image: null,
+      createdAt: new Date("2024-01-01").toISOString(),
     },
     {
+      id: 2,
       title: "현이네 고기국수",
       category: "리뷰게시판",
       author: "인생은 고기서 고기",
       image: null,
+      createdAt: new Date("2024-01-02").toISOString(),
     },
     {
+      id: 3,
       title: "종강까지 한달!!!",
       category: "자유게시판",
       author: "휴학하고파",
       image: null,
+      createdAt: new Date("2024-01-03").toISOString(),
     },
     {
+      id: 4,
       title: "진스시",
       category: "리뷰게시판",
       author: "가는곳마다스시",
       image: null,
+      createdAt: new Date("2024-01-04").toISOString(),
     },
-  ]);
+  ];
+
+  const [posts, setPosts] = useState(() => {
+    const savedPosts = localStorage.getItem("communityPosts");
+    return savedPosts ? JSON.parse(savedPosts) : initialPosts;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("communityPosts", JSON.stringify(posts));
+  }, [posts]);
+
+  // 페이지네이션 관련 계산
+  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+
+  // 현재 페이지에 표시할 게시글들
+  const currentPosts = posts.slice(
+    (currentPage - 1) * POSTS_PER_PAGE,
+    currentPage * POSTS_PER_PAGE
+  );
+
+  // 페이지 번호 배열 생성
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [formData, setFormData] = useState({
     category: "자유게시판",
     title: "",
@@ -69,11 +101,13 @@ const Community = () => {
     }
 
     const newPost = {
+      id: Date.now(),
       title: formData.title,
       category: formData.category,
       author: "홍익이",
       content: formData.content,
       image: formData.image,
+      createdAt: new Date().toISOString(),
     };
 
     setPosts([newPost, ...posts]);
@@ -83,7 +117,27 @@ const Community = () => {
       content: "",
       image: null,
     });
+
+    // 새 게시글이 추가되면 첫 페이지로 이동
+    setCurrentPage(1);
     closeModal();
+  };
+
+  const handleDeletePost = (postId) => {
+    if (window.confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
+      setPosts(posts.filter((post) => post.id !== postId));
+
+      // 현재 페이지의 모든 게시글이 삭제되면 이전 페이지로 이동
+      const newTotalPages = Math.ceil((posts.length - 1) / POSTS_PER_PAGE);
+      if (currentPage > newTotalPages) {
+        setCurrentPage(newTotalPages);
+      }
+    }
+  };
+
+  // 페이지 변경 핸들러
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -99,15 +153,26 @@ const Community = () => {
         맛집부터 일상까지, 자유롭게 소통해요!
       </p>
       <div className="w-[70%] min-h-[60vh] mx-auto my-4 bg-white rounded-2xl shadow-lg overflow-hidden p-4">
-        {posts.map((post, index) => (
+        {currentPosts.map((post) => (
           <div
-            key={index}
+            key={post.id}
             className="flex items-center justify-between p-4 m-4 text-gray-800 transition-colors duration-300 ease-in-out bg-white rounded-lg shadow-md hover:bg-gray-100"
           >
             <div className="flex-1">
-              <h2 className="mb-2 text-lg font-bold">{post.title}</h2>
+              <div className="flex items-center justify-between">
+                <h2 className="mb-2 text-lg font-bold">{post.title}</h2>
+                <button
+                  onClick={() => handleDeletePost(post.id)}
+                  className="px-2 py-1 text-sm text-red-500 rounded hover:text-red-700"
+                >
+                  삭제
+                </button>
+              </div>
               <p className="text-sm text-gray-500">{post.category}</p>
               <p className="text-sm text-gray-500">작성자: {post.author}</p>
+              <p className="text-sm text-gray-500">
+                작성일: {new Date(post.createdAt).toLocaleDateString()}
+              </p>
               {post.image && (
                 <img
                   src={post.image}
@@ -118,16 +183,23 @@ const Community = () => {
             </div>
           </div>
         ))}
-        <div className="flex items-center justify-center m-4">
-          {[1, 2, 3, 4, 5].map((num) => (
-            <span
-              key={num}
-              className="mx-2 text-base font-bold text-gray-500 transition-colors duration-300 cursor-pointer hover:text-red-500"
-            >
-              {num}
-            </span>
-          ))}
-        </div>
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center m-4">
+            {pageNumbers.map((num) => (
+              <span
+                key={num}
+                onClick={() => handlePageChange(num)}
+                className={`mx-2 text-base font-bold cursor-pointer transition-colors duration-300 ${
+                  currentPage === num
+                    ? "text-red-500"
+                    : "text-gray-500 hover:text-red-500"
+                }`}
+              >
+                {num}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
       <button
         onClick={openModal}
