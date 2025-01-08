@@ -7,7 +7,7 @@ import { IoMdEyeOff } from "react-icons/io";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-
+import Brand from "../components/Brand";
 function SignUp() {
   const navigate = useNavigate();
   const [password, setPassword] = useState(false);
@@ -68,7 +68,7 @@ function SignUp() {
         <p className="text-5xl text-white font-yeonsung">
           숨겨진 맛집을 캠슐랭에서 발견하세요!
         </p>
-        <div className="flex mt-12 space-x-4">
+        <div className="flex mt-12 mb-3 ml-10 space-x-4">
           <img src="/images/연대.png" alt="연세대학교" className="w-32 h-32" />
           <img
             src="/images/서강대.png"
@@ -81,7 +81,7 @@ function SignUp() {
             className="w-32 h-32"
           />
         </div>
-        <div className="flex ml-14 space-x-7">
+        <div className="flex mt-3 ml-12 space-x-7">
           <img
             src="/images/시립대.png"
             alt="서울시립대학교"
@@ -98,9 +98,31 @@ function SignUp() {
             className="w-32 h-32"
           />
         </div>
-        <h1 className="font-normal text-white ml-36 text-8xl font-petemoss">
-          CamChelin
-        </h1>
+        <div className="mt-5 ml-24">
+          {" "}
+          <div className="flex space-x-4">
+            <img
+              src="/images/flower.png"
+              alt="아이콘"
+              className="w-[100px] h-[100px]"
+            />
+            <img
+              src="/images/flower.png"
+              alt="아이콘"
+              className="w-[100px] h-[100px]"
+            />{" "}
+            <img
+              src="/images/flower.png"
+              alt="아이콘"
+              className="w-[100px] h-[100px]"
+            />
+          </div>
+          <div>
+            <h1 className="font-normal text-white text-9xl font-petemoss">
+              CamChelin
+            </h1>
+          </div>
+        </div>
       </div>
       <div className="p-6 mr-48 bg-white rounded-lg shadow-lg h-[600px] w-[500px]">
         <h1 className="mt-3 mb-5 font-normal text-center text-8xl font-petemoss">
