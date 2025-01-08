@@ -195,10 +195,10 @@ function SignUp() {
             로그인
           </button>
         </form>
-        <div className="flex mt-4 text-center">
-          <hr className="flex-grow border-gray-500" />
-          <p className="text-xl font-bold text-gray-600 font-yeonsung">OR</p>
-          <hr className="flex-grow border-gray-500" />
+        <div className="flex items-center justify-center gap-4 mt-4">
+          <hr className="w-1/3 border-gray-500" />
+          <p className="text-2xl font-bold text-gray-600 font-yeonsung">OR</p>
+          <hr className="w-1/3 border-gray-500" />
         </div>
         <p
           className="block mt-3 font-bold text-center cursor-pointer font-yeonsung hover:underline"
