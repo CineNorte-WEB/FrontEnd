@@ -6,7 +6,11 @@ export default function MyPageWrite({ posts, setPosts }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentPostIndex, setCurrentPostIndex] = useState(null);
-  const [editedPost, setEditedPost] = useState({ title: "", category: "", author: "" });
+  const [editedPost, setEditedPost] = useState({
+    title: "",
+    category: "",
+    author: "",
+  });
 
   const handleDeleteClick = (index) => {
     setCurrentPostIndex(index);
@@ -20,7 +24,9 @@ export default function MyPageWrite({ posts, setPosts }) {
   };
 
   const confirmDelete = () => {
-    setPosts((prevPosts) => prevPosts.filter((_, index) => index !== currentPostIndex));
+    setPosts((prevPosts) =>
+      prevPosts.filter((_, index) => index !== currentPostIndex)
+    );
     setIsDeleteModalOpen(false);
     setCurrentPostIndex(null);
   };
@@ -62,14 +68,24 @@ export default function MyPageWrite({ posts, setPosts }) {
             <div className="write-item font-yeonsung" key={index}>
               <div className="write-info">
                 <h2 className="write-post-title font-yeonsung">{post.title}</h2>
-                <p className="write-post-category font-yeonsung">{post.category}</p>
-                <p className="write-post-author font-yeonsung">작성자: {post.author}</p>
+                <p className="write-post-category font-yeonsung">
+                  {post.category}
+                </p>
+                <p className="write-post-author font-yeonsung">
+                  작성자: {post.author}
+                </p>
               </div>
               <div className="write-actions">
-                <button className="edit-button" onClick={() => handleEditClick(index)}>
+                <button
+                  className="edit-button"
+                  onClick={() => handleEditClick(index)}
+                >
                   수정
                 </button>
-                <button className="delete-button" onClick={() => handleDeleteClick(index)}>
+                <button
+                  className="delete-button"
+                  onClick={() => handleDeleteClick(index)}
+                >
                   삭제
                 </button>
               </div>
@@ -97,7 +113,7 @@ export default function MyPageWrite({ posts, setPosts }) {
       {isEditModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
-            <p>게시글 수정</p>
+            <p className="correct">게시글 수정</p>
             <input
               type="text"
               name="title"
