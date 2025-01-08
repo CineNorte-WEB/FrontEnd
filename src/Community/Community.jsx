@@ -12,21 +12,25 @@ const Community = () => {
       title: "주식 ...",
       category: "자유게시판",
       author: "인생은 한방",
+      image: null,
     },
     {
       title: "현이네 고기국수",
       category: "리뷰게시판",
       author: "인생은 고기서 고기",
+      image: null,
     },
     {
       title: "종강까지 한달!!!",
       category: "자유게시판",
       author: "휴학하고파",
+      image: null,
     },
     {
       title: "진스시",
       category: "리뷰게시판",
       author: "가는곳마다스시",
+      image: null,
     },
   ]);
 
@@ -48,7 +52,14 @@ const Community = () => {
   };
 
   const handleImageUpload = (e) => {
-    setFormData({ ...formData, image: e.target.files[0] });
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, image: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = () => {
@@ -61,6 +72,8 @@ const Community = () => {
       title: formData.title,
       category: formData.category,
       author: "홍익이",
+      content: formData.content,
+      image: formData.image,
     };
 
     setPosts([newPost, ...posts]);
@@ -95,6 +108,13 @@ const Community = () => {
               <h2 className="mb-2 text-lg font-bold">{post.title}</h2>
               <p className="text-sm text-gray-500">{post.category}</p>
               <p className="text-sm text-gray-500">작성자: {post.author}</p>
+              {post.image && (
+                <img
+                  src={post.image}
+                  alt="게시글 이미지"
+                  className="mt-2 w-[15px] h-[15px] rounded-lg shadow-sm object-cover"
+                />
+              )}
             </div>
           </div>
         ))}
@@ -118,7 +138,7 @@ const Community = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
-          <div className="text-2xl bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] max-h-[90%]  space-y-2 font-['Song Myung']">
+          <div className="text-2xl bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] max-h-[100%] font-['Song Myung']">
             <h2 className="text-4xl text-center font-bold font-['Song Myung']">
               게시물 작성
             </h2>
@@ -160,12 +180,26 @@ const Community = () => {
               />
             </div>
             <div>
-              <label className="font-bold">📸사진 등록</label>
-              <input
-                type="file"
-                onChange={handleImageUpload}
-                className="w-full my-2 p-2 font-bold border-2 border-gray-500 rounded-lg text-base font-['Song Myung']"
-              />
+              <label className="mt-2 font-bold">📸사진 등록</label>
+              <div className="flex">
+                <div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="w-64 my-3.5 p-2 font-bold border-2 border-gray-500 rounded-lg text-base font-['Song Myung']"
+                  />
+                </div>
+                <div>
+                  {formData.image && (
+                    <img
+                      src={formData.image}
+                      alt="미리보기"
+                      className="ml-32 w-[150px] h-[150px] object-cover"
+                    />
+                  )}
+                </div>
+              </div>
             </div>
             <div>
               <div className="flex justify-between mt-4">
