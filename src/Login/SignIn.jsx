@@ -1,5 +1,10 @@
 import axios from "axios";
-import { MdAttachEmail, MdLock, MdLockPerson, MdOutlineRestaurant } from "react-icons/md";
+import {
+  MdAttachEmail,
+  MdLock,
+  MdLockPerson,
+  MdOutlineRestaurant,
+} from "react-icons/md";
 import { TbUser } from "react-icons/tb";
 import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useForm } from "react-hook-form";
@@ -42,8 +47,6 @@ function SignIn() {
     }
   };
 
-  
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-rose-800">
       {/* 뒤로가기 버튼 */}
@@ -58,12 +61,16 @@ function SignIn() {
         <div className="mt-8 ml-12 space-y-12">
           <div>
             <div className="flex space-x-3">
-              <img src="/images/flower.png" alt="스타" className="w-[75px] h-[75px]" />
+              <img
+                src="/images/flower.png"
+                alt="스타"
+                className="w-[75px] h-[75px]"
+              />
               <p className="mt-4 text-5xl font-bold text-white font-yeonsung">
                 캠슐랭 1스타
               </p>
             </div>
-            <p className="mt-3 text-4xl text-white ml-16 font-yeonsung">
+            <p className="mt-3 ml-16 text-4xl text-white font-yeonsung">
               가성비와 맛을 모두 잡은 실속 맛집
             </p>
           </div>
@@ -73,7 +80,9 @@ function SignIn() {
 
       {/* 회원가입 폼 */}
       <div className="w-[550px] h-[650px] px-12 py-8 mr-32 bg-white rounded-lg shadow-lg">
-        <h2 className="text-5xl font-bold text-center font-yeonsung">회원가입</h2>
+        <h2 className="text-5xl font-bold text-center font-yeonsung">
+          회원가입
+        </h2>
         <form className="mt-5 space-y-4" onSubmit={handleSubmit(onSubmit)}>
           {/* 이메일 입력 */}
           <div>
@@ -104,7 +113,9 @@ function SignIn() {
 
           {/* 비밀번호 입력 */}
           <div className="relative">
-            <p className="mb-2 text-lg font-bold text-gray-700 font-yeonsung">비밀번호</p>
+            <p className="mb-2 text-lg font-bold text-gray-700 font-yeonsung">
+              비밀번호
+            </p>
             <MdLock className="absolute text-2xl text-gray-500 left-3 bottom-3" />
             <input
               type={keyVisible ? "text" : "password"}
@@ -121,12 +132,12 @@ function SignIn() {
             {keyVisible ? (
               <FaEyeSlash
                 onClick={toggleKeyVisibility}
-                className="absolute text-2xl text-black top-3 right-4 cursor-pointer"
+                className="absolute text-2xl text-black cursor-pointer bottom-3 right-3"
               />
             ) : (
               <FaEye
                 onClick={toggleKeyVisibility}
-                className="absolute text-2xl text-black top-3 right-4 cursor-pointer"
+                className="absolute text-2xl text-black cursor-pointer bottom-3 right-3"
               />
             )}
           </div>
@@ -148,18 +159,19 @@ function SignIn() {
               className="w-full px-12 py-3 border border-black rounded-lg font-yeonsung"
               {...register("passwordConfirm", {
                 required: "비밀번호 확인은 필수입니다.",
-                validate: (value) => value === password || "비밀번호가 일치하지 않습니다.",
+                validate: (value) =>
+                  value === password || "비밀번호가 일치하지 않습니다.",
               })}
             />
             {confirmVisible ? (
               <FaEyeSlash
                 onClick={toggleConfirmVisibility}
-                className="absolute text-2xl text-black top-3 right-4 cursor-pointer"
+                className="absolute text-2xl text-black cursor-pointer bottom-3 right-3"
               />
             ) : (
               <FaEye
                 onClick={toggleConfirmVisibility}
-                className="absolute text-2xl text-black top-3 right-4 cursor-pointer"
+                className="absolute text-2xl text-black cursor-pointer bottom-3 right-3"
               />
             )}
           </div>
@@ -171,7 +183,9 @@ function SignIn() {
 
           {/* 닉네임 입력 */}
           <div className="relative">
-            <p className="mb-2 text-lg font-bold text-gray-700 font-yeonsung">닉네임</p>
+            <p className="mb-2 text-lg font-bold text-gray-700 font-yeonsung">
+              닉네임
+            </p>
             <TbUser className="absolute text-2xl text-gray-500 left-3 bottom-3" />
             <input
               type="text"
