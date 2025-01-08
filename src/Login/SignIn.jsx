@@ -32,7 +32,7 @@ function SignIn() {
     };
 
     try {
-      const response = await axios.post("/api/register", requestData);
+      const response = await axios.post("/api/users/register", requestData);
       console.log("회원가입 성공:", response.data);
       alert("🎉 회원가입이 성공적으로 완료되었습니다!");
       navigate("/"); // 성공 시 메인 페이지로 이동

@@ -1,48 +1,86 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import apiClient from "../api/axios"; // Axios 설정 확인
 import "./MyPageProfile.css";
 import { GoPencil } from "react-icons/go";
 import { IoExitOutline } from "react-icons/io5";
 
 export default function MyPageProfile({ items, posts }) {
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [profile, setProfile] = useState({
-    nickname: "홍익이",
-    email: "muyaho1234@gmail.com",
+    nickname: "",
+    email: "",
   });
   const [editedProfile, setEditedProfile] = useState({ ...profile });
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // localStorage에서 사용자 데이터 가져오기
+  useEffect(() => {
+    const email = localStorage.getItem("email") || "이메일 없음";
+    const nickname = localStorage.getItem("nickname") || "닉네임 없음";
+
+    setProfile({ email, nickname });
+    setLoading(false);
+  }, []);
 
   const handleEditClick = () => {
-    setEditedProfile(profile);
-    setIsEditModalOpen(true);
+    setEditedProfile(profile); // 현재 프로필 데이터를 수정 데이터로 설정
+    setIsEditModalOpen(true); // 수정 모달 열기
   };
 
-  const saveEdit = () => {
-    setProfile(editedProfile);
-    setIsEditModalOpen(false);
+  const saveEdit = async () => {
+    try {
+      // 수정된 데이터를 백엔드로 전송
+      const response = await apiClient.put("/api/users/update", {
+        email: editedProfile.email,
+        nickname: editedProfile.nickname,
+      });
+
+      console.log("프로필 수정 완료:", response.data);
+
+      // 백엔드 응답 데이터를 로컬에 저장
+      localStorage.setItem("email", response.data.email);
+      localStorage.setItem("nickname", response.data.nickname);
+
+      // 상태 업데이트
+      setProfile(response.data);
+      setIsEditModalOpen(false); // 수정 모달 닫기
+    } catch (error) {
+      console.error("프로필 수정 중 오류 발생:", error);
+      alert("프로필 수정에 실패했습니다. 다시 시도해주세요.");
+    }
   };
 
   const cancelEdit = () => {
-    setIsEditModalOpen(false);
+    setIsEditModalOpen(false); // 수정 모달 닫기
   };
 
   const handleDeleteClick = () => {
-    setIsDeleteModalOpen(true);
+    setIsDeleteModalOpen(true); // 탈퇴 모달 열기
   };
 
   const confirmDelete = () => {
     console.log("탈퇴가 완료되었습니다.");
+    // localStorage에서 사용자 데이터 제거
+    localStorage.removeItem("email");
+    localStorage.removeItem("nickname");
+
+    setProfile({ email: "이메일 없음", nickname: "닉네임 없음" }); // 상태 초기화
     setIsDeleteModalOpen(false);
   };
 
   const cancelDelete = () => {
-    setIsDeleteModalOpen(false);
+    setIsDeleteModalOpen(false); // 탈퇴 모달 닫기
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setEditedProfile((prev) => ({ ...prev, [name]: value }));
+    setEditedProfile((prev) => ({ ...prev, [name]: value })); // 수정된 프로필 업데이트
   };
+
+  if (loading) {
+    return <div className="loading">데이터를 불러오는 중...</div>;
+  }
 
   return (
     <div className="profile-container font-['Song Myung']">
@@ -91,6 +129,7 @@ export default function MyPageProfile({ items, posts }) {
         </div>
       </div>
 
+      {/* 프로필 수정 모달 */}
       {isEditModalOpen && (
         <div className="modal-overlay">
           <div className="modal font-['Song Myung']">
@@ -133,10 +172,11 @@ export default function MyPageProfile({ items, posts }) {
         </div>
       )}
 
+      {/* 탈퇴 확인 모달 */}
       {isDeleteModalOpen && (
         <div className="modal-overlay">
           <div className="modal font-['Song Myung']">
-            <h2>ㄹㅇ 탈퇴?</h2>
+            <h2>정말로 탈퇴하시겠습니까?</h2>
             <div className="modal-buttons">
               <button
                 onClick={confirmDelete}
