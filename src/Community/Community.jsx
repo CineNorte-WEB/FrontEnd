@@ -146,7 +146,7 @@ const Community = () => {
                 value={formData.title}
                 onChange={handleInputChange}
                 placeholder="제목을 입력하세요"
-                className="w-full my-2 px-2 pt-2 pb-2 border-2 border-gray-500 rounded-lg text-base font-['Song Myung']"
+                className="w-full my-2 px-4 font-semibold pt-2 pb-2 border-2 border-gray-500 rounded-lg text-base font-['Song Myung']"
               />
             </div>
             <div>
@@ -156,7 +156,7 @@ const Community = () => {
                 value={formData.content}
                 onChange={handleInputChange}
                 placeholder="내용을 입력하세요."
-                className="w-full my-2 px-4 pt-4 pb-12 border-2 border-gray-500 rounded-lg text-base font-['Song Myung']"
+                className="w-full my-2 px-4 pt-4 pb-12 font-semibold border-2 border-gray-500 rounded-lg text-base font-['Song Myung']"
               />
             </div>
             <div>
@@ -171,13 +171,13 @@ const Community = () => {
               <div className="flex justify-between mt-4">
                 <button
                   onClick={handleSubmit}
-                  className="bg-blue-500 shadow-lg text-white px-4 py-2 rounded-lg cursor-pointer font-bold text-3xl hover:bg-green-700 font-['Song Myung']"
+                  className="bg-blue-500 shadow-lg text-white px-4 py-2 rounded-lg cursor-pointer font-semibold text-2xl hover:bg-sky-700 font-['Song Myung']"
                 >
-                  게시물 등록하기
+                  게시물 등록
                 </button>
                 <button
                   onClick={closeModal}
-                  className="bg-red-500 shadow-lg text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-red-700 font-bold font-['Song Myung']"
+                  className="bg-red-500 shadow-lg text-white px-4 py-2 text-2xl rounded-lg cursor-pointer hover:bg-red-700 font-semibold font-['Song Myung']"
                 >
                   취소
                 </button>
