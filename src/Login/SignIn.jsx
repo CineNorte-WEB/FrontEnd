@@ -48,17 +48,17 @@ function SignIn() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-rose-800">
+    <div className="flex items-center justify-center min-h-screen overflow-hidden bg-rose-800">
       {/* 뒤로가기 버튼 */}
       <FaArrowLeft
         onClick={() => navigate("/")}
-        className="absolute text-4xl text-white cursor-pointer left-8 top-8 hover:text-gray-300"
+        className="absolute text-4xl text-white cursor-pointer left-8 top-7 hover:text-gray-300"
       />
 
       {/* 왼쪽 설명 섹션 */}
       <div className="flex flex-col items-start w-1/2 px-8">
         <h1 className="ml-32 text-white text-9xl font-petemoss">CamChelin</h1>
-        <div className="mt-8 ml-12 space-y-12">
+        <div className="mt-8 ml-12 space-y-8">
           <div>
             <div className="flex space-x-3">
               <img
@@ -70,11 +70,51 @@ function SignIn() {
                 캠슐랭 1스타
               </p>
             </div>
-            <p className="mt-3 ml-16 text-4xl text-white font-yeonsung">
+            <p className="mt-5 text-4xl text-white ml- font-yeonsung">
               가성비와 맛을 모두 잡은 실속 맛집
             </p>
           </div>
-          {/* 추가 설명 */}
+          <div className="flex space-x-3">
+            <img
+              src="/images/flower.png"
+              alt="스타"
+              className="w-[75px] h-[75px]"
+            />{" "}
+            <img
+              src="/images/flower.png"
+              alt="스타"
+              className="w-[75px] h-[75px]"
+            />
+            <p className="mt-4 text-5xl font-bold text-white font-yeonsung">
+              캠슐랭 2스타
+            </p>
+          </div>
+          <p className="text-4xl text-white font-yeonsung">
+            맛뿐만 아니라 분위기까지 특별한 곳
+          </p>
+          <div className="flex space-x-3">
+            <img
+              src="/images/flower.png"
+              alt="스타"
+              className="w-[75px] h-[75px]"
+            />
+            <img
+              src="/images/flower.png"
+              alt="스타"
+              className="w-[75px] h-[75px]"
+            />
+            <img
+              src="/images/flower.png"
+              alt="스타"
+              className="w-[75px] h-[75px]"
+            />
+            <p className="mt-4 text-5xl font-bold text-white font-yeonsung">
+              캠슐랭 3스타
+            </p>
+          </div>
+          <p className="text-4xl text-white font-yeonsung">
+            여기를 가기 위해선 먼 길도 마다하지 않을 레전드 맛집!
+          </p>
         </div>
       </div>
 
