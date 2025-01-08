@@ -173,23 +173,33 @@ const Community = () => {
                     e.stopPropagation();
                     handleDeletePost(post.id);
                   }}
-                  className="px-2 py-1 text-sm text-red-500 rounded hover:text-red-700"
+                  className="px-2 py-1 text-sm font-semibold text-red-500 border-2 border-gray-300 rounded hover:text-red-700"
                 >
                   삭제
                 </button>
               </div>
-              <p className="text-sm text-gray-500">{post.category}</p>
-              <p className="text-sm text-gray-500">작성자: {post.author}</p>
-              <p className="text-sm text-gray-500">
-                작성일: {new Date(post.createdAt).toLocaleDateString()}
-              </p>
-              {post.image && (
-                <img
-                  src={post.image}
-                  alt="게시글 이미지"
-                  className="mt-2 w-[15px] h-[15px] rounded-lg shadow-sm object-cover"
-                />
-              )}
+              <div className="flex items-center justify-between">
+                <div className="space-y-5">
+                  <p className="text-sm text-gray-500 font-semibold font-['Song Myung']">
+                    {post.category}
+                  </p>
+                  <p className="text-sm text-gray-500 font-semibold font-['Song Myung']">
+                    작성자: {post.author}
+                  </p>
+                  <p className="text-sm text-gray-500 font-['Song Myung'] font-semibold">
+                    작성일: {new Date(post.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+                <div>
+                  {post.image && (
+                    <img
+                      src={post.image}
+                      alt="게시글 이미지"
+                      className="object-cover mr-16 rounded-sm shadow-md h-36 w-36"
+                    />
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         ))}
@@ -217,7 +227,6 @@ const Community = () => {
       >
         <PiPencilLineDuotone />
       </button>
-
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
           <div className="text-2xl bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] max-h-[100%] font-['Song Myung']">
@@ -302,7 +311,6 @@ const Community = () => {
           </div>
         </div>
       )}
-
       {isDetailModalOpen && selectedPost && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
           <div className="bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] max-h-[95%] font-['Song Myung']">
@@ -329,7 +337,7 @@ const Community = () => {
               <hr className="my-3" />
               <p className="my-2 text-2xl font-semibold">🗃️이미지</p>
               {selectedPost.image && (
-                <div className="mt-4">
+                <div>
                   <img
                     src={selectedPost.image}
                     alt="게시글 이미지"
