@@ -6,10 +6,20 @@ import Brand from "../components/Brand";
 
 const Community = () => {
   const navigate = useNavigate();
-  const POSTS_PER_PAGE = 5; // 페이지당 게시글 수
-
-  // 현재 페이지 상태 추가
+  const POSTS_PER_PAGE = 5;
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePostClick = (post) => {
+    setSelectedPost(post);
+    setIsDetailModalOpen(true);
+  };
+
+  const handleCloseDetailModal = () => {
+    setSelectedPost(null);
+    setIsDetailModalOpen(false);
+  };
 
   const initialPosts = [
     {
@@ -18,6 +28,7 @@ const Community = () => {
       category: "자유게시판",
       author: "인생은 한방",
       image: null,
+      content: "",
       createdAt: new Date("2024-01-01").toISOString(),
     },
     {
@@ -26,6 +37,7 @@ const Community = () => {
       category: "리뷰게시판",
       author: "인생은 고기서 고기",
       image: null,
+      content: "",
       createdAt: new Date("2024-01-02").toISOString(),
     },
     {
@@ -34,6 +46,7 @@ const Community = () => {
       category: "자유게시판",
       author: "휴학하고파",
       image: null,
+      content: "",
       createdAt: new Date("2024-01-03").toISOString(),
     },
     {
@@ -42,6 +55,7 @@ const Community = () => {
       category: "리뷰게시판",
       author: "가는곳마다스시",
       image: null,
+      content: "",
       createdAt: new Date("2024-01-04").toISOString(),
     },
   ];
@@ -55,16 +69,11 @@ const Community = () => {
     localStorage.setItem("communityPosts", JSON.stringify(posts));
   }, [posts]);
 
-  // 페이지네이션 관련 계산
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
-
-  // 현재 페이지에 표시할 게시글들
   const currentPosts = posts.slice(
     (currentPage - 1) * POSTS_PER_PAGE,
     currentPage * POSTS_PER_PAGE
   );
-
-  // 페이지 번호 배열 생성
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -118,7 +127,6 @@ const Community = () => {
       image: null,
     });
 
-    // 새 게시글이 추가되면 첫 페이지로 이동
     setCurrentPage(1);
     closeModal();
   };
@@ -127,7 +135,6 @@ const Community = () => {
     if (window.confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
       setPosts(posts.filter((post) => post.id !== postId));
 
-      // 현재 페이지의 모든 게시글이 삭제되면 이전 페이지로 이동
       const newTotalPages = Math.ceil((posts.length - 1) / POSTS_PER_PAGE);
       if (currentPage > newTotalPages) {
         setCurrentPage(newTotalPages);
@@ -135,7 +142,6 @@ const Community = () => {
     }
   };
 
-  // 페이지 변경 핸들러
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -156,13 +162,17 @@ const Community = () => {
         {currentPosts.map((post) => (
           <div
             key={post.id}
-            className="flex items-center justify-between p-4 m-4 text-gray-800 transition-colors duration-300 ease-in-out bg-white rounded-lg shadow-md hover:bg-gray-100"
+            onClick={() => handlePostClick(post)}
+            className="flex items-center justify-between p-4 m-4 text-gray-800 transition-colors duration-300 ease-in-out bg-white rounded-lg shadow-md cursor-pointer hover:bg-gray-100"
           >
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <h2 className="mb-2 text-lg font-bold">{post.title}</h2>
                 <button
-                  onClick={() => handleDeletePost(post.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeletePost(post.id);
+                  }}
                   className="px-2 py-1 text-sm text-red-500 rounded hover:text-red-700"
                 >
                   삭제
@@ -288,6 +298,56 @@ const Community = () => {
                   취소
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isDetailModalOpen && selectedPost && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
+          <div className="bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] max-h-[95%] font-['Song Myung']">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-3xl font-bold">
+                📑제목 : {selectedPost.title}
+              </h2>
+            </div>
+            <div className="flex items-center justify-between mb-4 text-gray-600">
+              <div className="flex flex-col space-y-5 font-semibold">
+                <span className="mr-4">👤작성자: {selectedPost.author}</span>
+                <span>🏷️카테고리: {selectedPost.category}</span>
+              </div>
+              <span className="flex font-semibold">
+                <p className="mr-3"> ⏱️작성 일자 :</p>
+                {new Date(selectedPost.createdAt).toLocaleDateString()}
+              </span>
+            </div>
+            <div className="py-6 my-4 border-t border-b">
+              <p className="mb-3 text-2xl font-semibold">📜글 내용</p>
+              <p className="text-lg text-gray-800 whitespace-pre-wrap">
+                {selectedPost.content}
+              </p>
+              <hr className="my-3" />
+              <p className="my-2 text-2xl font-semibold">🗃️이미지</p>
+              {selectedPost.image && (
+                <div className="mt-4">
+                  <img
+                    src={selectedPost.image}
+                    alt="게시글 이미지"
+                    className="h-auto max-w-full rounded-lg shadow-sm"
+                  />
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCloseDetailModal();
+                }}
+                className="px-4 py-2 text-white transition-colors duration-200 bg-gray-500 rounded-lg hover:bg-gray-600"
+              >
+                닫기
+              </button>
             </div>
           </div>
         </div>
