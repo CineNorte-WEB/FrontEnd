@@ -151,11 +151,11 @@ const Community = () => {
       <Common />
       <header className="relative flex items-center justify-between w-full px-8 pt-4">
         <Brand className="w-[200px] aspect-[2] absolute top-1/2 left-8 -translate-y-1/2 cursor-pointer border-b-[3px] border-white pb-[0.2rem]" />
-        <h1 className="absolute m-0 text-5xl font-bold text-center text-white -translate-x-1/2 left-1/2">
+        <h1 className="absolute m-0 font-bold text-center text-white -translate-x-1/2 text-7xl left-1/2">
           커뮤니티
         </h1>
       </header>
-      <p className="mb-2 text-2xl text-center text-white">
+      <p className="my-1 text-2xl font-semibold text-center text-white">
         맛집부터 일상까지, 자유롭게 소통해요!
       </p>
       <div className="w-[70%] min-h-[60vh] mx-auto my-4 bg-white rounded-2xl shadow-lg overflow-hidden p-4">
@@ -173,7 +173,7 @@ const Community = () => {
                     e.stopPropagation();
                     handleDeletePost(post.id);
                   }}
-                  className="px-2 py-1 text-sm font-semibold text-red-500 border-2 border-gray-300 rounded hover:text-red-700"
+                  className="px-2 py-1 text-sm font-semibold text-red-500 border-2 border-gray-300 rounded hover:text-red-700 hover:bg-red-400"
                 >
                   삭제
                 </button>
