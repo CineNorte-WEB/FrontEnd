@@ -11,8 +11,7 @@ import axios from "axios";
 const MyPage = () => {
   const [currentComponent, setCurrentComponent] = useState("profile");
 
-  
-  const [items, setItems] = useState([
+  const [bookmarks, setBookmarks] = useState([
     {
       title: "현이네 고기 국수",
       menu: "한식",
@@ -39,7 +38,8 @@ const MyPage = () => {
       image: "/images/인도식.png",
     },
   ]);
-  const [posts, setPosts] = useState([
+
+  const [boards, setBoards] = useState([
     {
       title: "현이네 고기국수",
       category: "리뷰게시판",
@@ -61,13 +61,13 @@ const MyPage = () => {
   const renderComponent = () => {
     switch (currentComponent) {
       case "profile":
-        return <MyPageProfile items={items} posts={posts} />;
+        return <MyPageProfile bookmarks={bookmarks} boards={boards} />;
       case "mylist":
-        return <MyPageList items={items} setItems={setItems} />;
+        return <MyPageList bookmarks={bookmarks} setBookmarks={setBookmarks} />;
       case "write":
-        return <MyPageWrite posts={posts} setPosts={setPosts} />;
+        return <MyPageWrite boards={boards} setBoards={setBoards} />;
       default:
-        return <MyPageProfile items={items} posts={posts} />;
+        return <MyPageProfile bookmarks={bookmarks} boards={boards} />;
     }
   };
 

@@ -4,7 +4,7 @@ import "./MyPageProfile.css";
 import { GoPencil } from "react-icons/go";
 import { IoExitOutline } from "react-icons/io5";
 
-export default function MyPageProfile({ items, posts }) {
+export default function MyPageProfile({ bookmarks = [], boards = [] }) {
   const [profile, setProfile] = useState({
     nickname: "",
     email: "",
@@ -100,7 +100,7 @@ export default function MyPageProfile({ items, posts }) {
         <div className="profile-row font-['Song Myung']">
           <span className="profile-label font-['Song Myung']">내가 쓴 글:</span>
           <span className="profile-value font-['Song Myung']">
-            {posts.length}개
+            {Array.isArray(boards) ? boards.length : 0}개
           </span>
         </div>
         <div className="profile-row font-['Song Myung']">
@@ -108,7 +108,7 @@ export default function MyPageProfile({ items, posts }) {
             내가 찜한 리스트:
           </span>
           <span className="profile-value font-['Song Myung']">
-            {items.length}곳
+            {Array.isArray(bookmarks) ? bookmarks.length : 0}곳
           </span>
         </div>
         <div className="profile-buttons font-['Song Myung']">
