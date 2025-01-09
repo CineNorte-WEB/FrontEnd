@@ -278,7 +278,7 @@ function SignUp() {
           </p>
           <p
             onClick={() => navigate("/signin")}
-            className="absolute font-bold right-8 text-rose-400 hover:underline hover:text-rose-600 font-yeonsung"
+            className="absolute font-bold cursor-pointer right-8 text-rose-400 hover:underline hover:text-rose-600 font-yeonsung"
           >
             지금, 바로 가입해보세요!
           </p>

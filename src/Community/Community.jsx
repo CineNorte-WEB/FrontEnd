@@ -131,17 +131,6 @@ const Community = () => {
     closeModal();
   };
 
-  const handleDeletePost = (postId) => {
-    if (window.confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
-      setPosts(posts.filter((post) => post.id !== postId));
-
-      const newTotalPages = Math.ceil((posts.length - 1) / POSTS_PER_PAGE);
-      if (currentPage > newTotalPages) {
-        setCurrentPage(newTotalPages);
-      }
-    }
-  };
-
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -168,15 +157,6 @@ const Community = () => {
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <h2 className="mb-2 text-lg font-bold">{post.title}</h2>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeletePost(post.id);
-                  }}
-                  className="px-2 py-1 text-sm font-semibold text-red-500 border-2 border-gray-300 rounded hover:text-red-700 hover:bg-red-400"
-                >
-                  삭제
-                </button>
               </div>
               <div className="flex items-center justify-between">
                 <div className="space-y-5">
