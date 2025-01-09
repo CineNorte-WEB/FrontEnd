@@ -33,16 +33,16 @@
   background-color: #f9f9f9;
 }
 
-.write-info{
+.write-info {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;    /* 정보 간 간격 */
+  gap: 0.3rem; /* 정보 간 간격 */
 }
 
-.write-actions{
+.write-actions {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;    /* 버튼 간 간격 */
+  gap: 0.5rem; /* 버튼 간 간격 */
 }
 /* 삭제/수정 버튼 */
 .delete-button,

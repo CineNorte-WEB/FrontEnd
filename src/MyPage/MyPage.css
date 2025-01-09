@@ -43,11 +43,11 @@
   margin: 0; /* 여백 제거 */
 }
 
-
 .community-subtitle {
   font-size: 1.5rem;
   color: white;
   text-align: center;
+  font-weight: 600;
 }
 
 .container {
