@@ -1,56 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
 import "./MyPageWrite.css";
-import { useState } from "react";
 
-export default function MyPageWrite({ posts, setPosts }) {
+export default function MyPageWrite({ boards, setBoards }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [currentPostIndex, setCurrentPostIndex] = useState(null);
-  const [editedPost, setEditedPost] = useState({ title: "", category: "", author: "" });
+  const [currentBoardIndex, setCurrentBoardIndex] = useState(null);
+  const [editedBoard, setEditedBoard] = useState({
+    title: "",
+    category: "",
+    author: "",
+  });
 
   const handleDeleteClick = (index) => {
-    setCurrentPostIndex(index);
+    setCurrentBoardIndex(index);
     setIsDeleteModalOpen(true);
   };
 
   const handleEditClick = (index) => {
-    setCurrentPostIndex(index);
-    setEditedPost(posts[index]);
+    setCurrentBoardIndex(index);
+    setEditedBoard(boards[index]);
     setIsEditModalOpen(true);
   };
 
   const confirmDelete = () => {
-    setPosts((prevPosts) => prevPosts.filter((_, index) => index !== currentPostIndex));
+    setBoards((prevBoards) =>
+      prevBoards.filter((_, index) => index !== currentBoardIndex)
+    );
     setIsDeleteModalOpen(false);
-    setCurrentPostIndex(null);
+    setCurrentBoardIndex(null);
   };
 
   const cancelDelete = () => {
     setIsDeleteModalOpen(false);
-    setCurrentPostIndex(null);
+    setCurrentBoardIndex(null);
   };
 
   const saveEdit = () => {
-    const updatedPosts = [...posts];
-    updatedPosts[currentPostIndex] = editedPost;
-    setPosts(updatedPosts);
+    const updatedBoards = [...boards];
+    updatedBoards[currentBoardIndex] = editedBoard;
+    setBoards(updatedBoards);
     setIsEditModalOpen(false);
-    setCurrentPostIndex(null);
+    setCurrentBoardIndex(null);
   };
 
   const cancelEdit = () => {
     setIsEditModalOpen(false);
-    setCurrentPostIndex(null);
+    setCurrentBoardIndex(null);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setEditedPost((prev) => ({ ...prev, [name]: value }));
+    setEditedBoard((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
     <div className="write-container font-yeonsung">
-      {posts.length === 0 ? (
+      {boards.length === 0 ? (
         <div className="empty-message">
           작성한 게시물이 없습니다.
           <br />
@@ -58,18 +63,28 @@ export default function MyPageWrite({ posts, setPosts }) {
         </div>
       ) : (
         <div className="write-list">
-          {posts.map((post, index) => (
+          {boards.map((board, index) => (
             <div className="write-item font-yeonsung" key={index}>
               <div className="write-info">
-                <h2 className="write-post-title font-yeonsung">{post.title}</h2>
-                <p className="write-post-category font-yeonsung">{post.category}</p>
-                <p className="write-post-author font-yeonsung">작성자: {post.author}</p>
+                <h2 className="write-post-title font-yeonsung">{board.title}</h2>
+                <p className="write-post-category font-yeonsung">
+                  {board.category}
+                </p>
+                <p className="write-post-author font-yeonsung">
+                  작성자: {board.author}
+                </p>
               </div>
               <div className="write-actions">
-                <button className="edit-button" onClick={() => handleEditClick(index)}>
+                <button
+                  className="edit-button"
+                  onClick={() => handleEditClick(index)}
+                >
                   수정
                 </button>
-                <button className="delete-button" onClick={() => handleDeleteClick(index)}>
+                <button
+                  className="delete-button"
+                  onClick={() => handleDeleteClick(index)}
+                >
                   삭제
                 </button>
               </div>
@@ -101,7 +116,7 @@ export default function MyPageWrite({ posts, setPosts }) {
             <input
               type="text"
               name="title"
-              value={editedPost.title}
+              value={editedBoard.title}
               onChange={handleInputChange}
               placeholder="제목"
               className="modal-input"
@@ -109,7 +124,7 @@ export default function MyPageWrite({ posts, setPosts }) {
             <input
               type="text"
               name="category"
-              value={editedPost.category}
+              value={editedBoard.category}
               onChange={handleInputChange}
               placeholder="카테고리"
               className="modal-input"
@@ -117,7 +132,7 @@ export default function MyPageWrite({ posts, setPosts }) {
             <input
               type="text"
               name="author"
-              value={editedPost.author}
+              value={editedBoard.author}
               onChange={handleInputChange}
               placeholder="작성자"
               className="modal-input"
