@@ -7,7 +7,6 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
 
   // 마커 호버 시 오버레이 표시
   if (source === "marker") {
-    // 마커 위치를 화면 좌표로 변환
     const map = window.map;
     const markerPosition = new window.kakao.maps.LatLng(
       restaurant.position.lat,
@@ -19,10 +18,12 @@ const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
       <div
         className="absolute z-50 bg-white rounded-lg shadow-lg w-72 font-yeonsung"
         style={{
-          left: `${map.getNode().offsetLeft + point.x}px`,
-          top: `${map.getNode().offsetTop + point.y - 40}px`,
-          transform: "translate(-50%, -100%)",
+          position: "absolute",
+          left: `${point.x}px`,
+          top: `${point.y}px`,
+          transform: "translate(0%, -100%)",
           pointerEvents: "none",
+          zIndex: 999,
         }}
       >
         <div className="p-4">
