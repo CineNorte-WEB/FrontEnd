@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./MyPage.css";
 import MyPageProfile from "./MyPageProfile";
@@ -10,7 +10,6 @@ import axios from "axios";
 
 const MyPage = () => {
   const [currentComponent, setCurrentComponent] = useState("profile");
-
   const [bookmarks, setBookmarks] = useState([
     {
       title: "현이네 고기 국수",
@@ -25,20 +24,7 @@ const MyPage = () => {
       summary: "분위기도 좋고 가격도 적당해서 자주 올 것 같아요!",
       image: "/images/인도식.png",
     },
-    {
-      title: "진스시",
-      menu: "일식",
-      summary: "분위기도 좋고 가격도 적당해서 자주 올 것 같아요!",
-      image: "/images/인도식.png",
-    },
-    {
-      title: "진스시",
-      menu: "일식",
-      summary: "분위기도 좋고 가격도 적당해서 자주 올 것 같아요!",
-      image: "/images/인도식.png",
-    },
   ]);
-
   const [boards, setBoards] = useState([
     {
       title: "현이네 고기국수",
@@ -52,7 +38,45 @@ const MyPage = () => {
     },
   ]);
 
+  const [profile, setProfile] = useState(null); // 프로필 상태 추가
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token"); // 토큰 가져오기
+        
+        if (!token) {
+          console.error("토큰이 없습니다. 로그인이 필요합니다.");
+          navigate("/login"); // 토큰이 없으면 로그인 페이지로 이동
+          return;
+        }
+  
+        const response = await axios.get("/users/profile"); // 요청 인터셉터가 자동으로 Authorization 헤더 추가
+  
+        console.log("프로필 데이터:", response.data);
+        setProfile(response.data); // API에서 받은 프로필 데이터를 상태로 설정
+        setLoading(false);
+      } catch (error) {
+        console.error("프로필 호출 중 오류 발생:", error);
+        if (error.response && error.response.status === 401) {
+          console.error("인증 실패. 로그인 페이지로 이동합니다.");
+          localStorage.removeItem("token"); // 만료된 토큰 제거
+          navigate("/login"); // 로그인 페이지로 이동
+        }
+        setLoading(false);
+      }
+    };
+  
+    fetchProfile();
+  }, [navigate]); // navigate 의존성 추가
+  
+
+  if (loading) {
+    return <div className="loading">데이터를 불러오는 중입니다...</div>;
+  }
 
   const handleMenuClick = (menu) => {
     setCurrentComponent(menu);
@@ -61,13 +85,13 @@ const MyPage = () => {
   const renderComponent = () => {
     switch (currentComponent) {
       case "profile":
-        return <MyPageProfile bookmarks={bookmarks} boards={boards} />;
+        return <MyPageProfile profile={profile} bookmarks={bookmarks} boards={boards} />;
       case "mylist":
         return <MyPageList bookmarks={bookmarks} setBookmarks={setBookmarks} />;
       case "write":
         return <MyPageWrite boards={boards} setBoards={setBoards} />;
       default:
-        return <MyPageProfile bookmarks={bookmarks} boards={boards} />;
+        return <MyPageProfile profile={profile} bookmarks={bookmarks} boards={boards} />;
     }
   };
 
@@ -106,9 +130,7 @@ const MyPage = () => {
             찜한 리스트
           </div>
         </div>
-        <div className="menu-content font-['Song Myung']">
-          {renderComponent()}
-        </div>
+        <div className="menu-content font-['Song Myung']">{renderComponent()}</div>
       </div>
     </div>
   );

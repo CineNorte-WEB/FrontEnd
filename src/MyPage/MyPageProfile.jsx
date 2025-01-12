@@ -14,13 +14,24 @@ export default function MyPageProfile({ bookmarks = [], boards = [] }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // localStorage에서 사용자 데이터 가져오기
+  // API에서 사용자 데이터 가져오기
   useEffect(() => {
-    const email = localStorage.getItem("email") || "이메일 없음";
-    const nickname = localStorage.getItem("nickname") || "닉네임 없음";
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await apiClient.get("/users/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setProfile(response.data);
+        setEditedProfile(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("프로필 데이터를 가져오는 중 오류가 발생했습니다:", error);
+        setLoading(false);
+      }
+    };
 
-    setProfile({ email, nickname });
-    setLoading(false);
+    fetchProfile();
   }, []);
 
   const handleEditClick = () => {
@@ -30,17 +41,19 @@ export default function MyPageProfile({ bookmarks = [], boards = [] }) {
 
   const saveEdit = async () => {
     try {
-      // 수정된 데이터를 백엔드로 전송
-      const response = await apiClient.put("/api/users/update", {
-        email: editedProfile.email,
-        nickname: editedProfile.nickname,
-      });
+      const token = localStorage.getItem("token");
+      const response = await apiClient.put(
+        "/users/profile",
+        {
+          email: editedProfile.email,
+          nickname: editedProfile.nickname,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       console.log("프로필 수정 완료:", response.data);
-
-      // 백엔드 응답 데이터를 로컬에 저장
-      localStorage.setItem("email", response.data.email);
-      localStorage.setItem("nickname", response.data.nickname);
 
       // 상태 업데이트
       setProfile(response.data);
@@ -62,9 +75,7 @@ export default function MyPageProfile({ bookmarks = [], boards = [] }) {
   const confirmDelete = () => {
     console.log("탈퇴가 완료되었습니다.");
     // localStorage에서 사용자 데이터 제거
-    localStorage.removeItem("email");
-    localStorage.removeItem("nickname");
-
+    localStorage.removeItem("token");
     setProfile({ email: "이메일 없음", nickname: "닉네임 없음" }); // 상태 초기화
     setIsDeleteModalOpen(false);
   };
