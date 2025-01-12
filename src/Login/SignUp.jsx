@@ -192,18 +192,19 @@ function SignUp() {
               id="email"
               type="email"
               {...register("name", {
-                required: "올바른 이메일 주소를 입력하세요.",
+                required: "이메일은 필수 입력입니다.",
                 pattern: {
-                  value: /^[a-zA-Z0-9_%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                  message:
-                    "올바르지 않은 이메일 주소입니다. 다시 입력해주세요!",
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                  message: "올바른 이메일 형식을 입력해주세요.",
                 },
               })}
               placeholder="아이디(이메일 주소)"
               className="block w-full px-10 py-3 mt-1 border border-black rounded-md shadow-md font-yeonsung mpt focus:border-indigo-500 focus:ring-indigo-500"
             />
             {errors.name && (
-              <p className="text-red-500">{errors.name.message}</p>
+              <p className="mt-2 text-sm font-bold text-red-500 font-yeonsung">
+                {errors.name.message}
+              </p>
             )}
           </div>
           <div>
@@ -214,21 +215,10 @@ function SignUp() {
                 id="password"
                 type={password ? "text" : "password"}
                 {...register("password", {
-                  required: "비밀번호를 입력해주세요!",
+                  required: "비밀번호는 필수 입력입니다.",
                   minLength: {
                     value: 8,
-                    message: "비밀번호는 최소 8자리 이상이어야 합니다.",
-                  },
-                  validate: {
-                    hasUppercase: (value) =>
-                      /[A-Z]/.test(value) ||
-                      "영어 대문자는 반드시 1개 이상의 문자로 포함되어야 합니다!",
-                    hasNumber: (value) =>
-                      /[0-9]/.test(value) ||
-                      "숫자는 반드시 1개 이상 포함되어야 합니다!",
-                    hasSpecialChar: (value) =>
-                      /[!@#$%^&*]/.test(value) ||
-                      "특수기호는 반드시 1개 이상의 문자로 포함되어야 합니다!",
+                    message: "비밀번호는 최소 8자 이상이어야 합니다.",
                   },
                 })}
                 placeholder="비밀번호"
