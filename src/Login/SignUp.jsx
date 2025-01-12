@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 function SignUp() {
   const navigate = useNavigate();
   const [password, setPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지 상태
 
   const {
     register,
@@ -19,38 +19,45 @@ function SignUp() {
     formState: { errors },
   } = useForm();
 
+  // 비밀번호 표시 토글
   const showPassword = () => {
     setPassword((prev) => !prev);
   };
 
+  // 로그인 요청 함수
+
   const onSubmit = async (data) => {
     try {
+      // API 호출
       const response = await axios.post("/api/login", {
         email: data.email,
         password: data.password,
       });
-
+  
+      // 서버 응답 확인
       console.log("로그인 응답 데이터:", response.data);
-
+  
       if (response.data.message === "success") {
-        localStorage.setItem("email", response.data.email);
-        localStorage.setItem("nickname", response.data.nickname);
+  // email, nickname, token 저장
+  localStorage.setItem("email", response.data.email);
+  localStorage.setItem("nickname", response.data.nickname);
+  localStorage.setItem("token", response.data.token); // 추가
+  
+  console.log("토큰 저장:", response.data.token);
+  navigate("/map"); // 성공 시 /map 페이지로 이동 
+} else {
+  setErrorMessage("로그인에 실패했습니다. 다시 시도해주세요.");
+}
 
-        console.log("email 저장:", response.data.email);
-        console.log("nickname 저장:", response.data.nickname);
-
-        navigate("/map");
-      } else {
-        setErrorMessage("로그인에 실패했습니다. 다시 시도해주세요.");
-      }
     } catch (error) {
       console.error("로그인 요청 실패:", error);
       setErrorMessage(
-        error.response?.data?.message ||
-          "로그인에 실패했습니다. 다시 시도해주세요."
+        error.response?.data?.message || "로그인에 실패했습니다. 다시 시도해주세요."
       );
     }
   };
+  
+
 
   return (
     <div className="flex items-center justify-end min-h-screen bg-rose-800">
@@ -61,7 +68,7 @@ function SignUp() {
         <p className="text-5xl text-white font-yeonsung">
           숨겨진 맛집을 캠슐랭에서 발견하세요!
         </p>
-        <div className="flex pl-16 mt-10 space-x-6">
+        <div className="flex mt-12 space-x-4">
           <img src="/images/연대.png" alt="연세대학교" className="w-32 h-32" />
           <img
             src="/images/서강대.png"
@@ -74,7 +81,7 @@ function SignUp() {
             className="w-32 h-32"
           />
         </div>
-        <div className="flex mt-5 ml-16 space-x-7">
+        <div className="flex ml-14 space-x-7">
           <img
             src="/images/시립대.png"
             alt="서울시립대학교"
@@ -89,23 +96,6 @@ function SignUp() {
             src="/images/외대.png"
             alt="한국외국어대학교"
             className="w-32 h-32"
-          />
-        </div>
-        <div className="flex mt-12 ml-24 space-x-8">
-          <img
-            src="/images/flower.png"
-            alt="아이콘"
-            className="w-[100px] h-[100px] mt-3"
-          />
-          <img
-            src="/images/flower.png"
-            alt="아이콘"
-            className="w-[100px] h-[100px] mt-3"
-          />
-          <img
-            src="/images/flower.png"
-            alt="아이콘"
-            className="w-[100px] h-[100px] mt-3"
           />
         </div>
         <h1 className="font-normal text-white ml-36 text-8xl font-petemoss">
@@ -159,12 +149,12 @@ function SignUp() {
             {password ? (
               <IoMdEyeOff
                 onClick={showPassword}
-                className="absolute text-2xl text-black transform cursor-pointer bottom-3 right-3"
+                className="absolute text-2xl cursor-pointer top-12 right-4"
               />
             ) : (
               <FaEye
                 onClick={showPassword}
-                className="absolute text-2xl text-black transform cursor-pointer bottom-3 right-3"
+                className="absolute text-2xl cursor-pointer top-12 right-4"
               />
             )}
             {errors.password && (
@@ -178,7 +168,7 @@ function SignUp() {
           )}
           <button
             type="submit"
-            className="w-full px-4 py-2 text-2xl font-bold text-white border border-white rounded-md shadow-lg font-yeonsung bg-rose-700 hover:bg-rose-400 focus:outline focus:ring focus:ring-offset-2 focus:ring-white"
+            className="w-full px-4 py-2 text-2xl font-bold text-white border border-white rounded-md shadow-lg font-yeonsung bg-rose-700 hover:bg-rose-400"
           >
             로그인
           </button>
@@ -201,7 +191,7 @@ function SignUp() {
           </p>
           <p
             onClick={() => navigate("/signin")}
-            className="absolute font-bold cursor-pointer right-8 text-rose-400 hover:underline hover:text-rose-600 font-yeonsung"
+            className="absolute font-bold right-8 text-rose-400 hover:underline hover:text-rose-600 font-yeonsung"
           >
             지금, 바로 가입해보세요!
           </p>
