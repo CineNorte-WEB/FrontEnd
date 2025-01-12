@@ -6,6 +6,7 @@ import MyPageList from "./MyPageList";
 import MyPageWrite from "./MyPageWrite";
 import Common from "../components/Common";
 import Brand from "../components/Brand";
+import apiClient from "../api/axios";
 import axios from "axios";
 
 const MyPage = () => {
@@ -46,32 +47,19 @@ const MyPage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem("token"); // 토큰 가져오기
-        
-        if (!token) {
-          console.error("토큰이 없습니다. 로그인이 필요합니다.");
-          navigate("/login"); // 토큰이 없으면 로그인 페이지로 이동
-          return;
-        }
-  
-        const response = await axios.get("/users/profile"); // 요청 인터셉터가 자동으로 Authorization 헤더 추가
-  
-        console.log("프로필 데이터:", response.data);
-        setProfile(response.data); // API에서 받은 프로필 데이터를 상태로 설정
+        const response = await apiClient.get("/users/profile"); // axios.js가 Authorization 헤더 처리
+        setProfile(response.data); // 프로필 데이터 설정
         setLoading(false);
       } catch (error) {
-        console.error("프로필 호출 중 오류 발생:", error);
-        if (error.response && error.response.status === 401) {
-          console.error("인증 실패. 로그인 페이지로 이동합니다.");
-          localStorage.removeItem("token"); // 만료된 토큰 제거
-          navigate("/login"); // 로그인 페이지로 이동
-        }
+        console.error("프로필 데이터를 가져오는 중 오류:", error);
         setLoading(false);
       }
     };
   
     fetchProfile();
-  }, [navigate]); // navigate 의존성 추가
+  }, []);
+  
+  
   
 
   if (loading) {

@@ -28,27 +28,27 @@ function SignUp() {
 
   const onSubmit = async (data) => {
     try {
-      // API 호출
       const response = await axios.post("/api/login", {
         email: data.email,
         password: data.password,
       });
   
-      // 서버 응답 확인
-      console.log("로그인 응답 데이터:", response.data);
-  
       if (response.data.message === "success") {
-  // email, nickname, token 저장
-  localStorage.setItem("email", response.data.email);
-  localStorage.setItem("nickname", response.data.nickname);
-  localStorage.setItem("token", response.data.token); // 추가
+        const { accessToken, refreshToken, email, nickname } = response.data;
   
-  console.log("토큰 저장:", response.data.token);
-  navigate("/map"); // 성공 시 /map 페이지로 이동 
-} else {
-  setErrorMessage("로그인에 실패했습니다. 다시 시도해주세요.");
-}
-
+        // 토큰 및 사용자 정보 저장
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("email", email);
+        localStorage.setItem("nickname", nickname);
+  
+        console.log("로그인 성공, 토큰 저장 완료");
+  
+        // 로그인 성공 시 페이지 이동
+        navigate("/mypage");
+      } else {
+        setErrorMessage("로그인에 실패했습니다. 다시 시도해주세요.");
+      }
     } catch (error) {
       console.error("로그인 요청 실패:", error);
       setErrorMessage(
@@ -56,6 +56,7 @@ function SignUp() {
       );
     }
   };
+  
   
 
 
