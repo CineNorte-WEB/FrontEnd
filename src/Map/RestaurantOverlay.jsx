@@ -1,352 +1,170 @@
-import React, { useEffect, useState } from "react";
-import Common from "../components/Common";
-import LeftSide from "./LeftSide";
-import RestaurantOverlay from "./RestaurantOverlay";
+import React from "react";
 
-// University location information
-const universityLocations = {
-  서강대: { lat: 37.551292, lng: 126.940108 },
-  시립대: { lat: 37.5849836, lng: 127.057752 },
-  이대: { lat: 37.562691, lng: 126.947684 },
-  연대: { lat: 37.564512, lng: 126.938977 },
-  외대: { lat: 37.5976717, lng: 127.0579181 },
-  경희대: { lat: 37.597312, lng: 127.05165 },
-};
+const RestaurantOverlay = ({ restaurant, onClose, source }) => {
+  if (!restaurant) return null;
 
-function KakaoMap() {
-  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
-  const [markerClick, setMarkerClick] = useState(false);
-  const [map, setMap] = useState(null);
-  const [markers, setMarkers] = useState([]);
-  const [universityOverlays, setUniversityOverlays] = useState([]);
-  const [restaurantData, setRestaurantData] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // Fetch restaurant data from the API
-  useEffect(() => {
-    const fetchRestaurantData = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        // Updated API endpoint
-        const response = await fetch(
-          `http://43.203.118.59:8080/users/register`
-        );
-
-        if (!response.ok) {
-          if (response.status === 404) {
-            throw new Error("요청하신 데이터를 찾을 수 없습니다.");
-          } else if (response.status === 500) {
-            throw new Error("서버 내부 오류가 발생했습니다.");
-          } else {
-            throw new Error(`서버 오류! 상태: ${response.status}`);
-          }
-        }
-
-        const data = await response.json();
-
-        if (!Array.isArray(data)) {
-          console.error("Invalid data format:", data);
-          throw new Error("서버 응답이 올바른 형식이 아닙니다.");
-        }
-
-        const transformedData = data
-          .map((restaurant) => {
-            if (!restaurant || typeof restaurant !== "object") {
-              console.warn("Invalid restaurant data:", restaurant);
-              return null;
-            }
-
-            try {
-              return {
-                id: restaurant.id || Date.now() + Math.random(),
-                name: restaurant.name || "이름 없음",
-                category: restaurant.category || "기타",
-                rating: parseFloat(restaurant.rating || 0).toFixed(1),
-                dislikeRating: parseFloat(
-                  restaurant.dislikeRating || 0
-                ).toFixed(1),
-                goodText: restaurant.goodText || "",
-                badText: restaurant.badText || "",
-                address: restaurant.address || "",
-                hours: restaurant.hours || "",
-                operatingHours: {
-                  weekday: restaurant.weekdayHours || "",
-                  weekend: restaurant.weekendHours || "",
-                },
-                position: {
-                  lat: parseFloat(restaurant.latitude) || 37.564512,
-                  lng: parseFloat(restaurant.longitude) || 126.938977,
-                },
-                like_points: Array.isArray(restaurant.likePoints)
-                  ? restaurant.likePoints
-                  : [],
-                image: `/images/${restaurant.category || "기타"}.png`,
-                menu: Array.isArray(restaurant.menu) ? restaurant.menu : [],
-              };
-            } catch (err) {
-              console.error("Error transforming restaurant data:", err);
-              return null;
-            }
-          })
-          .filter(Boolean);
-
-        if (transformedData.length === 0) {
-          throw new Error("표시할 수 있는 식당 데이터가 없습니다.");
-        }
-
-        setRestaurantData(transformedData);
-      } catch (error) {
-        console.error("식당 데이터 불러오기 오류:", error);
-        setError(error.message || "알 수 없는 오류가 발생했습니다.");
-        setRestaurantData([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRestaurantData();
-  }, []);
-
-  // Initialize Kakao Map
-  useEffect(() => {
-    const KAKAO_MAP_SRC = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${
-      import.meta.env.VITE_KAKAO_APP_KEY
-    }&libraries=services&autoload=false`;
-
-    const loadKakaoMap = () => {
-      if (!document.querySelector(`script[src="${KAKAO_MAP_SRC}"]`)) {
-        const script = document.createElement("script");
-        script.src = KAKAO_MAP_SRC;
-        script.async = true;
-        script.defer = true;
-
-        script.onload = () => {
-          if (window.kakao && window.kakao.maps) {
-            window.kakao.maps.load(() => initializeMap());
-          }
-        };
-
-        script.onerror = () => {
-          setError("카카오맵 로딩 실패");
-        };
-
-        document.head.appendChild(script);
-      } else if (window.kakao && window.kakao.maps) {
-        window.kakao.maps.load(() => initializeMap());
-      }
-    };
-
-    loadKakaoMap();
-  }, []);
-
-  const initializeMap = () => {
-    if (!window.kakao || !window.kakao.maps) {
-      setError("카카오맵 초기화 실패");
-      return;
-    }
-
-    const container = document.getElementById("map");
-    if (!container) {
-      setError("맵 컨테이너를 찾을 수 없습니다");
-      return;
-    }
-
+  const formatLikePoints = (likePoints) => {
     try {
-      const options = {
-        center: new window.kakao.maps.LatLng(37.564512, 126.938977),
-        level: 3,
-        draggable: true,
-        scrollwheel: true,
-        disableDoubleClick: false,
-      };
-
-      const newMap = new window.kakao.maps.Map(container, options);
-      window.map = newMap;
-      setMap(newMap);
-
-      createUniversityOverlays(newMap);
-
-      // Only create restaurant markers if we have data
-      if (restaurantData.length > 0) {
-        createRestaurantMarkers(newMap);
+      if (typeof likePoints === "string") {
+        return JSON.parse(likePoints);
       }
-
-      window.kakao.maps.event.addListener(newMap, "click", () => {
-        setSelectedRestaurant(null);
-        setMarkerClick(false);
-      });
-    } catch (error) {
-      console.error("맵 초기화 오류:", error);
-      setError("맵 초기화 중 오류가 발생했습니다");
+      return likePoints || [];
+    } catch (e) {
+      console.warn("Error parsing likePoints:", e);
+      return [];
     }
   };
 
-  const createUniversityOverlays = (newMap) => {
-    try {
-      const newUniversityOverlays = [];
-      Object.entries(universityLocations).forEach(([university, position]) => {
-        const universityPosition = new window.kakao.maps.LatLng(
-          position.lat,
-          position.lng
-        );
-
-        const content = document.createElement("div");
-        content.style.position = "relative";
-        content.style.width = "50px";
-        content.style.height = "50px";
-        content.style.border = "3px solid #000000";
-        content.style.borderRadius = "50%";
-        content.style.backgroundColor = "white";
-        content.style.padding = "2px";
-        content.style.boxSizing = "border-box";
-
-        const img = document.createElement("img");
-        img.src = `/images/${university}.png`;
-        img.style.width = "100%";
-        img.style.height = "100%";
-        img.style.borderRadius = "50%";
-        img.onerror = () => {
-          img.src = "/images/default-university.png"; // Fallback image
-        };
-        content.appendChild(img);
-
-        const customOverlay = new window.kakao.maps.CustomOverlay({
-          position: universityPosition,
-          content: content,
-          map: newMap,
-          zIndex: 3,
-        });
-
-        newUniversityOverlays.push(customOverlay);
-      });
-      setUniversityOverlays(newUniversityOverlays);
-    } catch (error) {
-      console.error("대학교 오버레이 생성 오류:", error);
-      setError("대학교 마커 생성 중 오류가 발생했습니다");
-    }
-  };
-
-  const createRestaurantMarkers = (newMap) => {
-    try {
-      const newMarkers = restaurantData.map((place) => {
-        const markerPosition = new window.kakao.maps.LatLng(
-          place.position.lat,
-          place.position.lng
-        );
-
-        const marker = new window.kakao.maps.Marker({
-          position: markerPosition,
-          map: newMap,
-        });
-
-        window.kakao.maps.event.addListener(marker, "mouseover", () => {
-          setSelectedRestaurant({
-            ...place,
-            markerPosition: {
-              left: marker.getPosition().getLng(),
-              top: marker.getPosition().getLat(),
-            },
-          });
-          setMarkerClick(true);
-        });
-
-        window.kakao.maps.event.addListener(marker, "mouseout", () => {
-          setSelectedRestaurant(null);
-          setMarkerClick(false);
-        });
-
-        window.kakao.maps.event.addListener(marker, "click", () => {
-          setSelectedRestaurant({
-            ...place,
-            markerPosition: {
-              left: marker.getPosition().getLng(),
-              top: marker.getPosition().getLat(),
-            },
-          });
-          setMarkerClick(true);
-        });
-
-        return marker;
-      });
-
-      setMarkers(newMarkers);
-    } catch (error) {
-      console.error("식당 마커 생성 오류:", error);
-      setError("식당 마커 생성 중 오류가 발생했습니다");
-    }
-  };
-
-  const handleListClick = (restaurant) => {
-    setSelectedRestaurant(restaurant);
-    setMarkerClick(false);
-  };
-
-  const handleUniversityChange = (university) => {
-    if (map && universityLocations[university]) {
-      const position = new window.kakao.maps.LatLng(
-        universityLocations[university].lat,
-        universityLocations[university].lng
-      );
-      map.panTo(position);
-    }
-  };
-
-  // Show loading state
-  if (loading) {
+  // 마커 호버시 간단한 정보만 표시
+  if (source === "marker") {
     return (
-      <div className="flex items-center justify-center w-full h-screen bg-gray-100">
-        <div className="text-xl font-semibold text-gray-600">
-          데이터를 불러오는 중...
+      <div className="absolute z-50 p-4 bg-white border-2 border-gray-300 rounded-lg shadow-lg left-4 top-4">
+        <div className="flex justify-between mb-2">
+          <h3 className="text-lg font-bold font-yeonsung">{restaurant.name}</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            ✕
+          </button>
         </div>
+        <p className="mb-2 text-sm text-gray-600">
+          <strong>카테고리:</strong> {restaurant.category}
+        </p>
+        <p className="mb-2 text-sm text-gray-600">
+          <strong>주소:</strong> {restaurant.address}
+        </p>
+        <p className="text-sm text-gray-600">
+          <strong>영업시간:</strong> {restaurant.hours || "정보 없음"}
+        </p>
       </div>
     );
   }
 
-  // Show error state
-  if (error) {
-    return (
-      <div className="flex items-center justify-center w-full h-screen bg-gray-100">
-        <div className="p-4 text-red-500 bg-white rounded-lg shadow-lg">
-          <h2 className="mb-2 text-xl font-bold">오류가 발생했습니다</h2>
-          <p>{error}</p>
-        </div>
-      </div>
-    );
-  }
-
+  // 리스트에서 클릭시 상세 정보 표시
   return (
-    <div className="relative flex w-full h-screen bg-gray-100">
-      <div className="w-1/4 h-full bg-white border-r-2 border-gray-300">
-        <div className="relative h-full overflow-hidden border-2 border-black rounded-r-xl">
-          <LeftSide
-            restaurantData={restaurantData}
-            onSelectRestaurant={handleListClick}
-            onUniversityChange={handleUniversityChange}
-          />
-        </div>
+    <div className="fixed z-50 w-1/3 h-screen mb-4 ml-12 overflow-y-auto bg-white border-2 border-gray-300 top-1 rounded-xl left-80">
+      <div className="sticky top-0 z-10 flex justify-between p-3 bg-white border-2 border-gray-200">
+        <h2 className="text-2xl font-bold font-yeonsung">{restaurant.name}</h2>
+        <button
+          onClick={onClose}
+          className="text-2xl font-bold text-red-500 font-yeonsung hover:text-gray-700"
+        >
+          ✕
+        </button>
       </div>
-      <div className="relative w-3/4 h-full">
-        <div
-          id="map"
-          className="w-full h-full overflow-hidden border-2 border-gray-400 rounded-xl"
-        />
-        {selectedRestaurant && (
-          <RestaurantOverlay
-            restaurant={selectedRestaurant}
-            onClose={() => {
-              setSelectedRestaurant(null);
-              setMarkerClick(false);
+
+      <div className="p-4">
+        {/* 기본 정보 */}
+        <div className="p-4 mb-6 rounded-lg bg-gray-50">
+          <img
+            src={restaurant.imageUrl || `/images/${restaurant.category}.png`}
+            alt={restaurant.name}
+            className="object-cover w-full h-48 mb-4 rounded-lg"
+            onError={(e) => {
+              e.target.src = "/images/default-restaurant.png";
             }}
-            source={markerClick ? "marker" : "list"}
           />
+          <div className="grid gap-2">
+            <div className="flex items-center justify-between">
+              <span className="font-bold">평점</span>
+              <span className="text-yellow-400">
+                {"⭐".repeat(Math.round(restaurant.rating))} (
+                {restaurant.rating})
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-bold">카테고리</span>
+              <span>{restaurant.category}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-bold">주소</span>
+              <span className="flex-1 ml-4 text-right">
+                {restaurant.address}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-bold">영업시간</span>
+              <span>{restaurant.hours || "정보 없음"}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 메뉴 정보 */}
+        {restaurant.menus && restaurant.menus.length > 0 && (
+          <div className="mb-6">
+            <h3 className="mb-3 text-xl font-bold font-yeonsung">메뉴</h3>
+            <div className="grid gap-3">
+              {restaurant.menus.map((menu, index) => (
+                <div key={index} className="p-3 rounded-lg bg-gray-50">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-lg font-medium">{menu.name}</span>
+                    <span className="font-bold text-blue-600">
+                      {menu.price?.toLocaleString()}원
+                    </span>
+                  </div>
+                  {menu.description && menu.description !== "설명 없음" && (
+                    <p className="text-sm text-gray-600">{menu.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 좋아요 포인트 */}
+        {restaurant.likePoints && (
+          <div className="mb-6">
+            <h3 className="mb-3 text-xl font-bold font-yeonsung">
+              좋아요 포인트
+            </h3>
+            <div className="p-4 rounded-lg bg-gray-50">
+              {formatLikePoints(restaurant.likePoints).map((point, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between mb-2"
+                >
+                  <span className="font-medium">{point.category}</span>
+                  <div className="flex items-center">
+                    <div className="w-24 h-2 mr-2 bg-gray-200 rounded-full">
+                      <div
+                        className="h-full bg-blue-500 rounded-full"
+                        style={{ width: `${(point.score / 5) * 100}%` }}
+                      ></div>
+                    </div>
+                    <span className="text-sm text-gray-600">{point.score}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 리뷰 섹션 */}
+        {restaurant.reviews && restaurant.reviews.length > 0 && (
+          <div className="mb-6">
+            <h3 className="mb-3 text-xl font-bold font-yeonsung">리뷰</h3>
+            <div className="grid gap-3">
+              {restaurant.reviews.map((review, index) => (
+                <div key={index} className="p-4 rounded-lg bg-gray-50">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium">
+                      {review.author || "익명"}
+                    </span>
+                    <span className="text-yellow-400">
+                      {"⭐".repeat(Math.round(review.rating))}
+                    </span>
+                  </div>
+                  <p className="text-gray-700">{review.content}</p>
+                  <p className="mt-2 text-sm text-gray-500">{review.date}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
-      <Common />
     </div>
   );
-}
+};
 
-export default KakaoMap;
+export default RestaurantOverlay;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Common from "../components/Common";
 import LeftSide from "./LeftSide";
 import RestaurantOverlay from "./RestaurantOverlay";
@@ -51,9 +51,6 @@ function KakaoMap() {
   const [selectedUniversity, setSelectedUniversity] = useState("연대");
   const [reviewData, setReviewData] = useState({});
   const [analysisData, setAnalysisData] = useState({});
-
-  // useRef로 마운트 상태 추적
-  const isMountedRef = useRef(true);
 
   // 개선된 API 호출 함수
   const fetchWithErrorHandling = async (url) => {
@@ -132,40 +129,25 @@ function KakaoMap() {
   };
 
   // likePoints 파싱 함수 (기존과 동일)
-  const parseLikePoints = useCallback((likePoints) => {
+  const parseLikePoints = (likePoints) => {
     if (!likePoints) return [];
 
     try {
-      // 문자열인 경우
       if (typeof likePoints === "string") {
-        // 공백 제거 후 체크
-        const trimmedPoints = likePoints.trim();
-
-        // JSON 배열인지 확인
-        if (trimmedPoints.startsWith("[") && trimmedPoints.endsWith("]")) {
-          // 안전한 JSON 파싱 시도
-          const parsed = JSON.parse(trimmedPoints);
-          return Array.isArray(parsed) ? parsed : [];
+        if (likePoints.trim().startsWith("[")) {
+          return JSON.parse(likePoints);
         }
-
-        // 콤마로 구분된 문자열인 경우
-        return trimmedPoints
-          .split(",")
-          .map((point) => point.trim())
-          .filter(Boolean);
+        return likePoints.split(",").map((point) => point.trim());
       }
-
-      // 이미 배열인 경우
       if (Array.isArray(likePoints)) {
-        return likePoints.filter(Boolean); // null, undefined, 빈 문자열 제거
+        return likePoints;
       }
-
       return [];
     } catch (e) {
-      console.warn("Error parsing likePoints:", likePoints, e);
+      console.warn("Error parsing likePoints:", e);
       return [];
     }
-  }, []);
+  };
 
   // 개선된 데이터 변환 로직 (기존과 동일)
   const transformPlaceData = (place) => {
@@ -197,11 +179,7 @@ function KakaoMap() {
 
   // 모든 데이터 가져오기 (개선된 로깅 추가)
   useEffect(() => {
-    isMountedRef.current = true;
-
     const fetchAllData = async () => {
-      if (!isMountedRef.current) return;
-
       setIsLoading(true);
       setError(null);
       try {
