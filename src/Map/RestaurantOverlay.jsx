@@ -21,20 +21,17 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
       <div className="absolute z-50 p-4 bg-white border-2 border-gray-300 rounded-lg shadow-lg left-4 top-4">
         <div className="flex justify-between mb-2">
           <h3 className="text-lg font-bold font-yeonsung">{restaurant.name}</h3>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
+          <button onClick={onClose} className="text-gray-500 font-yeonsung">
             ✕
           </button>
         </div>
-        <p className="mb-2 text-sm text-gray-600">
+        <p className="mb-2 text-sm text-gray-600 font-yeonsung">
           <strong>카테고리:</strong> {restaurant.category}
         </p>
-        <p className="mb-2 text-sm text-gray-600">
+        <p className="mb-2 text-sm text-gray-600 font-yeonsung">
           <strong>주소:</strong> {restaurant.address}
         </p>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 font-yeonsung">
           <strong>영업시간:</strong> {restaurant.hours || "정보 없음"}
         </p>
       </div>
@@ -43,12 +40,12 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
 
   // 리스트에서 클릭시 상세 정보 표시
   return (
-    <div className="fixed z-50 w-1/3 h-screen mb-4 ml-12 overflow-y-auto bg-white border-2 border-gray-300 top-1 rounded-xl left-80">
+    <div className="fixed z-50 w-1/3 h-screen ml-12 overflow-y-auto bg-white border-2 border-gray-300 top-1 rounded-xl left-80">
       <div className="sticky top-0 z-10 flex justify-between p-3 bg-white border-2 border-gray-200">
         <h2 className="text-2xl font-bold font-yeonsung">{restaurant.name}</h2>
         <button
           onClick={onClose}
-          className="text-2xl font-bold text-red-500 font-yeonsung hover:text-gray-700"
+          className="text-2xl font-bold text-red-500 font-yeonsung"
         >
           ✕
         </button>
@@ -65,7 +62,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
               e.target.src = "/images/default-restaurant.png";
             }}
           />
-          <div className="grid gap-2">
+          <div className="grid gap-2 font-yeonsung">
             <div className="flex items-center justify-between">
               <span className="font-bold">평점</span>
               <span className="text-yellow-400">
@@ -97,14 +94,16 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
             <div className="grid gap-3">
               {restaurant.menus.map((menu, index) => (
                 <div key={index} className="p-3 rounded-lg bg-gray-50">
-                  <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center justify-between mb-1 font-yeonsung">
                     <span className="text-lg font-medium">{menu.name}</span>
                     <span className="font-bold text-blue-600">
                       {menu.price?.toLocaleString()}원
                     </span>
                   </div>
                   {menu.description && menu.description !== "설명 없음" && (
-                    <p className="text-sm text-gray-600">{menu.description}</p>
+                    <p className="text-sm text-gray-600 font-yeonsung">
+                      {menu.description}
+                    </p>
                   )}
                 </div>
               ))}
@@ -122,7 +121,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
               {formatLikePoints(restaurant.likePoints).map((point, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between mb-2"
+                  className="flex items-center justify-between mb-2 font-yeonsung"
                 >
                   <span className="font-medium">{point.category}</span>
                   <div className="flex items-center">
@@ -147,7 +146,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
             <div className="grid gap-3">
               {restaurant.reviews.map((review, index) => (
                 <div key={index} className="p-4 rounded-lg bg-gray-50">
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center justify-between mb-2 font-yeonsung">
                     <span className="font-medium">
                       {review.author || "익명"}
                     </span>
@@ -155,8 +154,12 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
                       {"⭐".repeat(Math.round(review.rating))}
                     </span>
                   </div>
-                  <p className="text-gray-700">{review.content}</p>
-                  <p className="mt-2 text-sm text-gray-500">{review.date}</p>
+                  <p className="text-gray-700 font-yeonsung">
+                    {review.content}
+                  </p>
+                  <p className="mt-2 text-sm text-gray-500 font-yeonsung">
+                    {review.date}
+                  </p>
                 </div>
               ))}
             </div>
