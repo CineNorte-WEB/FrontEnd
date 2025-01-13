@@ -18,10 +18,18 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
   // 마커 호버시 간단한 정보만 표시
   if (source === "marker") {
     return (
-      <div className="absolute z-50 p-4 bg-white border-2 border-gray-300 rounded-lg shadow-lg left-4 top-4">
+      <div
+        className="absolute z-50 p-4 bg-white border-2 border-gray-300 rounded-lg shadow-lg left-4 top-4"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex justify-between mb-2">
           <h3 className="text-lg font-bold font-yeonsung">{restaurant.name}</h3>
-          <button onClick={onClose} className="text-gray-500 font-yeonsung">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            className="text-gray-500 font-yeonsung"
+          >
             ✕
           </button>
         </div>
@@ -40,11 +48,17 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
 
   // 리스트에서 클릭시 상세 정보 표시
   return (
-    <div className="fixed z-50 w-1/3 h-screen ml-12 overflow-y-auto bg-white border-2 border-gray-300 top-1 rounded-xl left-80">
+    <div
+      className="fixed z-50 w-1/3 h-screen ml-12 overflow-y-auto bg-white border-2 border-gray-300 top-1 rounded-xl left-80"
+      onClick={(e) => e.stopPropagation()}
+    >
       <div className="sticky top-0 z-10 flex justify-between p-3 bg-white border-2 border-gray-200">
         <h2 className="text-2xl font-bold font-yeonsung">{restaurant.name}</h2>
         <button
-          onClick={onClose}
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
           className="text-2xl font-bold text-red-500 font-yeonsung"
         >
           ✕
