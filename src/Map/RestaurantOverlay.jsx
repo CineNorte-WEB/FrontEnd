@@ -1,244 +1,352 @@
-// RestaurantOverlay.jsx
-import React from "react";
-import { IoArrowBack } from "react-icons/io5";
+import React, { useEffect, useState } from "react";
+import Common from "../components/Common";
+import LeftSide from "./LeftSide";
+import RestaurantOverlay from "./RestaurantOverlay";
 
-const RestaurantOverlay = ({ restaurant, onClose, source = "list" }) => {
-  if (!restaurant) return null;
+// University location information
+const universityLocations = {
+  서강대: { lat: 37.551292, lng: 126.940108 },
+  시립대: { lat: 37.5849836, lng: 127.057752 },
+  이대: { lat: 37.562691, lng: 126.947684 },
+  연대: { lat: 37.564512, lng: 126.938977 },
+  외대: { lat: 37.5976717, lng: 127.0579181 },
+  경희대: { lat: 37.597312, lng: 127.05165 },
+};
 
-  // 마커 호버 시 오버레이 표시
-  if (source === "marker") {
-    const map = window.map;
-    const markerPosition = new window.kakao.maps.LatLng(
-      restaurant.position.lat,
-      restaurant.position.lng
-    );
-    const projection = map.getProjection();
-    const point = projection.pointFromCoords(markerPosition);
+function KakaoMap() {
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+  const [markerClick, setMarkerClick] = useState(false);
+  const [map, setMap] = useState(null);
+  const [markers, setMarkers] = useState([]);
+  const [universityOverlays, setUniversityOverlays] = useState([]);
+  const [restaurantData, setRestaurantData] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch restaurant data from the API
+  useEffect(() => {
+    const fetchRestaurantData = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        // Updated API endpoint
+        const response = await fetch(
+          `http://43.203.118.59:8080/users/register`
+        );
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error("요청하신 데이터를 찾을 수 없습니다.");
+          } else if (response.status === 500) {
+            throw new Error("서버 내부 오류가 발생했습니다.");
+          } else {
+            throw new Error(`서버 오류! 상태: ${response.status}`);
+          }
+        }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+          console.error("Invalid data format:", data);
+          throw new Error("서버 응답이 올바른 형식이 아닙니다.");
+        }
+
+        const transformedData = data
+          .map((restaurant) => {
+            if (!restaurant || typeof restaurant !== "object") {
+              console.warn("Invalid restaurant data:", restaurant);
+              return null;
+            }
+
+            try {
+              return {
+                id: restaurant.id || Date.now() + Math.random(),
+                name: restaurant.name || "이름 없음",
+                category: restaurant.category || "기타",
+                rating: parseFloat(restaurant.rating || 0).toFixed(1),
+                dislikeRating: parseFloat(
+                  restaurant.dislikeRating || 0
+                ).toFixed(1),
+                goodText: restaurant.goodText || "",
+                badText: restaurant.badText || "",
+                address: restaurant.address || "",
+                hours: restaurant.hours || "",
+                operatingHours: {
+                  weekday: restaurant.weekdayHours || "",
+                  weekend: restaurant.weekendHours || "",
+                },
+                position: {
+                  lat: parseFloat(restaurant.latitude) || 37.564512,
+                  lng: parseFloat(restaurant.longitude) || 126.938977,
+                },
+                like_points: Array.isArray(restaurant.likePoints)
+                  ? restaurant.likePoints
+                  : [],
+                image: `/images/${restaurant.category || "기타"}.png`,
+                menu: Array.isArray(restaurant.menu) ? restaurant.menu : [],
+              };
+            } catch (err) {
+              console.error("Error transforming restaurant data:", err);
+              return null;
+            }
+          })
+          .filter(Boolean);
+
+        if (transformedData.length === 0) {
+          throw new Error("표시할 수 있는 식당 데이터가 없습니다.");
+        }
+
+        setRestaurantData(transformedData);
+      } catch (error) {
+        console.error("식당 데이터 불러오기 오류:", error);
+        setError(error.message || "알 수 없는 오류가 발생했습니다.");
+        setRestaurantData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRestaurantData();
+  }, []);
+
+  // Initialize Kakao Map
+  useEffect(() => {
+    const KAKAO_MAP_SRC = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${
+      import.meta.env.VITE_KAKAO_APP_KEY
+    }&libraries=services&autoload=false`;
+
+    const loadKakaoMap = () => {
+      if (!document.querySelector(`script[src="${KAKAO_MAP_SRC}"]`)) {
+        const script = document.createElement("script");
+        script.src = KAKAO_MAP_SRC;
+        script.async = true;
+        script.defer = true;
+
+        script.onload = () => {
+          if (window.kakao && window.kakao.maps) {
+            window.kakao.maps.load(() => initializeMap());
+          }
+        };
+
+        script.onerror = () => {
+          setError("카카오맵 로딩 실패");
+        };
+
+        document.head.appendChild(script);
+      } else if (window.kakao && window.kakao.maps) {
+        window.kakao.maps.load(() => initializeMap());
+      }
+    };
+
+    loadKakaoMap();
+  }, []);
+
+  const initializeMap = () => {
+    if (!window.kakao || !window.kakao.maps) {
+      setError("카카오맵 초기화 실패");
+      return;
+    }
+
+    const container = document.getElementById("map");
+    if (!container) {
+      setError("맵 컨테이너를 찾을 수 없습니다");
+      return;
+    }
+
+    try {
+      const options = {
+        center: new window.kakao.maps.LatLng(37.564512, 126.938977),
+        level: 3,
+        draggable: true,
+        scrollwheel: true,
+        disableDoubleClick: false,
+      };
+
+      const newMap = new window.kakao.maps.Map(container, options);
+      window.map = newMap;
+      setMap(newMap);
+
+      createUniversityOverlays(newMap);
+
+      // Only create restaurant markers if we have data
+      if (restaurantData.length > 0) {
+        createRestaurantMarkers(newMap);
+      }
+
+      window.kakao.maps.event.addListener(newMap, "click", () => {
+        setSelectedRestaurant(null);
+        setMarkerClick(false);
+      });
+    } catch (error) {
+      console.error("맵 초기화 오류:", error);
+      setError("맵 초기화 중 오류가 발생했습니다");
+    }
+  };
+
+  const createUniversityOverlays = (newMap) => {
+    try {
+      const newUniversityOverlays = [];
+      Object.entries(universityLocations).forEach(([university, position]) => {
+        const universityPosition = new window.kakao.maps.LatLng(
+          position.lat,
+          position.lng
+        );
+
+        const content = document.createElement("div");
+        content.style.position = "relative";
+        content.style.width = "50px";
+        content.style.height = "50px";
+        content.style.border = "3px solid #000000";
+        content.style.borderRadius = "50%";
+        content.style.backgroundColor = "white";
+        content.style.padding = "2px";
+        content.style.boxSizing = "border-box";
+
+        const img = document.createElement("img");
+        img.src = `/images/${university}.png`;
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.borderRadius = "50%";
+        img.onerror = () => {
+          img.src = "/images/default-university.png"; // Fallback image
+        };
+        content.appendChild(img);
+
+        const customOverlay = new window.kakao.maps.CustomOverlay({
+          position: universityPosition,
+          content: content,
+          map: newMap,
+          zIndex: 3,
+        });
+
+        newUniversityOverlays.push(customOverlay);
+      });
+      setUniversityOverlays(newUniversityOverlays);
+    } catch (error) {
+      console.error("대학교 오버레이 생성 오류:", error);
+      setError("대학교 마커 생성 중 오류가 발생했습니다");
+    }
+  };
+
+  const createRestaurantMarkers = (newMap) => {
+    try {
+      const newMarkers = restaurantData.map((place) => {
+        const markerPosition = new window.kakao.maps.LatLng(
+          place.position.lat,
+          place.position.lng
+        );
+
+        const marker = new window.kakao.maps.Marker({
+          position: markerPosition,
+          map: newMap,
+        });
+
+        window.kakao.maps.event.addListener(marker, "mouseover", () => {
+          setSelectedRestaurant({
+            ...place,
+            markerPosition: {
+              left: marker.getPosition().getLng(),
+              top: marker.getPosition().getLat(),
+            },
+          });
+          setMarkerClick(true);
+        });
+
+        window.kakao.maps.event.addListener(marker, "mouseout", () => {
+          setSelectedRestaurant(null);
+          setMarkerClick(false);
+        });
+
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          setSelectedRestaurant({
+            ...place,
+            markerPosition: {
+              left: marker.getPosition().getLng(),
+              top: marker.getPosition().getLat(),
+            },
+          });
+          setMarkerClick(true);
+        });
+
+        return marker;
+      });
+
+      setMarkers(newMarkers);
+    } catch (error) {
+      console.error("식당 마커 생성 오류:", error);
+      setError("식당 마커 생성 중 오류가 발생했습니다");
+    }
+  };
+
+  const handleListClick = (restaurant) => {
+    setSelectedRestaurant(restaurant);
+    setMarkerClick(false);
+  };
+
+  const handleUniversityChange = (university) => {
+    if (map && universityLocations[university]) {
+      const position = new window.kakao.maps.LatLng(
+        universityLocations[university].lat,
+        universityLocations[university].lng
+      );
+      map.panTo(position);
+    }
+  };
+
+  // Show loading state
+  if (loading) {
     return (
-      <div
-        className="absolute z-50 bg-white rounded-lg shadow-lg w-72 font-yeonsung"
-        style={{
-          position: "absolute",
-          left: `${point.x}px`,
-          top: `${point.y}px`,
-          transform: "translate(0%, -100%)",
-          pointerEvents: "none",
-          zIndex: 999,
-        }}
-      >
-        <div className="p-4">
-          <div className="flex items-center gap-3 mb-3">
-            <img
-              src={`/images/${restaurant.category}.png`}
-              alt={restaurant.category}
-              className="rounded-lg w-14 h-14"
-            />
-            <div>
-              <h2 className="text-lg font-bold">{restaurant.name}</h2>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">
-                  {restaurant.category}
-                </span>
-                <div className="flex items-center">
-                  <span className="text-yellow-400">⭐</span>
-                  <span className="ml-1 text-sm">{restaurant.rating}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-4">
-            <div className="space-y-1 text-sm">
-              <p className="flex items-center gap-1">
-                <span>📍</span>
-                {restaurant.address}
-              </p>
-              <p className="flex items-center gap-1">
-                <span>⏰</span>
-                {restaurant.hours}
-              </p>
-            </div>
-
-            <div className="mt-3">
-              <h3 className="mb-2 text-sm font-bold">메뉴</h3>
-              <div className="space-y-1">
-                {(restaurant.menu || []).slice(0, 3).map((item, index) => (
-                  <div key={index} className="flex justify-between text-sm">
-                    <span>{item.item}</span>
-                    <span>{item.price}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+      <div className="flex items-center justify-center w-full h-screen bg-gray-100">
+        <div className="text-xl font-semibold text-gray-600">
+          데이터를 불러오는 중...
         </div>
       </div>
     );
   }
 
-  // 리스트 클릭 시 오른쪽 상세정보 창 표시
-  return (
-    <div className="fixed z-50 w-1/3 h-[calc(100vh-24px)] bg-white border-2 border-gray-300 rounded-lg shadow-lg left-96 top-3 right-2 overflow-hidden">
-      <div className="relative h-full p-8 overflow-y-scroll font-yeonsung scrollbar-none">
-        <div className="flex items-center gap-4">
-          <img
-            src={`/images/${restaurant.category}.png`}
-            alt={restaurant.category}
-            className="w-16 h-16 rounded-lg"
-          />
-          <div className="flex-1">
-            <h2 className="text-xl font-bold">{restaurant.name}</h2>
-            <div className="flex items-center mt-1">
-              <span className="text-gray-600">{restaurant.category}</span>
-              <span className="flex items-center ml-2">
-                <span className="mr-1 text-yellow-400">⭐</span>
-                <span>{restaurant.rating}</span>
-              </span>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="absolute text-gray-400 left-4 top-4 hover:text-gray-600"
-          >
-            <IoArrowBack className="w-6 h-6" />
-          </button>
-        </div>
-
-        <div className="mt-6">
-          <div className="mb-4">
-            <div className="flex items-center mb-2">
-              <span className="font-bold">상세정보</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6 text-gray-500"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                />
-              </svg>
-            </div>
-            <div className="flex items-center my-2 text-sm text-gray-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6 mr-2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-              <span>주소: {restaurant.address}</span>
-            </div>
-            <div className="flex items-center text-sm text-gray-600">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6 mr-2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-                />
-              </svg>
-              <span>영업시간: {restaurant.hours}</span>
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <div className="flex items-center mb-2">
-              <span className="font-bold">메뉴</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6 text-gray-500"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                />
-              </svg>
-            </div>
-            <div className="space-y-2">
-              {restaurant.fullMenu
-                ? restaurant.fullMenu.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex justify-between py-1 text-sm border-b border-gray-100 last:border-b-0"
-                    >
-                      <span>{item.item}</span>
-                      <span>{item.price}</span>
-                    </div>
-                  ))
-                : restaurant.menu.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex justify-between py-1 text-sm border-b border-gray-100 last:border-b-0"
-                    >
-                      <span>{item.item}</span>
-                      <span>{item.price}</span>
-                    </div>
-                  ))}
-            </div>
-          </div>
-
-          <div className="mt-4">
-            <div className="flex items-center mb-2">
-              <span className="font-bold">리뷰</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-6 h-6 text-gray-500"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                />
-              </svg>
-            </div>
-            <div className="mb-3">
-              <div className="flex items-center">
-                <span className="text-blue-500">좋아요 👍</span>
-                <span className="ml-2">{restaurant.rating}</span>
-              </div>
-              <p className="mt-1 text-sm text-gray-600">
-                {restaurant.goodText}
-              </p>
-            </div>
-            <div>
-              <div className="flex items-center">
-                <span className="text-red-500">싫어요 👎</span>
-                <span className="ml-2">{restaurant.dislikeRating}</span>
-              </div>
-              <p className="mt-1 text-sm text-gray-600">{restaurant.badText}</p>
-            </div>
-          </div>
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center w-full h-screen bg-gray-100">
+        <div className="p-4 text-red-500 bg-white rounded-lg shadow-lg">
+          <h2 className="mb-2 text-xl font-bold">오류가 발생했습니다</h2>
+          <p>{error}</p>
         </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="relative flex w-full h-screen bg-gray-100">
+      <div className="w-1/4 h-full bg-white border-r-2 border-gray-300">
+        <div className="relative h-full overflow-hidden border-2 border-black rounded-r-xl">
+          <LeftSide
+            restaurantData={restaurantData}
+            onSelectRestaurant={handleListClick}
+            onUniversityChange={handleUniversityChange}
+          />
+        </div>
+      </div>
+      <div className="relative w-3/4 h-full">
+        <div
+          id="map"
+          className="w-full h-full overflow-hidden border-2 border-gray-400 rounded-xl"
+        />
+        {selectedRestaurant && (
+          <RestaurantOverlay
+            restaurant={selectedRestaurant}
+            onClose={() => {
+              setSelectedRestaurant(null);
+              setMarkerClick(false);
+            }}
+            source={markerClick ? "marker" : "list"}
+          />
+        )}
+      </div>
+      <Common />
     </div>
   );
-};
+}
 
-export default RestaurantOverlay;
+export default KakaoMap;
