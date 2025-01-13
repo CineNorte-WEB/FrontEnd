@@ -1,5 +1,4 @@
 import api from "./axios";
-
 export const authApi = {
   signup: async (signupData) => {
     try {
