@@ -1,10 +1,28 @@
 import React from "react";
 import "./MyPageList.css";
+import apiClient from "../api/axios";
 
 export default function MyPageList({ bookmarks, setBookmarks }) {
-  const handleDelete = (indexToDelete) => {
-    const updatedBookmarks = bookmarks.filter((_, index) => index !== indexToDelete);
-    setBookmarks(updatedBookmarks);
+  const handleDelete = async (indexToDelete) => {
+    const placeId = bookmarks[indexToDelete]?.id;
+
+    try {
+      if (placeId) {
+        await apiClient.delete(`/users/bookmarks/${placeId}`); // API 호출
+        console.log(`찜한 리스트 항목(ID: ${placeId}) 삭제 완료`);
+
+        // 로컬 상태에서 삭제
+        const updatedBookmarks = bookmarks.filter(
+          (_, index) => index !== indexToDelete
+        );
+        setBookmarks(updatedBookmarks);
+      } else {
+        console.error("삭제할 placeId가 없습니다.");
+      }
+    } catch (error) {
+      console.error("찜한 리스트 항목 삭제 중 오류 발생:", error);
+      alert("삭제에 실패했습니다. 다시 시도해주세요.");
+    }
   };
 
   return (

@@ -11,38 +11,63 @@ import axios from "axios";
 
 const MyPage = () => {
   const [currentComponent, setCurrentComponent] = useState("profile");
-  const [bookmarks, setBookmarks] = useState([
-    {
-      title: "현이네 고기 국수",
-      menu: "한식",
-      summary:
-        "웨이팅이 많은 집! 조금 아쉽지만 전체적으로 맛있어서 또 갈 것 같아요!",
-      image: "/images/남미식.png",
-    },
-    {
-      title: "진스시",
-      menu: "일식",
-      summary: "분위기도 좋고 가격도 적당해서 자주 올 것 같아요!",
-      image: "/images/인도식.png",
-    },
-  ]);
-  const [boards, setBoards] = useState([
-    {
-      title: "현이네 고기국수",
-      category: "리뷰게시판",
-      author: "인생은 고기서 고기",
-    },
-    {
-      title: "주식 ...",
-      category: "자유게시판",
-      author: "인생은 한방",
-    },
-  ]);
-
+  const [bookmarks, setBookmarks] = useState([]);
+  const [boards, setBoards] = useState([]);
   const [profile, setProfile] = useState(null); // 프로필 상태 추가
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
-  const navigate = useNavigate();
+
+  // 찜한 리스트 데이터 가져오기
+  useEffect(() => {
+    const fetchBookmarks = async () => {
+      try {
+        const response = await apiClient.get("/users/bookmarks");
+        setBookmarks(response.data); // 찜한 리스트 상태 업데이트
+      } catch (error) {
+        console.error("찜한 리스트 데이터를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    fetchBookmarks();
+  }, []);
+
+  useEffect(() => {
+    const fetchBoards = async () => {
+      try {
+        const [reviewsResponse, boardsResponse] = await Promise.all([
+          apiClient.get("/users/reviews"),
+          apiClient.get("/users/boards"),
+        ]);
+
+        // 리뷰와 일반 게시판 데이터를 하나로 합치기
+        const combinedBoards = [
+          ...reviewsResponse.data.map((review) => ({
+            id: review.id,
+            title: review.title,
+            category: "리뷰게시판",
+            content: review.content,
+            author: review.userNickname,
+            placeName: review.placeName, // 장소 이름 추가
+          })),
+          ...boardsResponse.data.map((board) => ({
+            id: board.id,
+            title: board.title,
+            category: "자유게시판",
+            content: board.content,
+            author: board.userNickname,
+          })),
+        ];
+
+        setBoards(combinedBoards);
+        setLoading(false);
+      } catch (error) {
+        console.error("게시판 데이터를 가져오는 중 오류:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchBoards();
+  }, []);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -59,9 +84,6 @@ const MyPage = () => {
     fetchProfile();
   }, []);
   
-  
-  
-
   if (loading) {
     return <div className="loading">데이터를 불러오는 중입니다...</div>;
   }
