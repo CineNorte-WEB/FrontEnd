@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import Common from "../components/Common";
 import LeftSide from "./LeftSide";
 import RestaurantOverlay from "./RestaurantOverlay";
+
+const BASE_URL = "http://43.203.118.59:8080";
 
 const universityLocations = {
   서강대: { lat: 37.551292, lng: 126.940108 },
@@ -10,6 +12,31 @@ const universityLocations = {
   연대: { lat: 37.564512, lng: 126.938977 },
   외대: { lat: 37.5976717, lng: 127.0579181 },
   경희대: { lat: 37.597312, lng: 127.05165 },
+};
+
+const API = {
+  UNIVS: `${BASE_URL}/univs`,
+  UNIV_PLACES: (univId) => `${BASE_URL}/univs/${univId}/places`,
+  UNIV_BY_NAME: (name) => `${BASE_URL}/univs/name/${name}`,
+  UNIV_BY_ID: (id) => `${BASE_URL}/univs/id/${id}`,
+  PLACES: {
+    BY_NAME: (name) => `${BASE_URL}/places/name/${name}`,
+    BY_ID: (id) => `${BASE_URL}/places/id/${id}`,
+  },
+  REVIEWS: {
+    ALL: `${BASE_URL}/review_posts`,
+    BY_ID: (id) => `${BASE_URL}/review_posts/${id}`,
+    BY_PLACE: (placeId) => `${BASE_URL}/review_posts/place/${placeId}`,
+  },
+  ANALYSIS: {
+    ALL: `${BASE_URL}/review-analysis`,
+    BY_PLACE: (placeId) => `${BASE_URL}/review-analysis/${placeId}`,
+  },
+  USER: {
+    BOOKMARKS: `${BASE_URL}/users/bookmarks`,
+    REVIEWS: `${BASE_URL}/users/reviews`,
+    BOARDS: `${BASE_URL}/users/boards`,
+  },
 };
 
 function KakaoMap() {
@@ -21,59 +48,207 @@ function KakaoMap() {
   const [restaurantData, setRestaurantData] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedUniversity, setSelectedUniversity] = useState("연대");
+  const [reviewData, setReviewData] = useState({});
+  const [analysisData, setAnalysisData] = useState({});
 
+  // useRef로 마운트 상태 추적
+  const isMountedRef = useRef(true);
+
+  // 개선된 API 호출 함수
+  const fetchWithErrorHandling = async (url) => {
+    try {
+      console.log(`🌐 Attempting API call to: ${url}`);
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 500) {
+          console.error(`❌ Server error (500) for endpoint: ${url}`);
+          console.error(`📝 API Path: ${url.replace(BASE_URL, "")}`);
+          return {};
+        }
+        if (response.status === 404) {
+          console.error(`❌ Not Found (404) for endpoint: ${url}`);
+          console.error(`📝 API Path: ${url.replace(BASE_URL, "")}`);
+          return {};
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(`✅ Successful API call to: ${url.replace(BASE_URL, "")}`);
+      return data;
+    } catch (error) {
+      console.error(
+        `🔥 Error details for ${url.replace(BASE_URL, "")}:`,
+        error
+      );
+      if (error.name === "SyntaxError") {
+        console.error("📄 Invalid JSON response from server");
+      }
+      return {};
+    }
+  };
+
+  // 개선된 리뷰 데이터 가져오기
+  const fetchReviewData = async (placeId) => {
+    try {
+      console.log(`📊 Fetching review data for place ID: ${placeId}`);
+
+      const [reviews, analysis] = await Promise.all([
+        fetchWithErrorHandling(API.REVIEWS.BY_PLACE(placeId)),
+        fetchWithErrorHandling(API.ANALYSIS.BY_PLACE(placeId)),
+      ]);
+
+      if (!reviews.data) {
+        console.warn(`⚠️ No review data received for place ID: ${placeId}`);
+      }
+      if (!analysis.data) {
+        console.warn(`⚠️ No analysis data received for place ID: ${placeId}`);
+      }
+
+      setReviewData((prev) => ({
+        ...prev,
+        [placeId]: reviews.data || [],
+      }));
+      setAnalysisData((prev) => ({
+        ...prev,
+        [placeId]: analysis.data || null,
+      }));
+    } catch (error) {
+      console.error(`❌ Error fetching data for place ID ${placeId}:`, error);
+      console.error("📝 Failed endpoints:", {
+        reviews: API.REVIEWS.BY_PLACE(placeId),
+        analysis: API.ANALYSIS.BY_PLACE(placeId),
+      });
+      setReviewData((prev) => ({ ...prev, [placeId]: [] }));
+      setAnalysisData((prev) => ({ ...prev, [placeId]: null }));
+    }
+  };
+
+  // likePoints 파싱 함수 (기존과 동일)
+  const parseLikePoints = useCallback((likePoints) => {
+    if (!likePoints) return [];
+
+    try {
+      // 문자열인 경우
+      if (typeof likePoints === "string") {
+        // 공백 제거 후 체크
+        const trimmedPoints = likePoints.trim();
+
+        // JSON 배열인지 확인
+        if (trimmedPoints.startsWith("[") && trimmedPoints.endsWith("]")) {
+          // 안전한 JSON 파싱 시도
+          const parsed = JSON.parse(trimmedPoints);
+          return Array.isArray(parsed) ? parsed : [];
+        }
+
+        // 콤마로 구분된 문자열인 경우
+        return trimmedPoints
+          .split(",")
+          .map((point) => point.trim())
+          .filter(Boolean);
+      }
+
+      // 이미 배열인 경우
+      if (Array.isArray(likePoints)) {
+        return likePoints.filter(Boolean); // null, undefined, 빈 문자열 제거
+      }
+
+      return [];
+    } catch (e) {
+      console.warn("Error parsing likePoints:", likePoints, e);
+      return [];
+    }
+  }, []);
+
+  // 개선된 데이터 변환 로직 (기존과 동일)
+  const transformPlaceData = (place) => {
+    return {
+      id: place.id || 0,
+      name: place.name || "",
+      category: place.category || "항목 없음",
+      address: place.address || "",
+      hours: place.hours || "",
+      rating: place.rating || 0,
+      likePoints: parseLikePoints(place.likePoints),
+      imageUrl: place.imageUrl || "",
+      univName: place.univName || "",
+      menus: Array.isArray(place.menus) ? place.menus : [],
+      reviews: reviewData[place.id] || [],
+      analysis: analysisData[place.id] || null,
+      position: {
+        lat:
+          place.latitude ||
+          universityLocations[place.univName]?.lat ||
+          37.564512,
+        lng:
+          place.longitude ||
+          universityLocations[place.univName]?.lng ||
+          126.938977,
+      },
+    };
+  };
+
+  // 모든 데이터 가져오기 (개선된 로깅 추가)
   useEffect(() => {
-    const fetchRestaurantData = async () => {
+    isMountedRef.current = true;
+
+    const fetchAllData = async () => {
+      if (!isMountedRef.current) return;
+
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(
-          "http://43.203.118.59:8080/places/{place_id}",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+        console.log("🏁 Starting to fetch all data...");
+
+        const universities = await fetchWithErrorHandling(API.UNIVS);
+        if (!Array.isArray(universities)) {
+          console.error("❌ Universities data is not an array:", universities);
+          throw new Error("Universities data is not an array");
+        }
+        console.log(`📚 Found ${universities.length} universities`);
+
+        console.log("🏪 Fetching places for each university...");
+        const placesPromises = universities.map((univ) =>
+          fetchWithErrorHandling(API.UNIV_PLACES(univ.id))
         );
+        const allPlacesData = await Promise.all(placesPromises);
+        const validPlacesData = allPlacesData.filter(Array.isArray).flat();
+        console.log(`📍 Found ${validPlacesData.length} total places`);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        console.log("🔍 Fetching details for each place...");
+        const placeDetailsPromises = validPlacesData.map(async (place) => {
+          console.log(`📌 Fetching details for place ID: ${place.id}`);
+          const details = await fetchWithErrorHandling(
+            API.PLACES.BY_ID(place.id)
+          );
+          await fetchReviewData(place.id);
+          return details;
+        });
 
-        const data = await response.json();
+        const placeDetails = await Promise.all(placeDetailsPromises);
+        const transformedData = placeDetails
+          .filter((place) => {
+            if (!place || !place.id) {
+              console.warn("⚠️ Found invalid place data:", place);
+              return false;
+            }
+            return true;
+          })
+          .map(transformPlaceData);
 
-        if (!data) {
-          throw new Error("No data received from server");
-        }
-
-        const transformedData = {
-          id: data.id,
-          name: data.name,
-          category: data.category || "항목 없음",
-          address: data.address || "",
-          hours: data.hours || "",
-          rating: data.rating || 0,
-          likePoints: data.likePoints ? JSON.parse(data.likePoints) : [],
-          imageUrl: data.imageUrl || "",
-          univName: data.univName || "",
-          menus: data.menus || [],
-          position: {
-            lat:
-              data.latitude ||
-              universityLocations[data.univName]?.lat ||
-              37.564512,
-            lng:
-              data.longitude ||
-              universityLocations[data.univName]?.lng ||
-              126.938977,
-          },
-        };
-
-        setRestaurantData([transformedData]);
-        setError(null);
+        console.log(
+          `✅ Successfully processed ${transformedData.length} places`
+        );
+        setRestaurantData(transformedData);
       } catch (error) {
-        console.error("Error fetching restaurant data:", error);
+        console.error("🔥 Error in fetchAllData:", error);
         setError(
           "데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요."
         );
@@ -82,9 +257,9 @@ function KakaoMap() {
       }
     };
 
-    fetchRestaurantData();
+    fetchAllData();
   }, []);
-
+  // 카카오맵 초기화
   useEffect(() => {
     const loadKakaoMap = () => {
       const KAKAO_MAP_SRC = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${
@@ -125,14 +300,17 @@ function KakaoMap() {
     initMap();
   }, []);
 
-  const initializeMap = () => {
+  const initializeMap = useCallback(() => {
     if (!window.kakao || !window.kakao.maps) return;
 
     const container = document.getElementById("map");
     if (!container) return;
 
     const options = {
-      center: new window.kakao.maps.LatLng(37.564512, 126.938977),
+      center: new window.kakao.maps.LatLng(
+        universityLocations[selectedUniversity].lat,
+        universityLocations[selectedUniversity].lng
+      ),
       level: 3,
       draggable: true,
       scrollwheel: true,
@@ -149,9 +327,9 @@ function KakaoMap() {
       setSelectedRestaurant(null);
       setMarkerClick(false);
     });
-  };
+  }, [selectedUniversity]);
 
-  const createUniversityOverlays = (newMap) => {
+  const createUniversityOverlays = useCallback((newMap) => {
     const newUniversityOverlays = [];
     Object.entries(universityLocations).forEach(([university, position]) => {
       const universityPosition = new window.kakao.maps.LatLng(
@@ -174,6 +352,9 @@ function KakaoMap() {
       img.style.width = "100%";
       img.style.height = "100%";
       img.style.borderRadius = "50%";
+      img.onerror = () => {
+        img.src = "/images/default-university.png";
+      };
       content.appendChild(img);
 
       const customOverlay = new window.kakao.maps.CustomOverlay({
@@ -186,100 +367,135 @@ function KakaoMap() {
       newUniversityOverlays.push(customOverlay);
     });
     setUniversityOverlays(newUniversityOverlays);
-  };
+  }, []);
 
-  const createRestaurantMarkers = (newMap) => {
-    if (!restaurantData.length) return;
+  const createRestaurantMarkers = useCallback(
+    (newMap) => {
+      if (!restaurantData.length) return;
 
-    const newMarkers = restaurantData
-      .map((place) => {
-        if (!place.position || !place.position.lat || !place.position.lng) {
-          console.error("Invalid position data for restaurant:", place);
-          return null;
-        }
+      // 기존 마커 제거
+      markers.forEach((marker) => marker.setMap(null));
 
-        const markerPosition = new window.kakao.maps.LatLng(
-          place.position.lat,
-          place.position.lng
-        );
+      const newMarkers = restaurantData
+        .map((place) => {
+          if (!place.position || !place.position.lat || !place.position.lng) {
+            console.error("Invalid position data for restaurant:", place);
+            return null;
+          }
 
-        const marker = new window.kakao.maps.Marker({
-          position: markerPosition,
-          map: newMap,
-        });
+          const markerPosition = new window.kakao.maps.LatLng(
+            place.position.lat,
+            place.position.lng
+          );
 
-        window.kakao.maps.event.addListener(marker, "mouseover", () => {
-          setSelectedRestaurant({
-            ...place,
-            markerPosition: {
-              left: marker.getPosition().getLng(),
-              top: marker.getPosition().getLat(),
-            },
+          const marker = new window.kakao.maps.Marker({
+            position: markerPosition,
+            map: newMap,
           });
-          setMarkerClick(true);
-        });
 
-        window.kakao.maps.event.addListener(marker, "mouseout", () => {
-          setSelectedRestaurant(null);
-          setMarkerClick(false);
-        });
+          const handleMouseOver = () => {
+            setSelectedRestaurant({
+              ...place,
+              markerPosition: {
+                left: marker.getPosition().getLng(),
+                top: marker.getPosition().getLat(),
+              },
+            });
+            setMarkerClick(true);
+          };
 
-        window.kakao.maps.event.addListener(marker, "click", () => {
-          setSelectedRestaurant({
-            ...place,
-            markerPosition: {
-              left: marker.getPosition().getLng(),
-              top: marker.getPosition().getLat(),
-            },
-          });
-          setMarkerClick(true);
-        });
+          const handleMouseOut = () => {
+            setSelectedRestaurant(null);
+            setMarkerClick(false);
+          };
 
-        return marker;
-      })
-      .filter(Boolean); // Remove null markers
+          const handleClick = () => {
+            setSelectedRestaurant({
+              ...place,
+              markerPosition: {
+                left: marker.getPosition().getLng(),
+                top: marker.getPosition().getLat(),
+              },
+            });
+            setMarkerClick(true);
+          };
 
-    setMarkers(newMarkers);
-  };
+          window.kakao.maps.event.addListener(
+            marker,
+            "mouseover",
+            handleMouseOver
+          );
+          window.kakao.maps.event.addListener(
+            marker,
+            "mouseout",
+            handleMouseOut
+          );
+          window.kakao.maps.event.addListener(marker, "click", handleClick);
 
-  const handleListClick = (restaurant) => {
-    if (!restaurant) return;
+          return marker;
+        })
+        .filter(Boolean);
 
-    setSelectedRestaurant(restaurant);
-    setMarkerClick(false);
+      setMarkers(newMarkers);
+    },
+    [restaurantData, markers]
+  );
 
-    if (map && restaurant.position) {
+  const handleListClick = useCallback(
+    (restaurant) => {
+      if (!restaurant || !map) return;
+
+      setSelectedRestaurant(restaurant);
+      setMarkerClick(false);
+
       const position = new window.kakao.maps.LatLng(
         restaurant.position.lat,
         restaurant.position.lng
       );
       map.panTo(position);
-    }
-  };
+    },
+    [map]
+  );
 
-  const handleUniversityChange = (university) => {
-    if (!map || !universityLocations[university]) return;
+  const handleUniversityChange = useCallback(
+    (university) => {
+      if (!map || !universityLocations[university]) return;
 
-    const position = new window.kakao.maps.LatLng(
-      universityLocations[university].lat,
-      universityLocations[university].lng
-    );
-    map.panTo(position);
-  };
+      setSelectedUniversity(university);
+      const position = new window.kakao.maps.LatLng(
+        universityLocations[university].lat,
+        universityLocations[university].lng
+      );
+      map.panTo(position);
+    },
+    [map]
+  );
 
+  // 마커와 오버레이 업데이트
   useEffect(() => {
     if (map && restaurantData.length > 0) {
       createRestaurantMarkers(map);
     }
-  }, [map, restaurantData]);
+  }, [map, restaurantData, createRestaurantMarkers]);
 
+  // 컴포넌트 언마운트 시 정리
   useEffect(() => {
     return () => {
-      // Clean up markers when component unmounts
       markers.forEach((marker) => marker.setMap(null));
       universityOverlays.forEach((overlay) => overlay.setMap(null));
     };
-  }, []);
+  }, [markers, universityOverlays]);
+
+  // 로딩 상태 표시
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center w-full h-screen bg-gray-100">
+        <div className="text-xl font-semibold text-gray-600">
+          데이터를 불러오는 중...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex w-full h-screen bg-gray-100">
@@ -291,6 +507,7 @@ function KakaoMap() {
             onUniversityChange={handleUniversityChange}
             isLoading={isLoading}
             error={error}
+            selectedUniversity={selectedUniversity}
           />
         </div>
       </div>
