@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Common from "../components/Common";
 import { PiPencilLineDuotone } from "react-icons/pi";
@@ -60,7 +60,15 @@ const Community = () => {
     },
   ];
 
-  const [posts, setPosts] = useState(initialPosts);
+  // localStorage에서 posts 데이터를 가져오거나 초기 데이터 사용
+  const [posts, setPosts] = useState(() => {
+    const savedPosts = localStorage.getItem("communityPosts");
+    return savedPosts ? JSON.parse(savedPosts) : initialPosts;
+  });
+  // posts가 변경될 때마다 localStorage에 저장
+  useEffect(() => {
+    localStorage.setItem("communityPosts", JSON.stringify(posts));
+  }, [posts]);
 
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
   const currentPosts = posts.slice(
