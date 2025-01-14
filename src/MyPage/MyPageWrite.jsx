@@ -60,9 +60,6 @@ export default function MyPageWrite({ boards, setBoards }) {
     setCurrentBoardIndex(null);
   };
   
-  
-  
-
   const cancelDelete = () => {
     setIsDeleteModalOpen(false);
     setCurrentBoardIndex(null);
