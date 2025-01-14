@@ -54,11 +54,26 @@ export default function MyPageProfile({
     setIsDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    console.log("탈퇴가 완료되었습니다.");
-    localStorage.removeItem("token");
+  const confirmDelete = async () => {
+    try {
+      // 탈퇴 API 호출
+      await apiClient.delete("/users/delete");
+      console.log("탈퇴가 성공적으로 완료되었습니다.");
+
+      // 로컬스토리지 정리 및 로그아웃
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("email");
+      localStorage.removeItem("nickname");
+
+      // 로그인 페이지로 리다이렉트
+      window.location.href = "/";
+    } catch (error) {
+      console.error("탈퇴 중 오류 발생:", error);
+      alert("탈퇴에 실패했습니다. 다시 시도해주세요.");
+    }
+
     setIsDeleteModalOpen(false);
-    window.location.href = "/login";
   };
 
   const cancelDelete = () => {
