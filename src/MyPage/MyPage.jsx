@@ -10,45 +10,59 @@ import apiClient from "../api/axios";
 import axios from "axios";
 
 const MyPage = () => {
+  const [userId, setUserId] = useState(null);
   const [currentComponent, setCurrentComponent] = useState("profile");
-  const [bookmarks, setBookmarks] = useState([
-    {
-      title: "현이네 고기 국수",
-      menu: "한식",
-      summary:
-        "웨이팅이 많은 집! 조금 아쉽지만 전체적으로 맛있어서 또 갈 것 같아요!",
-      image: "/images/남미식.png",
-    },
-    {
-      title: "진스시",
-      menu: "일식",
-      summary: "분위기도 좋고 가격도 적당해서 자주 올 것 같아요!",
-      image: "/images/인도식.png",
-    },
-  ]);
-  const [boards, setBoards] = useState([
-    {
-      title: "현이네 고기국수",
-      category: "리뷰게시판",
-      author: "인생은 고기서 고기",
-    },
-    {
-      title: "주식 ...",
-      category: "자유게시판",
-      author: "인생은 한방",
-    },
-  ]);
-
+  const [bookmarks, setBookmarks] = useState([]);
+  const [boards, setBoards] = useState([]);
   const [profile, setProfile] = useState(null); // 프로필 상태 추가
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    const fetchBoards = async () => {
+      try {
+        const [reviewsResponse, boardsResponse] = await Promise.all([
+          apiClient.get("/users/reviews"),
+          apiClient.get("/users/boards"),
+        ]);
+
+        // 리뷰와 일반 게시판 데이터를 하나로 합치기
+        const combinedBoards = [
+          ...reviewsResponse.data.map((review) => ({
+            id: review.id,
+            title: review.title,
+            category: "리뷰게시판",
+            content: review.content,
+            author: review.userNickname,
+            placeName: review.placeName, // 장소 이름 추가
+            type: "review", // 리뷰 게시판 타입 추가
+          })),
+          ...boardsResponse.data.map((board) => ({
+            id: board.id,
+            title: board.title,
+            category: "자유게시판",
+            content: board.content,
+            author: board.userNickname,
+            type: "board", // 일반 게시판 타입 추가
+          })),
+        ];
+
+        setBoards(combinedBoards);
+        setLoading(false);
+      } catch (error) {
+        console.error("게시판 데이터를 가져오는 중 오류:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchBoards();
+  }, []);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await apiClient.get("/users/profile"); // axios.js가 Authorization 헤더 처리
         setProfile(response.data); // 프로필 데이터 설정
+        setUserId(response.data.id); // userId를 상태로 저장
         setLoading(false);
       } catch (error) {
         console.error("프로필 데이터를 가져오는 중 오류:", error);
@@ -58,10 +72,25 @@ const MyPage = () => {
   
     fetchProfile();
   }, []);
-  
-  
-  
 
+  // 북마크 정보 가져오기
+  useEffect(() => {
+    const fetchBookmarks = async () => {
+      if (!userId) return; // userId가 설정되지 않으면 실행하지 않음
+      try {
+        const response = await apiClient.get(`/users/${userId}/bookmarks`);
+        setBookmarks(response.data); // 북마크 데이터 설정
+        setLoading(false);
+      } catch (error) {
+        console.error("북마크 데이터를 가져오는 중 오류:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchBookmarks();
+  }, [userId]); // userId가 설정될 때만 실행
+
+  
   if (loading) {
     return <div className="loading">데이터를 불러오는 중입니다...</div>;
   }
@@ -73,7 +102,8 @@ const MyPage = () => {
   const renderComponent = () => {
     switch (currentComponent) {
       case "profile":
-        return <MyPageProfile profile={profile} bookmarks={bookmarks} boards={boards} />;
+        return <MyPageProfile   setProfile={setProfile}
+        profile={profile} bookmarks={bookmarks} boards={boards} />;
       case "mylist":
         return <MyPageList bookmarks={bookmarks} setBookmarks={setBookmarks} />;
       case "write":

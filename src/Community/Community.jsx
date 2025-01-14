@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Common from "../components/Common";
 import { PiPencilLineDuotone } from "react-icons/pi";
@@ -28,7 +28,7 @@ const Community = () => {
       category: "자유게시판",
       author: "인생은 한방",
       image: null,
-      content: "주식 투자로 인생을 바꿔보세요.",
+      content: "",
       createdAt: new Date("2024-01-01").toISOString(),
     },
     {
@@ -37,7 +37,7 @@ const Community = () => {
       category: "리뷰게시판",
       author: "인생은 고기서 고기",
       image: null,
-      content: "정말 맛있는 고기국수 맛집이에요!",
+      content: "",
       createdAt: new Date("2024-01-02").toISOString(),
     },
     {
@@ -46,7 +46,7 @@ const Community = () => {
       category: "자유게시판",
       author: "휴학하고파",
       image: null,
-      content: "종강이 빨리 오기를 바라며...",
+      content: "",
       createdAt: new Date("2024-01-03").toISOString(),
     },
     {
@@ -55,17 +55,16 @@ const Community = () => {
       category: "리뷰게시판",
       author: "가는곳마다스시",
       image: null,
-      content: "최고의 스시 맛집 진스시!",
+      content: "",
       createdAt: new Date("2024-01-04").toISOString(),
     },
   ];
 
-  // localStorage에서 posts 데이터를 가져오거나 초기 데이터 사용
   const [posts, setPosts] = useState(() => {
     const savedPosts = localStorage.getItem("communityPosts");
     return savedPosts ? JSON.parse(savedPosts) : initialPosts;
   });
-  // posts가 변경될 때마다 localStorage에 저장
+
   useEffect(() => {
     localStorage.setItem("communityPosts", JSON.stringify(posts));
   }, [posts]);
@@ -135,6 +134,7 @@ const Community = () => {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-[#c02231] w-full relative font-['Song Myung']">
       <Common />
@@ -144,7 +144,7 @@ const Community = () => {
           커뮤니티
         </h1>
       </header>
-      <p className="mb-2 text-2xl font-semibold text-center text-white">
+      <p className="my-1 text-2xl font-semibold text-center text-white">
         맛집부터 일상까지, 자유롭게 소통해요!
       </p>
       <div className="w-[70%] min-h-[60vh] mx-auto my-4 bg-white rounded-2xl shadow-lg overflow-hidden p-4">
@@ -310,7 +310,7 @@ const Community = () => {
               </span>
             </div>
             <div className="py-6 my-4 border-t border-b">
-              <p className="mb-3 text-2xl font-bold">📜글 내용</p>
+              <p className="mb-3 text-2xl font-semibold">📜글 내용</p>
               <p className="text-lg text-gray-800 whitespace-pre-wrap">
                 {selectedPost.content}
               </p>

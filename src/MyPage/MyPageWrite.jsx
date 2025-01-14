@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./MyPageWrite.css";
+import apiClient from "../api/axios";
 
 export default function MyPageWrite({ boards, setBoards }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -22,26 +23,79 @@ export default function MyPageWrite({ boards, setBoards }) {
     setIsEditModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    setBoards((prevBoards) =>
-      prevBoards.filter((_, index) => index !== currentBoardIndex)
-    );
+  const confirmDelete = async () => {
+    const postToDelete = boards[currentBoardIndex];
+  
+    if (!postToDelete) {
+      console.error("삭제할 게시물이 없습니다.");
+      return;
+    }
+  
+    const { id, type } = postToDelete; // type 추가
+  
+    try {
+      if (type === "review") {
+        // 리뷰 게시판 삭제 API 호출
+        await apiClient.delete(`/review_posts/${id}`);
+        console.log(`리뷰 게시물(ID: ${id})이 성공적으로 삭제되었습니다.`);
+      } else if (type === "board") {
+        // 일반 게시판 삭제 API 호출
+        await apiClient.delete(`/board_posts/${id}`);
+        console.log(`일반 게시물(ID: ${id})이 성공적으로 삭제되었습니다.`);
+      } else {
+        console.error("알 수 없는 게시물 타입입니다.");
+        return;
+      }
+  
+      // 로컬 상태에서 삭제
+      setBoards((prevBoards) =>
+        prevBoards.filter((_, index) => index !== currentBoardIndex)
+      );
+    } catch (error) {
+      console.error("게시물 삭제 중 오류 발생:", error);
+      alert("게시물 삭제에 실패했습니다. 다시 시도해주세요.");
+    }
+  
     setIsDeleteModalOpen(false);
     setCurrentBoardIndex(null);
   };
-
+  
   const cancelDelete = () => {
     setIsDeleteModalOpen(false);
     setCurrentBoardIndex(null);
   };
 
-  const saveEdit = () => {
-    const updatedBoards = [...boards];
-    updatedBoards[currentBoardIndex] = editedBoard;
-    setBoards(updatedBoards);
+  const saveEdit = async () => {
+    const boardToEdit = boards[currentBoardIndex];
+    const placeId = boardToEdit?.id;
+  
+    try {
+      if (placeId) {
+        // API 호출
+        const response = await apiClient.put(`/users/bookmarks/${placeId}`, {
+          title: editedBoard.title,
+          category: editedBoard.category,
+          author: editedBoard.author,
+        });
+  
+        console.log("게시물 수정 성공:", response.data);
+  
+        // 로컬 상태 업데이트
+        const updatedBoards = [...boards];
+        updatedBoards[currentBoardIndex] = response.data; // 서버 응답 데이터로 업데이트
+        setBoards(updatedBoards);
+      } else {
+        console.error("수정할 게시물의 ID가 없습니다.");
+      }
+    } catch (error) {
+      console.error("게시물 수정 중 오류 발생:", error);
+      alert("게시물 수정에 실패했습니다. 다시 시도해주세요.");
+    }
+  
     setIsEditModalOpen(false);
     setCurrentBoardIndex(null);
   };
+  
 
   const cancelEdit = () => {
     setIsEditModalOpen(false);
