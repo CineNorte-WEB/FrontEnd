@@ -34,6 +34,7 @@ const MyPage = () => {
             content: review.content,
             author: review.userNickname,
             placeName: review.placeName, // 장소 이름 추가
+            type: "review", // 리뷰 게시판 타입 추가
           })),
           ...boardsResponse.data.map((board) => ({
             id: board.id,
@@ -41,6 +42,7 @@ const MyPage = () => {
             category: "자유게시판",
             content: board.content,
             author: board.userNickname,
+            type: "board", // 일반 게시판 타입 추가
           })),
         ];
 
@@ -87,6 +89,7 @@ const MyPage = () => {
 
     fetchBookmarks();
   }, [userId]); // userId가 설정될 때만 실행
+
   
   if (loading) {
     return <div className="loading">데이터를 불러오는 중입니다...</div>;
