@@ -45,7 +45,7 @@ function SignUp() {
         console.log("로그인 성공, 토큰 저장 완료");
 
         // 로그인 성공 시 페이지 이동
-        navigate("/mypage");
+        navigate("/map");
       } else {
         setErrorMessage("로그인에 실패했습니다. 다시 시도해주세요.");
       }

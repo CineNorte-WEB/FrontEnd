@@ -1,10 +1,17 @@
 import React from "react";
 import "./MyPageList.css";
+import apiClient from "../api/axios";
 
 export default function MyPageList({ bookmarks, setBookmarks }) {
-  const handleDelete = (indexToDelete) => {
-    const updatedBookmarks = bookmarks.filter((_, index) => index !== indexToDelete);
-    setBookmarks(updatedBookmarks);
+  const handleDeleteBookmark = async (placeId) => {
+    try {
+      await apiClient.delete(`/users/bookmarks/${placeId}`);
+      setBookmarks((prev) => prev.filter((bookmark) => bookmark.id !== placeId));
+      console.log(`북마크(ID: ${placeId}) 삭제 완료`);
+    } catch (error) {
+      console.error("북마크 삭제 중 오류:", error);
+      alert("북마크 삭제에 실패했습니다.");
+    }
   };
 
   return (
@@ -37,7 +44,7 @@ export default function MyPageList({ bookmarks, setBookmarks }) {
               </div>
               <div
                 className="list-item-heart font-['Song Myung']"
-                onClick={() => handleDelete(index)}
+                onClick={() => handleDeleteBookmark(bookmark.id)}
               >
                 ❤️
               </div>
