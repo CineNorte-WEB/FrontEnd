@@ -3,25 +3,14 @@ import "./MyPageList.css";
 import apiClient from "../api/axios";
 
 export default function MyPageList({ bookmarks, setBookmarks }) {
-  const handleDelete = async (indexToDelete) => {
-    const placeId = bookmarks[indexToDelete]?.id;
-
+  const handleDeleteBookmark = async (placeId) => {
     try {
-      if (placeId) {
-        await apiClient.delete(`/users/bookmarks/${placeId}`); // API 호출
-        console.log(`찜한 리스트 항목(ID: ${placeId}) 삭제 완료`);
-
-        // 로컬 상태에서 삭제
-        const updatedBookmarks = bookmarks.filter(
-          (_, index) => index !== indexToDelete
-        );
-        setBookmarks(updatedBookmarks);
-      } else {
-        console.error("삭제할 placeId가 없습니다.");
-      }
+      await apiClient.delete(`/users/bookmarks/${placeId}`);
+      setBookmarks((prev) => prev.filter((bookmark) => bookmark.id !== placeId));
+      console.log(`북마크(ID: ${placeId}) 삭제 완료`);
     } catch (error) {
-      console.error("찜한 리스트 항목 삭제 중 오류 발생:", error);
-      alert("삭제에 실패했습니다. 다시 시도해주세요.");
+      console.error("북마크 삭제 중 오류:", error);
+      alert("북마크 삭제에 실패했습니다.");
     }
   };
 
@@ -55,7 +44,7 @@ export default function MyPageList({ bookmarks, setBookmarks }) {
               </div>
               <div
                 className="list-item-heart font-['Song Myung']"
-                onClick={() => handleDelete(index)}
+                onClick={() => handleDeleteBookmark(bookmark.id)}
               >
                 ❤️
               </div>

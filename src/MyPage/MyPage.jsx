@@ -17,14 +17,17 @@ const MyPage = () => {
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
 
-  // 찜한 리스트 데이터 가져오기
+  // 북마크 API 호출
   useEffect(() => {
     const fetchBookmarks = async () => {
       try {
-        const response = await apiClient.get("/users/bookmarks");
-        setBookmarks(response.data); // 찜한 리스트 상태 업데이트
+        const userId = localStorage.getItem("email");
+        const response = await apiClient.get(`/users/${userId}/bookmarks`);
+        setBookmarks(response.data);
+        setLoading(false);
       } catch (error) {
-        console.error("찜한 리스트 데이터를 가져오는 중 오류 발생:", error);
+        console.error("북마크 데이터를 가져오는 중 오류:", error);
+        setLoading(false);
       }
     };
 
