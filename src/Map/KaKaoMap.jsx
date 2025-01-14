@@ -137,7 +137,7 @@ function KakaoMap() {
         if (likePoints.trim().startsWith("[")) {
           return JSON.parse(likePoints);
         }
-        return likePoints.split(",").map((point) => point.trim());
+        return likePoints.split(",").map((point) => point.trim(Boolean));
       }
       if (Array.isArray(likePoints)) {
         return likePoints;
@@ -149,8 +149,12 @@ function KakaoMap() {
     }
   };
 
-  // 개선된 데이터 변환 로직 (기존과 동일)
+  // transformPlaceData 함수 수정
   const transformPlaceData = (place) => {
+    if (!place || typeof place !== "object") {
+      console.warn("Invalid place data:", place);
+      return null;
+    }
     return {
       id: place.id || 0,
       name: place.name || "",
@@ -237,7 +241,8 @@ function KakaoMap() {
 
     fetchAllData();
   }, []);
-  // 카카오맵 초기화
+
+  // 카카오맵 초기화 useEffect 수정
   useEffect(() => {
     const loadKakaoMap = () => {
       const KAKAO_MAP_SRC = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${
@@ -245,21 +250,24 @@ function KakaoMap() {
       }&libraries=services&autoload=false`;
 
       return new Promise((resolve, reject) => {
-        if (window.kakao && window.kakao.maps) {
-          resolve();
-          return;
-        }
-
         const script = document.createElement("script");
         script.src = KAKAO_MAP_SRC;
         script.async = true;
-        script.defer = true;
 
         script.onload = () => {
-          window.kakao.maps.load(() => resolve());
+          if (window.kakao && window.kakao.maps) {
+            window.kakao.maps.load(() => {
+              console.log("Kakao maps loaded successfully");
+              resolve();
+            });
+          } else {
+            reject(new Error("Kakao maps not available"));
+          }
         };
-        script.onerror = (error) =>
-          reject(new Error("Kakao maps script loading failed"));
+
+        script.onerror = () => {
+          reject(new Error("Failed to load Kakao maps script"));
+        };
 
         document.head.appendChild(script);
       });
@@ -267,10 +275,12 @@ function KakaoMap() {
 
     const initMap = async () => {
       try {
-        await loadKakaoMap();
+        if (!window.kakao || !window.kakao.maps) {
+          await loadKakaoMap();
+        }
         initializeMap();
       } catch (error) {
-        console.error("Error loading Kakao maps:", error);
+        console.error("Error initializing Kakao map:", error);
         setError("지도를 불러오는데 실패했습니다. 페이지를 새로고침해주세요.");
       }
     };
@@ -278,7 +288,7 @@ function KakaoMap() {
     initMap();
   }, []);
 
-  const initializeMap = useCallback(() => {
+  const initializeMap = () => {
     if (!window.kakao || !window.kakao.maps) return;
 
     const container = document.getElementById("map");
@@ -301,11 +311,11 @@ function KakaoMap() {
     createUniversityOverlays(newMap);
     createRestaurantMarkers(newMap);
 
-    window.kakao.maps.event.addListener(newMap, "click", () => {
+    window.kakao.maps.event.addListener(map, "click", () => {
       setSelectedRestaurant(null);
       setMarkerClick(false);
     });
-  }, [selectedUniversity]);
+  };
 
   const createUniversityOverlays = useCallback((newMap) => {
     const newUniversityOverlays = [];
@@ -349,10 +359,7 @@ function KakaoMap() {
 
   const createRestaurantMarkers = useCallback(
     (newMap) => {
-      if (!restaurantData.length) return;
-
-      // 기존 마커 제거
-      markers.forEach((marker) => marker.setMap(null));
+      if (!restaurantData.length || !newMap) return;
 
       const newMarkers = restaurantData
         .map((place) => {
@@ -398,17 +405,21 @@ function KakaoMap() {
             setMarkerClick(true);
           };
 
-          window.kakao.maps.event.addListener(
-            marker,
-            "mouseover",
-            handleMouseOver
-          );
-          window.kakao.maps.event.addListener(
-            marker,
-            "mouseout",
-            handleMouseOut
-          );
-          window.kakao.maps.event.addListener(marker, "click", handleClick);
+          window.kakao.maps.event.addListener(marker, "mouseout", () => {
+            setSelectedRestaurant(null);
+            setMarkerClick(false);
+          });
+
+          window.kakao.maps.event.addListener(marker, "click", () => {
+            setSelectedRestaurant({
+              ...place,
+              markerPosition: {
+                left: marker.getPosition().getLng(),
+                top: marker.getPosition().getLat(),
+              },
+            });
+            setMarkerClick(true);
+          });
 
           return marker;
         })
@@ -458,11 +469,20 @@ function KakaoMap() {
 
   // 컴포넌트 언마운트 시 정리
   useEffect(() => {
+    // 컴포넌트가 언마운트될 때만 실행
     return () => {
-      markers.forEach((marker) => marker.setMap(null));
-      universityOverlays.forEach((overlay) => overlay.setMap(null));
+      if (markers && markers.length) {
+        markers.forEach((marker) => {
+          if (marker) marker.setMap(null);
+        });
+      }
+      if (universityOverlays && universityOverlays.length) {
+        universityOverlays.forEach((overlay) => {
+          if (overlay) overlay.setMap(null);
+        });
+      }
     };
-  }, [markers, universityOverlays]);
+  }, []); // 빈 의존성 배열 사용
 
   // 로딩 상태 표시
   if (isLoading) {

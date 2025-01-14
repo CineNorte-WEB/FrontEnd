@@ -625,7 +625,7 @@ export const restaurantData = [
     rating: 0,
     likePoints: "[]",
     imageUrl:
-      "https://postfiles.pstatic.net/20160715_55/hausmann__146854597305280imi_JPEG/%C0%CC%B4%EB_%BA%A3%C0%CC%B1%DB_%B8%B6%B4%F5%B8%B0%B7%AF_%BA%A3%C0%CC%B1%DB_MATHER-IN-LAW_Bagel__Ewha_Women%27s_University_%2812%29.jpg?type=w966",
+      "https://mblogthumb-phinf.pstatic.net/20160715_55/hausmann__146854597305280imi_JPEG/%C0%CC%B4%EB_%BA%A3%C0%CC%B1%DB_%B8%B6%B4%F5%B8%B0%B7%AF_%BA%A3%C0%CC%B1%DB_MATHER-IN-LAW_Bagel__Ewha_Women%27s_University_%2812%29.jpg?type=w800",
     univName: "이화여자대학교",
     menus: [
       {
