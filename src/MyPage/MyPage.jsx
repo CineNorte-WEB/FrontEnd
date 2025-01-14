@@ -10,29 +10,12 @@ import apiClient from "../api/axios";
 import axios from "axios";
 
 const MyPage = () => {
+  const [userId, setUserId] = useState(null);
   const [currentComponent, setCurrentComponent] = useState("profile");
   const [bookmarks, setBookmarks] = useState([]);
   const [boards, setBoards] = useState([]);
   const [profile, setProfile] = useState(null); // 프로필 상태 추가
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
-
-
-  // 북마크 API 호출
-  useEffect(() => {
-    const fetchBookmarks = async () => {
-      try {
-        const userId = localStorage.getItem("email");
-        const response = await apiClient.get(`/users/${userId}/bookmarks`);
-        setBookmarks(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("북마크 데이터를 가져오는 중 오류:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchBookmarks();
-  }, []);
 
   useEffect(() => {
     const fetchBoards = async () => {
@@ -77,6 +60,7 @@ const MyPage = () => {
       try {
         const response = await apiClient.get("/users/profile"); // axios.js가 Authorization 헤더 처리
         setProfile(response.data); // 프로필 데이터 설정
+        setUserId(response.data.id); // userId를 상태로 저장
         setLoading(false);
       } catch (error) {
         console.error("프로필 데이터를 가져오는 중 오류:", error);
@@ -86,6 +70,23 @@ const MyPage = () => {
   
     fetchProfile();
   }, []);
+
+  // 북마크 정보 가져오기
+  useEffect(() => {
+    const fetchBookmarks = async () => {
+      if (!userId) return; // userId가 설정되지 않으면 실행하지 않음
+      try {
+        const response = await apiClient.get(`/users/${userId}/bookmarks`);
+        setBookmarks(response.data); // 북마크 데이터 설정
+        setLoading(false);
+      } catch (error) {
+        console.error("북마크 데이터를 가져오는 중 오류:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchBookmarks();
+  }, [userId]); // userId가 설정될 때만 실행
   
   if (loading) {
     return <div className="loading">데이터를 불러오는 중입니다...</div>;
