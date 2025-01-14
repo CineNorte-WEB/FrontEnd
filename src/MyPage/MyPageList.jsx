@@ -6,13 +6,16 @@ export default function MyPageList({ bookmarks, setBookmarks }) {
   const handleDeleteBookmark = async (placeId) => {
     try {
       await apiClient.delete(`/users/bookmarks/${placeId}`);
-      setBookmarks((prev) => prev.filter((bookmark) => bookmark.id !== placeId));
-      console.log(`북마크(ID: ${placeId}) 삭제 완료`);
+      setBookmarks((prevBookmarks) =>
+        prevBookmarks.filter((bookmark) => bookmark.id !== placeId)
+      );
+      console.log("북마크가 성공적으로 삭제되었습니다.");
     } catch (error) {
-      console.error("북마크 삭제 중 오류:", error);
+      console.error("북마크 삭제 중 오류 발생:", error);
       alert("북마크 삭제에 실패했습니다.");
     }
   };
+  
 
   return (
     <div className="list-container font-['Song Myung']">

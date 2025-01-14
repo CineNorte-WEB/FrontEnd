@@ -1,34 +1,18 @@
-import React, { useState, useEffect } from "react";
-import apiClient from "../api/axios";
+import React, { useState } from "react";
 import "./MyPageProfile.css";
+import apiClient from "../api/axios";
 import { GoPencil } from "react-icons/go";
 import { IoExitOutline } from "react-icons/io5";
 
-export default function MyPageProfile({ bookmarks = [], boards = [] }) {
-  const [profile, setProfile] = useState({
-    nickname: "",
-    email: "",
-  });
+export default function MyPageProfile({
+  profile,
+  setProfile, // 부모에서 전달받은 상태 업데이트 함수
+  bookmarks = [],
+  boards = [],
+}) {
   const [editedProfile, setEditedProfile] = useState({ ...profile });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await apiClient.get("/users/profile");
-        setProfile(response.data);
-        setEditedProfile(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("프로필 데이터를 가져오는 중 오류가 발생했습니다:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, []);
 
   const handleEditClick = () => {
     setEditedProfile(profile);
@@ -37,18 +21,30 @@ export default function MyPageProfile({ bookmarks = [], boards = [] }) {
 
   const saveEdit = async () => {
     try {
-      const response = await apiClient.put("/api/users/profile", {
+      // API 호출
+      const response = await apiClient.put("/users/update", {
+        id: profile.id,
         email: editedProfile.email,
         nickname: editedProfile.nickname,
       });
       console.log("프로필 수정 완료:", response.data);
-      setProfile(response.data);
-      setIsEditModalOpen(false);
+  
+      // 프로필 상태 업데이트
+      setEditedProfile(response.data);
+  
+      // 로그아웃 처리
+      alert("프로필 수정이 완료되었습니다. 다시 로그인해주세요.");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("email");
+      localStorage.removeItem("nickname");
+      window.location.href = "/"; // 로그인 페이지로 리다이렉트
     } catch (error) {
       console.error("프로필 수정 중 오류 발생:", error);
       alert("프로필 수정에 실패했습니다. 다시 시도해주세요.");
     }
   };
+  
 
   const cancelEdit = () => {
     setIsEditModalOpen(false);
@@ -58,12 +54,26 @@ export default function MyPageProfile({ bookmarks = [], boards = [] }) {
     setIsDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    console.log("탈퇴가 완료되었습니다.");
-    localStorage.removeItem("token");
-    setProfile({ email: "이메일 없음", nickname: "닉네임 없음" });
+  const confirmDelete = async () => {
+    try {
+      // 탈퇴 API 호출
+      await apiClient.delete("/users/delete");
+      console.log("탈퇴가 성공적으로 완료되었습니다.");
+
+      // 로컬스토리지 정리 및 로그아웃
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("email");
+      localStorage.removeItem("nickname");
+
+      // 로그인 페이지로 리다이렉트
+      window.location.href = "/";
+    } catch (error) {
+      console.error("탈퇴 중 오류 발생:", error);
+      alert("탈퇴에 실패했습니다. 다시 시도해주세요.");
+    }
+
     setIsDeleteModalOpen(false);
-    window.location.href = "/login";
   };
 
   const cancelDelete = () => {
@@ -74,10 +84,6 @@ export default function MyPageProfile({ bookmarks = [], boards = [] }) {
     const { name, value } = e.target;
     setEditedProfile((prev) => ({ ...prev, [name]: value }));
   };
-
-  if (loading) {
-    return <div className="loading">데이터를 불러오는 중...</div>;
-  }
 
   return (
     <div className="profile-container font-['Song Myung']">

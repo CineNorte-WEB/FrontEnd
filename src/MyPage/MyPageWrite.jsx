@@ -24,31 +24,42 @@ export default function MyPageWrite({ boards, setBoards }) {
   };
 
   const confirmDelete = async () => {
-    const boardToDelete = boards[currentBoardIndex];
-    const placeId = boardToDelete?.id; // 삭제할 게시물의 ID (placeId 사용)
-
+    const postToDelete = boards[currentBoardIndex];
+  
+    if (!postToDelete) {
+      console.error("삭제할 게시물이 없습니다.");
+      return;
+    }
+  
+    const { id, type } = postToDelete; // type 추가
+  
     try {
-      if (placeId) {
-        // API 호출
-        await apiClient.delete(`/users/bookmarks/${placeId}`);
-        console.log(`게시물(ID: ${placeId})이 성공적으로 삭제되었습니다.`);
-
-        // 로컬 상태에서 삭제
-        setBoards((prevBoards) =>
-          prevBoards.filter((_, index) => index !== currentBoardIndex)
-        );
+      if (type === "review") {
+        // 리뷰 게시판 삭제 API 호출
+        await apiClient.delete(`/review_posts/${id}`);
+        console.log(`리뷰 게시물(ID: ${id})이 성공적으로 삭제되었습니다.`);
+      } else if (type === "board") {
+        // 일반 게시판 삭제 API 호출
+        await apiClient.delete(`/board_posts/${id}`);
+        console.log(`일반 게시물(ID: ${id})이 성공적으로 삭제되었습니다.`);
       } else {
-        console.error("삭제할 게시물의 ID가 없습니다.");
+        console.error("알 수 없는 게시물 타입입니다.");
+        return;
       }
+  
+      // 로컬 상태에서 삭제
+      setBoards((prevBoards) =>
+        prevBoards.filter((_, index) => index !== currentBoardIndex)
+      );
     } catch (error) {
       console.error("게시물 삭제 중 오류 발생:", error);
       alert("게시물 삭제에 실패했습니다. 다시 시도해주세요.");
     }
-
+  
     setIsDeleteModalOpen(false);
     setCurrentBoardIndex(null);
   };
-
+  
   const cancelDelete = () => {
     setIsDeleteModalOpen(false);
     setCurrentBoardIndex(null);
