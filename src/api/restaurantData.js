@@ -4567,6 +4567,25 @@ export const transformPlaceData = (place) => {
     place.category.replace(/^[^a-zA-Z가-힣]+/, "") || "항목 없음";
   const emoji = categoryEmojis[categoryWithoutEmoji] || "🍽️";
 
+  // 이미지 URL 처리 개선
+  const sanitizeImageUrl = (url) => {
+    if (!url) return "";
+    try {
+      // URL이 이미 인코딩되어 있는지 확인
+      if (url.includes("%")) {
+        return url;
+      }
+      // S3 버킷 URL 형식 확인
+      if (url.includes("camchelin-bucket.s3")) {
+        return encodeURI(url);
+      }
+      return url;
+    } catch (e) {
+      console.warn("Image URL processing error:", e);
+      return "";
+    }
+  };
+
   return {
     id: place.id || 0,
     name: place.name || "",
@@ -4575,7 +4594,7 @@ export const transformPlaceData = (place) => {
     hours: place.hours || "",
     rating: place.rating || 0,
     likePoints: parseLikePoints(place.likePoints),
-    imageUrl: place.imageUrl || "",
+    imageUrl: sanitizeImageUrl(place.imageUrl),
     univName: place.univName || "",
     menus: Array.isArray(place.menus) ? place.menus : [],
     position: {
