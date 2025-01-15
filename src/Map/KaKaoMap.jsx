@@ -151,6 +151,84 @@ function KakaoMap() {
       console.warn("Invalid place data:", place);
       return null;
     }
+
+    // 수동으로 좌표 매핑
+    const manualCoordinates = {
+      안녕유부: { lat: 37.5971837, lng: 127.0553028 },
+      언니네함바그: { lat: 37.5912458, lng: 127.0562716 },
+      "크치치킨 회기점": { lat: 37.5903212, lng: 127.0524384 },
+      푸른하늘: { lat: 37.5975058, lng: 127.0556663 },
+      회기왕족발보쌈: { lat: 37.5898425, lng: 127.0530133 },
+      회기왕갈비탕: { lat: 37.5915625, lng: 127.0516384 },
+      여기가좋겠네: { lat: 37.5902841, lng: 127.0563716 },
+      "가야가야 이대점": { lat: 37.5577841, lng: 126.9461716 },
+      고냉지: { lat: 37.5577841, lng: 126.9472384 },
+      "마더린러베이글(이대점)": { lat: 37.5580458, lng: 126.9462716 },
+      비밀: { lat: 37.5572841, lng: 126.9463716 },
+      "비아37 신촌본점": { lat: 37.5577841, lng: 126.9464384 },
+      삭: { lat: 37.5582458, lng: 126.9465716 },
+      "아건 이대점": { lat: 37.5587841, lng: 126.9466384 },
+      "아민 이화": { lat: 37.5592458, lng: 126.9467716 },
+      오르랔베이커리: { lat: 37.5582841, lng: 126.9468384 },
+      카우떡볶이: { lat: 37.5572458, lng: 126.9469716 },
+      하늘초밥: { lat: 37.5577841, lng: 126.9470384 },
+      미스터서왕만두: { lat: 37.5582458, lng: 126.9471716 },
+      소바연구소: { lat: 37.5587841, lng: 126.9472384 },
+      란주탕슉: { lat: 37.5592458, lng: 126.9473716 },
+      김광석신촌칼국수: { lat: 37.5532841, lng: 126.9394384 },
+      "롤앤롤 김밥": { lat: 37.5537458, lng: 126.9395716 },
+      스키당: { lat: 37.5542841, lng: 126.9396384 },
+      "을밀대 본점": { lat: 37.5547458, lng: 126.9397716 },
+      "정정 공덕1호점": { lat: 37.5442841, lng: 126.9398384 },
+      수저가: { lat: 37.5447458, lng: 126.9399716 },
+      정각: { lat: 37.5452841, lng: 126.9400384 },
+      정든그릇: { lat: 37.5457458, lng: 126.9401716 },
+      "쭈꾸미블루스 신촌본점": { lat: 37.5462841, lng: 126.9402384 },
+      파사주: { lat: 37.5467458, lng: 126.9403716 },
+      라구식당: { lat: 37.5602841, lng: 126.9374384 },
+      대포찜닭: { lat: 37.5607458, lng: 126.9375716 },
+      김판석초밥: { lat: 37.5612841, lng: 126.9376384 },
+      공복식당: { lat: 37.5617458, lng: 126.9377716 },
+      "쿳사 연희": { lat: 37.5662841, lng: 126.9323716 },
+      "오늘통닭 신촌직영점": { lat: 37.5607458, lng: 126.9375384 },
+      "강남불백 3호점": { lat: 37.5612841, lng: 126.9376716 },
+      대성이네: { lat: 37.5617458, lng: 126.9377384 },
+      "명성양꼬치 본점": { lat: 37.5622841, lng: 126.9378716 },
+      정육면체: { lat: 37.5627458, lng: 126.9379384 },
+      카츠업: { lat: 37.5632841, lng: 126.9380716 },
+      "자가제빵선명희피자 외대점": { lat: 37.5977458, lng: 127.0589384 },
+      "성화금탕마라탕&튀김꼬치": { lat: 37.5982841, lng: 127.0590716 },
+      이상한떡볶이집: { lat: 37.5987458, lng: 127.0591384 },
+      "파치 외대점": { lat: 37.5992841, lng: 127.0592716 },
+      "서가네 정육식당 본점": { lat: 37.5997458, lng: 127.0593384 },
+      "샤로스톤 외대점": { lat: 37.6002841, lng: 127.0594716 },
+      "베브릿지 한국외대점": { lat: 37.6007458, lng: 127.0595384 },
+      무초타코: { lat: 37.6012841, lng: 127.0596716 },
+      분99: { lat: 37.6017458, lng: 127.0597384 },
+      "번패티번 외대점": { lat: 37.6022841, lng: 127.0598716 },
+      도란도란곱창: { lat: 37.6027458, lng: 127.0599384 },
+      "153스트리트": { lat: 37.6032841, lng: 127.0600716 },
+      "최원석의돼지한판 서해쭈꾸미 시립대점": {
+        lat: 37.5847458,
+        lng: 127.0551384,
+      },
+    };
+
+    // 수동 좌표 우선, 없으면 기존 로직
+    const manualPosition = manualCoordinates[place.name];
+    const position = {
+      lat:
+        manualPosition?.lat ||
+        place.position?.lat ||
+        universityLocations[place.univName?.replace("대학교", "")]?.lat ||
+        37.564512,
+      lng:
+        manualPosition?.lng ||
+        place.position?.lng ||
+        universityLocations[place.univName?.replace("대학교", "")]?.lng ||
+        126.938977,
+    };
+
     return {
       id: place.id || 0,
       name: place.name || "",
@@ -164,16 +242,7 @@ function KakaoMap() {
       menus: Array.isArray(place.menus) ? place.menus : [],
       reviews: reviewData[place.id] || [],
       analysis: analysisData[place.id] || null,
-      position: {
-        lat:
-          place.latitude ||
-          universityLocations[place.univName]?.lat ||
-          37.564512,
-        lng:
-          place.longitude ||
-          universityLocations[place.univName]?.lng ||
-          126.938977,
-      },
+      position: position, // 새로 계산된 position 사용
     };
   };
 
@@ -223,7 +292,7 @@ function KakaoMap() {
       try {
         const options = {
           center: new window.kakao.maps.LatLng(37.541012, 127.070798),
-          level: 3,
+          level: 4,
         };
 
         const newMap = new window.kakao.maps.Map(container, options);
@@ -326,8 +395,9 @@ function KakaoMap() {
       if (!restaurantData.length || !newMap) return;
 
       const newMarkers = restaurantData
+        .slice(0, 66) // 1번부터 66번까지의 가게만 표시
         .map((place) => {
-          if (!place.position || !place.position.lat || !place.position.lng) {
+          if (!place.position) {
             console.error("Invalid position data for restaurant:", place);
             return null;
           }
@@ -337,17 +407,39 @@ function KakaoMap() {
             place.position.lng
           );
 
+          // 커스텀 오버레이 콘텐츠 생성
+          const content = document.createElement("div");
+          content.className = "marker-content";
+          content.innerHTML = `
+          <div style="
+            padding: 5px;
+            background: white;
+            border: 1px solid #888;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            white-space: nowrap;
+          ">
+            ${place.name}
+          </div>
+        `;
+
           const marker = new window.kakao.maps.Marker({
             position: markerPosition,
             map: newMap,
           });
 
-          window.kakao.maps.event.addListener(marker, "mouseout", () => {
-            setSelectedRestaurant(null);
-            setMarkerClick(false);
+          // 마커 위에 오버레이 생성
+          const overlay = new window.kakao.maps.CustomOverlay({
+            position: markerPosition,
+            content: content,
+            map: null, // 초기에는 숨김
+            yAnchor: 2.2,
           });
 
           window.kakao.maps.event.addListener(marker, "mouseover", () => {
+            overlay.setMap(newMap);
             setSelectedRestaurant({
               ...place,
               markerPosition: {
@@ -356,6 +448,12 @@ function KakaoMap() {
               },
             });
             setMarkerClick(true);
+          });
+
+          window.kakao.maps.event.addListener(marker, "mouseout", () => {
+            overlay.setMap(null);
+            setSelectedRestaurant(null);
+            setMarkerClick(false);
           });
 
           window.kakao.maps.event.addListener(marker, "click", () => {
@@ -369,11 +467,11 @@ function KakaoMap() {
             setMarkerClick(true);
           });
 
-          return marker;
+          return { marker, overlay };
         })
         .filter(Boolean);
 
-      setMarkers(newMarkers);
+      setMarkers(newMarkers.map((item) => item.marker));
     },
     [restaurantData]
   );

@@ -22,6 +22,17 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
         className="absolute z-50 p-4 bg-white border-2 border-gray-300 rounded-lg shadow-lg left-4 top-4"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* 이미지 추가 */}
+        <div className="flex-shrink-0 w-24 h-24 mr-4">
+          <img
+            src={restaurant.imageUrl || `/images/${restaurant.category}.png`}
+            alt={restaurant.name}
+            className="object-cover w-full h-full rounded-lg"
+            onError={(e) => {
+              e.target.src = "/images/default-restaurant.png";
+            }}
+          />
+        </div>
         <div className="flex justify-between mb-2">
           <h3 className="text-lg font-bold font-yeonsung">{restaurant.name}</h3>
           <button

@@ -4567,45 +4567,50 @@ export const transformPlaceData = (place) => {
     place.category.replace(/^[^a-zA-Z가-힣]+/, "") || "항목 없음";
   const emoji = categoryEmojis[categoryWithoutEmoji] || "🍽️";
 
-  // 이미지 URL 처리 개선
-  const sanitizeImageUrl = (url) => {
-    if (!url) return "";
-    try {
-      // URL이 이미 인코딩되어 있는지 확인
-      if (url.includes("%")) {
+  // 변경 코드 (수정 후)
+  const sanitizeImageUrl = (url, id) => {
+    // 1번부터 66번까지의 가게 이미지 URL만 사용
+    if (id >= 1 && id <= 66) {
+      if (!url) return "";
+      try {
+        // URL이 이미 인코딩되어 있는지 확인
+        if (url.includes("%")) {
+          return url;
+        }
+        // S3 버킷 URL 형식 확인
+        if (url.includes("camchelin-bucket.s3")) {
+          return encodeURI(url);
+        }
         return url;
+      } catch (e) {
+        console.warn("Image URL processing error:", e);
+        return "";
       }
-      // S3 버킷 URL 형식 확인
-      if (url.includes("camchelin-bucket.s3")) {
-        return encodeURI(url);
-      }
-      return url;
-    } catch (e) {
-      console.warn("Image URL processing error:", e);
-      return "";
     }
+    // 67번 이상의 가게는 빈 문자열 반환
+    return "";
   };
 
-  return {
-    id: place.id || 0,
-    name: place.name || "",
-    category: `${emoji} ${categoryWithoutEmoji}`, // 이모티콘 + 카테고리명
-    address: place.address || "",
-    hours: place.hours || "",
-    rating: place.rating || 0,
-    likePoints: parseLikePoints(place.likePoints),
-    imageUrl: sanitizeImageUrl(place.imageUrl),
-    univName: place.univName || "",
-    menus: Array.isArray(place.menus) ? place.menus : [],
-    position: {
-      lat:
-        universityLocations[place.univName?.replace("대학교", "")]?.lat ||
-        37.564512,
-      lng:
-        universityLocations[place.univName?.replace("대학교", "")]?.lng ||
-        126.938977,
-    },
-  };
+ // transformPlaceData 함수 수정
+return {
+  id: place.id || 0,
+  name: place.name || "",
+  category: `${emoji} ${categoryWithoutEmoji}`, // 이모티콘 + 카테고리명
+  address: place.address || "",
+  hours: place.hours || "",
+  rating: place.rating || 0,
+  likePoints: parseLikePoints(place.likePoints),
+  imageUrl: sanitizeImageUrl(place.imageUrl, place.id),  // id 전달
+  univName: place.univName || "",
+  menus: Array.isArray(place.menus) ? place.menus : [],
+  position: {
+    lat:
+      universityLocations[place.univName?.replace("대학교", "")]?.lat ||
+      37.564512,
+    lng:
+      universityLocations[place.univName?.replace("대학교", "")]?.lng ||
+      126.938977,
+  },
 };
 
 // 초기 데이터 로드 함수
