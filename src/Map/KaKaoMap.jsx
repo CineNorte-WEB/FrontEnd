@@ -291,8 +291,8 @@ function KakaoMap() {
 
       try {
         const options = {
-          center: new window.kakao.maps.LatLng(37.541012, 127.070798),
-          level: 4,
+          center: new window.kakao.maps.LatLng(37.5535, 126.9368), // 신촌역 좌표로 변경
+          level: 3,
         };
 
         const newMap = new window.kakao.maps.Map(container, options);
