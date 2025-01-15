@@ -4591,29 +4591,25 @@ export const transformPlaceData = (place) => {
     return "";
   };
 
- // transformPlaceData 함수 수정
-return {
-  id: place.id || 0,
-  name: place.name || "",
-  category: `${emoji} ${categoryWithoutEmoji}`, // 이모티콘 + 카테고리명
-  address: place.address || "",
-  hours: place.hours || "",
-  rating: place.rating || 0,
-  likePoints: parseLikePoints(place.likePoints),
-  imageUrl: sanitizeImageUrl(place.imageUrl, place.id),  // id 전달
-  univName: place.univName || "",
-  menus: Array.isArray(place.menus) ? place.menus : [],
-  position: {
-    lat:
-      universityLocations[place.univName?.replace("대학교", "")]?.lat ||
-      37.564512,
-    lng:
-      universityLocations[place.univName?.replace("대학교", "")]?.lng ||
-      126.938977,
-  },
-};
-
-// 초기 데이터 로드 함수
-export const loadInitialData = () => {
-  return restaurantData.map(transformPlaceData);
+  // transformPlaceData 함수 수정
+  return {
+    id: place.id || 0,
+    name: place.name || "",
+    category: `${emoji} ${categoryWithoutEmoji}`, // 이모티콘 + 카테고리명
+    address: place.address || "",
+    hours: place.hours || "",
+    rating: place.rating || 0,
+    likePoints: parseLikePoints(place.likePoints),
+    imageUrl: sanitizeImageUrl(place.imageUrl, place.id), // id 전달
+    univName: place.univName || "",
+    menus: Array.isArray(place.menus) ? place.menus : [],
+    position: {
+      lat:
+        universityLocations[place.univName?.replace("대학교", "")]?.lat ||
+        37.564512,
+      lng:
+        universityLocations[place.univName?.replace("대학교", "")]?.lng ||
+        126.938977,
+    },
+  };
 };

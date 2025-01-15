@@ -39,7 +39,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
             onClick={(e) => {
               e.stopPropagation();
             }}
-            className="text-gray-500 font-yeonsung"
+            className="text-2xl font-bold text-red-500 font-yeonsung"
           >
             ✕
           </button>
