@@ -187,23 +187,16 @@ function KakaoMap() {
     const loadKakaoMapScript = () => {
       return new Promise((resolve, reject) => {
         if (isKakaoMapLoaded()) {
-          resolve();
+          window.kakao.maps.load(resolve);
           return;
         }
 
         const script = document.createElement("script");
-        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&libraries=services`;
+        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&libraries=services&autoload=false`;
         script.async = true;
 
         script.onload = () => {
-          if (window.kakao) {
-            window.kakao.maps.load(() => {
-              console.log("Kakao Maps script loaded and initialized");
-              resolve();
-            });
-          } else {
-            reject(new Error("Kakao Maps script loaded but not initialized"));
-          }
+          window.kakao.maps.load(resolve);
         };
 
         script.onerror = (error) => {
@@ -231,19 +224,24 @@ function KakaoMap() {
         const options = {
           center: new window.kakao.maps.LatLng(37.541012, 127.070798),
           level: 3,
-          draggable: true,
-          scrollwheel: true,
-          disableDoubleClick: false,
         };
 
-        const map = new window.kakao.maps.Map(container, options);
-        setMap(map);
-        window.map = map;
+        const newMap = new window.kakao.maps.Map(container, options);
 
-        createUniversityOverlays(map);
-        createRestaurantMarkers(map);
+        // 지도 인터랙션 옵션 설정
+        newMap.setDraggable(true);
+        newMap.setZoomable(true);
 
-        window.kakao.maps.event.addListener(map, "click", () => {
+        setMap(newMap);
+
+        // UI 컨트롤 추가
+        const zoomControl = new window.kakao.maps.ZoomControl();
+        newMap.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
+
+        createUniversityOverlays(newMap);
+        createRestaurantMarkers(newMap);
+
+        window.kakao.maps.event.addListener(newMap, "click", () => {
           setSelectedRestaurant(null);
           setMarkerClick(false);
         });
@@ -255,26 +253,30 @@ function KakaoMap() {
       }
     };
 
-    const loadMap = async () => {
+    const init = async () => {
       try {
         await loadKakaoMapScript();
-        setTimeout(initMap, 200);
+        initMap();
       } catch (error) {
         console.error("Failed to load Kakao Maps:", error);
         setError("지도를 로드하는 데 실패했습니다.");
       }
     };
 
-    if (!isKakaoMapLoaded()) {
-      loadMap();
-    } else {
-      initMap();
-    }
+    init();
 
-    // Cleanup function
     return () => {
       if (map) {
-        window.kakao.maps.event.removeListener(map, "click");
+        if (markers.length) {
+          markers.forEach((marker) => {
+            if (marker) marker.setMap(null);
+          });
+        }
+        if (universityOverlays.length) {
+          universityOverlays.forEach((overlay) => {
+            if (overlay) overlay.setMap(null);
+          });
+        }
       }
     };
   }, [restaurantData]);
