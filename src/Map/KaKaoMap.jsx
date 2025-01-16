@@ -237,28 +237,21 @@ function KakaoMap() {
       망우로30: { lat: 37.5896241510507, lng: 127.05981115001894 },
       혜성칼국수: { lat: 37.67378058202286, lng: 127.03857397066574 },
       청량회관: { lat: 37.67378058202286, lng: 127.03857397066574 },
-      서울뼈구이매운족발: { lat: 37.67378058202286, lng: 127.03857397066574 },
+      서울뼈구이매운족발: { lat: 37.58389604894765, lng: 127.05023412039714 },
       이모네왕파전: { lat: 37.58389604894765, lng: 127.05023412039714 },
       은하곱창: { lat: 37.579109331781005, lng: 127.05567626450954 },
       신락원: { lat: 37.579109331781005, lng: 127.05567626450954 },
-      브레드칸청량리점: { lat: 37.579109331781005, lng: 127.05567626450954 },
+      브레드칸청량리점: { lat: 37.58339848349493, lng: 127.05477373347772 },
       독: { lat: 37.58527854377872, lng: 127.05146347006404 },
       마루한: { lat: 37.58285875999863, lng: 127.05286000744832 },
     };
 
     // 수동 좌표 우선, 없으면 기존 로직
     const manualPosition = manualCoordinates[place.name];
-    const position = {
-      lat:
-        manualPosition?.lat ||
-        place.position?.lat ||
-        universityLocations[place.univName?.replace("대학교", "")]?.lat ||
-        37.564512,
-      lng:
-        manualPosition?.lng ||
-        place.position?.lng ||
-        universityLocations[place.univName?.replace("대학교", "")]?.lng ||
-        126.938977,
+    // 수동 좌표만 사용
+    const position = manualCoordinates[place.name] || {
+      lat: 37.564512,
+      lng: 126.938977,
     };
 
     return {
