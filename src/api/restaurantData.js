@@ -2069,65 +2069,6 @@ export const restaurantData = [
     ],
   },
   {
-    id: 31,
-    name: "파사주",
-    category: "항목 없음",
-    address: "서울 마포구 백범로20길 24-5 상수라이크 1층 (우)04151",
-    hours:
-      "'월~금': '11:30 ~ 22:00', '월~금 휴게시간': '15:00 ~ 17:00', '토,일': '11:00 ~ 21:00', '토,일 휴게시간': '15:00 ~ 16:00'",
-    reviewCount: 181,
-    rating: 3.8,
-    likePoints:
-      "[{'category': '맛', 'score': '18'}, {'category': '분위기', 'score': '14'}, {'category': '친절', 'score': '9'}, {'category': '가성비', 'score': '2'}]",
-    imageUrl:
-      "https://camchelin-bucket.s3.ap-northeast-2.amazonaws.com/Images/%E1%84%89%E1%85%A5%E1%84%80%E1%85%A1%E1%86%BC%E1%84%83%E1%85%A2/%ED%8C%8C%EC%82%AC%EC%A3%BC_img.png",
-    univName: "서강대학교",
-    menus: [
-      {
-        id: 247,
-        name: "프렌치 어니언 수프",
-        price: 14000,
-        description: "설명 없음",
-      },
-      {
-        id: 248,
-        name: "파흐망티에",
-        price: 19000,
-        description: "설명 없음",
-      },
-      {
-        id: 249,
-        name: "파리지엥 뇨끼",
-        price: 18000,
-        description: "설명 없음",
-      },
-      {
-        id: 250,
-        name: "라구",
-        price: 17000,
-        description: "설명 없음",
-      },
-      {
-        id: 251,
-        name: "로얄비스크 링귀네",
-        price: 19000,
-        description: "설명 없음",
-      },
-      {
-        id: 252,
-        name: "클래식프렌치 토스트",
-        price: 15000,
-        description: "설명 없음",
-      },
-      {
-        id: 253,
-        name: "스테이크 프랑세",
-        price: 29000,
-        description: "설명 없음",
-      },
-    ],
-  },
-  {
     id: 32,
     name: "라구식당",
     category: "🍽️ 항목 없음",
