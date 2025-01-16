@@ -35,14 +35,6 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
         </div>
         <div className="flex justify-between mb-2">
           <h3 className="text-lg font-bold font-yeonsung">{restaurant.name}</h3>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            className="text-2xl font-bold text-red-500 font-yeonsung"
-          >
-            ✕
-          </button>
         </div>
         <p className="mb-2 text-sm text-gray-600 font-yeonsung">
           <strong>카테고리:</strong> {restaurant.category}

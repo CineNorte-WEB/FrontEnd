@@ -157,13 +157,13 @@ const LeftSide = ({
         <input
           type="text"
           placeholder="🍽️ 가게 검색 :"
-          className="px-5 mt-4 mb-2 ml-16 text-black border border-black rounded-lg"
+          className="px-3 mb-3 ml-20 text-black border border-black rounded-lg 6 px-5mb-2"
           value={searchQuery}
           onChange={handleSearch}
           onKeyDown={handleSearchKeyDown}
         />
       </div>
-      
+
       {/* 검색 결과 섹션 */}
       {filteredRestaurants.length > 0 && (
         <div className="px-4 mb-4">
@@ -174,10 +174,7 @@ const LeftSide = ({
       )}
 
       {/* 레스토랑 리스트 */}
-      <div 
-        ref={listContainerRef} 
-        className="h-full px-4 overflow-y-auto"
-      >
+      <div ref={listContainerRef} className="h-full px-4 overflow-y-auto">
         {/* 일반 레스토랑 리스트 */}
         {displayRestaurants.map((restaurant) => (
           <div
@@ -252,7 +249,9 @@ const LeftSide = ({
               />
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-bold text-blue-800">{restaurant.name}</h2>
+                  <h2 className="text-lg font-bold text-blue-800">
+                    {restaurant.name}
+                  </h2>
                   <div className="flex items-center">
                     <span className="mr-1 text-yellow-400">⭐</span>
                     <span className="text-sm">{restaurant.rating}</span>
