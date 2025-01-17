@@ -43,6 +43,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
       >
         <div className="flex-shrink-0 w-24 h-24 mr-4">
           <img
+            src={restaurant.imageUrl || `/images/${restaurant.category}.png`}
             alt={restaurant.name}
             className="object-cover w-full h-full rounded-lg"
             onError={(e) => {
@@ -101,6 +102,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
                 {restaurant.rating})
               </span>
             </div>
+
             <div className="flex justify-between">
               <span className="font-bold">주소</span>
               <span className="flex-1 ml-4 text-right">
