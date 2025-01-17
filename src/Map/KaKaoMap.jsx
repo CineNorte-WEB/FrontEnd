@@ -227,7 +227,7 @@ function KakaoMap() {
       무초타코: { lat: 37.59545025399282, lng: 127.06187100814843 },
       분99: { lat: 37.59148565682761, lng: 127.05310105629461 },
       "번패티번 외대점": { lat: 37.59674625638892, lng: 127.05568657216698 },
-      도란도란곱창: { lat: 37.67378058202286, lng: 127.03857397066574 },
+      도란도란곱창: { lat: 37.558118052679445, lng: 126.93887490284675 },
       "153스트리트": { lat: 37.59617569237191, lng: 127.06160267567361 },
       "최원석의돼지한판 서해쭈꾸미 시립대점": {
         lat: 37.584079354462155,
@@ -253,17 +253,14 @@ function KakaoMap() {
         .map((menu) => {
           if (!menu) return null;
 
-          // 메뉴 데이터의 JSON 문자열 처리
           let processedMenu = menu;
           if (typeof menu === "string") {
             try {
               processedMenu = JSON.parse(menu);
             } catch (e) {
-              // JSON 파싱에 실패하면 원래 문자열 사용
               processedMenu = { name: menu };
             }
           }
-          // 메뉴 객체가 유효한지 확인
           if (!processedMenu || typeof processedMenu !== "object") {
             return null;
           }
@@ -278,14 +275,20 @@ function KakaoMap() {
             description: processedMenu.description || "설명 없음",
           };
         })
-        .filter((menu) => menu && menu.name); // null과 빈 이름 필터링
+        .filter((menu) => menu && menu.name);
     }
 
     // 수동 좌표 우선, 없으면 대학교 위치 기반 좌표
-    const position = manualCoordinates[place.name] || {
-      lat: universityLocations[place.univName?.replace("대학교", "")]?.lat,
-      lng: universityLocations[place.univName?.replace("대학교", "")]?.lng,
-    };
+    // transformPlaceData 함수 내부의 position 설정 부분만 수정
+    const position =
+      place.name && manualCoordinates[place.name]
+        ? manualCoordinates[place.name]
+        : {
+            lat: universityLocations[place.univName?.replace("대학교", "")]
+              ?.lat,
+            lng: universityLocations[place.univName?.replace("대학교", "")]
+              ?.lng,
+          };
 
     return {
       id: place.id || 0,
