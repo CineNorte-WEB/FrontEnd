@@ -362,7 +362,10 @@ function KakaoMap() {
 
         // UI 컨트롤 추가
         const zoomControl = new window.kakao.maps.ZoomControl();
-        newMap.addControl(zoomControl, window.kakao.maps.ControlPosition.RIGHT);
+        newMap.addControl(
+          zoomControl,
+          window.kakao.maps.ControlPosition.BOTTOMRIGHT
+        );
 
         createUniversityOverlays(newMap);
         createRestaurantMarkers(newMap);
