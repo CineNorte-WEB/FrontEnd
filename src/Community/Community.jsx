@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Common from "../components/Common";
 import { PiPencilLineDuotone } from "react-icons/pi";
 import Brand from "../components/Brand";
+import apiClient from "../api/axios";
 
 const Community = () => {
   const navigate = useNavigate();
@@ -10,6 +11,43 @@ const Community = () => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState("자유게시판");
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // 게시판 데이터 가져오기
+  const fetchPosts = async () => {
+    setLoading(true);
+    try {
+      const response =
+        selectedCategory === "리뷰게시판"
+          ? await apiClient.get("/review_posts")
+          : await apiClient.get("/board_posts");
+      const formattedData = response.data.map((post) => ({
+        id: post.id,
+        title: post.title,
+        content: post.content,
+        author: post.userNickname,
+        image: post.imageUrl || null, // 이미지 URL 포함
+        createdAt: new Date().toISOString(),
+        category: selectedCategory,
+      }));
+      setPosts(formattedData);
+    } catch (error) {
+      console.error(`${selectedCategory} 데이터를 가져오는 중 오류 발생:`, error);
+    }
+    setLoading(false);
+  };
+
+  // 카테고리 변경 시 API 호출
+  useEffect(() => {
+    fetchPosts();
+  }, [selectedCategory]);
+
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+    setCurrentPage(1); // 카테고리 변경 시 첫 페이지로 이동
+  };
 
   const handlePostClick = (post) => {
     setSelectedPost(post);
@@ -21,115 +59,12 @@ const Community = () => {
     setIsDetailModalOpen(false);
   };
 
-  const initialPosts = [
-    {
-      id: 1,
-      title: "주식 ...",
-      category: "자유게시판",
-      author: "인생은 한방",
-      image: null,
-      content: "",
-      createdAt: new Date("2024-01-01").toISOString(),
-    },
-    {
-      id: 2,
-      title: "현이네 고기국수",
-      category: "리뷰게시판",
-      author: "인생은 고기서 고기",
-      image: null,
-      content: "",
-      createdAt: new Date("2024-01-02").toISOString(),
-    },
-    {
-      id: 3,
-      title: "종강까지 한달!!!",
-      category: "자유게시판",
-      author: "휴학하고파",
-      image: null,
-      content: "",
-      createdAt: new Date("2024-01-03").toISOString(),
-    },
-    {
-      id: 4,
-      title: "진스시",
-      category: "리뷰게시판",
-      author: "가는곳마다스시",
-      image: null,
-      content: "",
-      createdAt: new Date("2024-01-04").toISOString(),
-    },
-  ];
-
-  const [posts, setPosts] = useState(() => {
-    const savedPosts = localStorage.getItem("communityPosts");
-    return savedPosts ? JSON.parse(savedPosts) : initialPosts;
-  });
-
-  useEffect(() => {
-    localStorage.setItem("communityPosts", JSON.stringify(posts));
-  }, [posts]);
-
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
   const currentPosts = posts.slice(
     (currentPage - 1) * POSTS_PER_PAGE,
     currentPage * POSTS_PER_PAGE
   );
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    category: "자유게시판",
-    title: "",
-    content: "",
-    image: null,
-  });
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, image: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = () => {
-    if (formData.title.trim() === "" || formData.content.trim() === "") {
-      alert("제목과 내용을 입력해주세요!");
-      return;
-    }
-
-    const newPost = {
-      id: Date.now(),
-      title: formData.title,
-      category: formData.category,
-      author: "홍익이",
-      content: formData.content,
-      image: formData.image,
-      createdAt: new Date().toISOString(),
-    };
-
-    setPosts([newPost, ...posts]);
-    setFormData({
-      category: "자유게시판",
-      title: "",
-      content: "",
-      image: null,
-    });
-
-    setCurrentPage(1);
-    closeModal();
-  };
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -148,41 +83,55 @@ const Community = () => {
         맛집부터 일상까지, 자유롭게 소통해요!
       </p>
       <div className="w-[70%] min-h-[60vh] mx-auto my-4 bg-white rounded-2xl shadow-lg overflow-hidden p-4">
-        {currentPosts.map((post) => (
-          <div
-            key={post.id}
-            onClick={() => handlePostClick(post)}
-            className="flex items-center justify-between p-4 m-4 text-gray-800 transition-colors duration-300 ease-in-out bg-white rounded-lg shadow-md cursor-pointer hover:bg-gray-100"
-          >
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <h2 className="mb-2 text-lg font-bold">{post.title}</h2>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="space-y-5">
-                  <p className="text-sm text-gray-500 font-semibold font-['Song Myung']">
-                    {post.category}
-                  </p>
-                  <p className="text-sm text-gray-500 font-semibold font-['Song Myung']">
-                    작성자: {post.author}
-                  </p>
-                  <p className="text-sm text-gray-500 font-['Song Myung'] font-semibold">
-                    작성일: {new Date(post.createdAt).toLocaleDateString()}
-                  </p>
+        <select
+          onChange={handleCategoryChange}
+          value={selectedCategory}
+          className="mb-4 px-4 py-2 text-lg border-2 border-gray-300 rounded-lg"
+        >
+          <option value="자유게시판">자유게시판</option>
+          <option value="리뷰게시판">리뷰게시판</option>
+        </select>
+        {loading ? (
+          <p>데이터를 불러오는 중입니다...</p>
+        ) : currentPosts.length > 0 ? (
+          currentPosts.map((post) => (
+            <div
+              key={post.id}
+              onClick={() => handlePostClick(post)}
+              className="flex items-center justify-between p-4 m-4 text-gray-800 transition-colors duration-300 ease-in-out bg-white rounded-lg shadow-md cursor-pointer hover:bg-gray-100"
+            >
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <h2 className="mb-2 text-lg font-bold">{post.title}</h2>
                 </div>
-                <div>
-                  {post.image && (
-                    <img
-                      src={post.image}
-                      alt="게시글 이미지"
-                      className="object-cover mr-16 rounded-sm shadow-md h-36 w-36"
-                    />
-                  )}
+                <div className="flex items-center justify-between">
+                  <div className="space-y-5">
+                    <p className="text-sm text-gray-500 font-semibold font-['Song Myung']">
+                      {post.category}
+                    </p>
+                    <p className="text-sm text-gray-500 font-semibold font-['Song Myung']">
+                      작성자: {post.author}
+                    </p>
+                    <p className="text-sm text-gray-500 font-semibold font-['Song Myung'] font-semibold">
+                      작성일: {new Date(post.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div>
+                    {post.image && (
+                      <img
+                        src={post.image}
+                        alt="게시글 이미지"
+                        className="object-cover mr-16 rounded-sm shadow-md h-36 w-36"
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p>게시물이 없습니다.</p>
+        )}
         {totalPages > 1 && (
           <div className="flex items-center justify-center m-4">
             {pageNumbers.map((num) => (
@@ -201,96 +150,7 @@ const Community = () => {
           </div>
         )}
       </div>
-      <button
-        onClick={openModal}
-        className="fixed bottom-8 right-8 bg-gray-100 text-black rounded-lg w-[60px] h-[60px] text-2xl flex items-center justify-center shadow-lg cursor-pointer transition-colors duration-300 hover:bg-white"
-      >
-        <PiPencilLineDuotone />
-      </button>
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
-          <div className="text-2xl bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] max-h-[100%] font-['Song Myung']">
-            <h2 className="text-4xl text-center font-bold font-['Song Myung']">
-              게시물 작성
-            </h2>
-            <div>
-              <label className="block font-bold">🏷️카테고리</label>
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-                className="w-full font-bold my-2 p-2 border-2 border-gray-500 rounded-lg text-base font-['Song Myung']"
-              >
-                <option className="font-bold" value="자유게시판">
-                  자유게시판
-                </option>
-                <option className="font-bold" value="리뷰게시판">
-                  리뷰게시판
-                </option>
-              </select>
-            </div>
-            <div>
-              <label className="font-bold">📓제목</label>
-              <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleInputChange}
-                placeholder="제목을 입력하세요"
-                className="w-full my-2 px-4 font-semibold pt-2 pb-2 border-2 border-gray-500 rounded-lg text-base font-['Song Myung']"
-              />
-            </div>
-            <div>
-              <label className="font-bold">📑글 내용</label>
-              <textarea
-                name="content"
-                value={formData.content}
-                onChange={handleInputChange}
-                placeholder="내용을 입력하세요."
-                className="w-full my-2 px-4 pt-4 pb-12 font-semibold border-2 border-gray-500 rounded-lg text-base font-['Song Myung']"
-              />
-            </div>
-            <div>
-              <label className="mt-2 font-bold">📸사진 등록</label>
-              <div className="flex">
-                <div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="w-64 my-3.5 p-2 font-bold border-2 border-gray-500 rounded-lg text-base font-['Song Myung']"
-                  />
-                </div>
-                <div>
-                  {formData.image && (
-                    <img
-                      src={formData.image}
-                      alt="미리보기"
-                      className="ml-32 w-[150px] h-[150px] object-cover"
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-            <div>
-              <div className="flex justify-between mt-4">
-                <button
-                  onClick={handleSubmit}
-                  className="bg-blue-500 shadow-lg text-white px-4 py-2 rounded-lg cursor-pointer font-semibold text-2xl hover:bg-sky-700 font-['Song Myung']"
-                >
-                  게시물 등록
-                </button>
-                <button
-                  onClick={closeModal}
-                  className="bg-red-500 shadow-lg text-white px-4 py-2 text-2xl rounded-lg cursor-pointer hover:bg-red-700 font-semibold font-['Song Myung']"
-                >
-                  취소
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      
       {isDetailModalOpen && selectedPost && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
           <div className="bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] max-h-[95%] font-['Song Myung']">

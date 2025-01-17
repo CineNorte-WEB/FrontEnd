@@ -35,6 +35,7 @@ const MyPage = () => {
             author: review.userNickname,
             placeName: review.placeName, // 장소 이름 추가
             type: "review", // 리뷰 게시판 타입 추가
+            createdAt: review.createdAt,
           })),
           ...boardsResponse.data.map((board) => ({
             id: board.id,
@@ -43,6 +44,7 @@ const MyPage = () => {
             content: board.content,
             author: board.userNickname,
             type: "board", // 일반 게시판 타입 추가
+            createdAt: board.createdAt,
           })),
         ];
 
