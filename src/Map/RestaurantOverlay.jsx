@@ -18,10 +18,17 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
 
   const formatLikePoints = (likePoints) => {
     try {
+      let points = [];
       if (typeof likePoints === "string") {
-        return JSON.parse(likePoints);
+        points = JSON.parse(likePoints);
+      } else {
+        points = likePoints || [];
       }
-      return likePoints || [];
+      // 항목없음 카테고리 제외하고 반환
+      return points.filter(
+        (point) =>
+          point.category !== "항목 없음" && point.category.trim() !== ""
+      );
     } catch (e) {
       console.warn("Error parsing likePoints:", e);
       return [];
