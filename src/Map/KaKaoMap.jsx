@@ -235,8 +235,8 @@ function KakaoMap() {
       },
       후루사토: { lat: 37.593191617813254, lng: 127.05121415016038 },
       망우로30: { lat: 37.5896241510507, lng: 127.05981115001894 },
-      혜성칼국수: { lat: 37.67378058202286, lng: 127.03857397066574 },
-      청량회관: { lat: 37.67378058202286, lng: 127.03857397066574 },
+      혜성칼국수: { lat: 37.58443718066738, lng: 127.05411783464582 },
+      청량회관: { lat: 37.58443718066738, lng: 127.05411783464582 },
       서울뼈구이매운족발: { lat: 37.58389604894765, lng: 127.05023412039714 },
       이모네왕파전: { lat: 37.58389604894765, lng: 127.05023412039714 },
       은하곱창: { lat: 37.579109331781005, lng: 127.05567626450954 },
@@ -263,7 +263,6 @@ function KakaoMap() {
               processedMenu = { name: menu };
             }
           }
-
           // 메뉴 객체가 유효한지 확인
           if (!processedMenu || typeof processedMenu !== "object") {
             return null;
@@ -284,12 +283,8 @@ function KakaoMap() {
 
     // 수동 좌표 우선, 없으면 대학교 위치 기반 좌표
     const position = manualCoordinates[place.name] || {
-      lat:
-        universityLocations[place.univName?.replace("대학교", "")]?.lat ||
-        37.564512,
-      lng:
-        universityLocations[place.univName?.replace("대학교", "")]?.lng ||
-        126.938977,
+      lat: universityLocations[place.univName?.replace("대학교", "")]?.lat,
+      lng: universityLocations[place.univName?.replace("대학교", "")]?.lng,
     };
 
     return {
@@ -301,7 +296,7 @@ function KakaoMap() {
       rating: place.rating || 0,
       reviewCount: place.reviewCount || 0,
       likePoints: parseLikePoints(place.likePoints) || [],
-      imageUrl: place.imageUrl || "/images/한식식.png", // 기본 이미지 추가
+      imageUrl: place.imageUrl || "/images/한식.png", // 기본 이미지 추가
       univName: place.univName || "",
       menus: processedMenus,
       position: position,
