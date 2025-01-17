@@ -31,13 +31,8 @@ const LeftSide = ({
     onUniversityChange && onUniversityChange(newUniversity);
   };
 
-  const calculateLikePoints = (likePoints) => {
-    try {
-      const points = JSON.parse(likePoints);
-      return points.reduce((sum, point) => sum + Number(point.score), 0);
-    } catch (e) {
-      return 0;
-    }
+  const calculateLikePoints = (restaurant) => {
+    return restaurant.rating || 0;
   };
 
   const handleSearch = (e) => {
@@ -154,8 +149,7 @@ const LeftSide = ({
                 <strong>리뷰:</strong> {restaurant.reviewCount}개
               </p>
               <p>
-                <strong>총 평점:</strong>{" "}
-                {calculateLikePoints(restaurant.likePoints)}점
+                <strong>총 평점:</strong> {calculateLikePoints(restaurant)}점
               </p>
               {restaurant.menus && restaurant.menus.length > 0 && (
                 <p>

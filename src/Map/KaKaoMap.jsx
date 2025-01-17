@@ -246,12 +246,33 @@ function KakaoMap() {
       마루한: { lat: 37.58285875999863, lng: 127.05286000744832 },
     };
 
-    // 수동 좌표 우선, 없으면 기존 로직
-    const manualPosition = manualCoordinates[place.name];
-    // 수동 좌표만 사용
+    // 메뉴 데이터 처리 개선
+    let processedMenus = [];
+    if (Array.isArray(place.menus)) {
+      processedMenus = place.menus
+        .map((menu) => {
+          if (!menu) return null;
+          return {
+            id: menu.id || 0,
+            name: menu.name || "",
+            price:
+              menu.price !== undefined && menu.price !== ""
+                ? Number(menu.price)
+                : 0,
+            description: menu.description || "설명 없음",
+          };
+        })
+        .filter((menu) => menu && menu.name); // null과 빈 이름 필터링
+    }
+
+    // 수동 좌표 우선, 없으면 대학교 위치 기반 좌표
     const position = manualCoordinates[place.name] || {
-      lat: 37.564512,
-      lng: 126.938977,
+      lat:
+        universityLocations[place.univName?.replace("대학교", "")]?.lat ||
+        37.564512,
+      lng:
+        universityLocations[place.univName?.replace("대학교", "")]?.lng ||
+        126.938977,
     };
 
     return {
@@ -261,13 +282,14 @@ function KakaoMap() {
       address: place.address || "",
       hours: place.hours || "",
       rating: place.rating || 0,
+      reviewCount: place.reviewCount || 0,
       likePoints: parseLikePoints(place.likePoints),
       imageUrl: place.imageUrl || "",
       univName: place.univName || "",
-      menus: Array.isArray(place.menus) ? place.menus : [],
+      menus: processedMenus,
+      position: position,
       reviews: reviewData[place.id] || [],
       analysis: analysisData[place.id] || null,
-      position: position, // 새로 계산된 position 사용
     };
   };
 

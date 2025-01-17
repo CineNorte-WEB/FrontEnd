@@ -3,6 +3,19 @@ import React from "react";
 const RestaurantOverlay = ({ restaurant, onClose, source }) => {
   if (!restaurant) return null;
 
+  const formatPrice = (price) => {
+    if (
+      price === 0 ||
+      price === "0" ||
+      price === "" ||
+      price === undefined ||
+      price === null
+    ) {
+      return "가게 측에서 가격 미제공";
+    }
+    return typeof price === "number" ? `${price.toLocaleString()}원` : price;
+  };
+
   const formatLikePoints = (likePoints) => {
     try {
       if (typeof likePoints === "string") {
@@ -15,6 +28,12 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
     }
   };
 
+  // 유효한 메뉴만 필터링
+  const validMenus =
+    restaurant.menus?.filter(
+      (menu) => menu && typeof menu === "object" && menu.name
+    ) || [];
+
   // 마커 호버시 간단한 정보만 표시
   if (source === "marker") {
     return (
@@ -22,7 +41,6 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
         className="absolute z-50 p-4 bg-white border-2 border-gray-300 rounded-lg shadow-lg left-4 top-4"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* 이미지 추가 */}
         <div className="flex-shrink-0 w-24 h-24 mr-4">
           <img
             src={restaurant.imageUrl || `/images/${restaurant.category}.png`}
@@ -105,16 +123,19 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
         </div>
 
         {/* 메뉴 정보 */}
-        {restaurant.menus && restaurant.menus.length > 0 && (
+        {validMenus.length > 0 && (
           <div className="mb-6">
             <h3 className="mb-3 text-xl font-bold font-yeonsung">메뉴</h3>
             <div className="grid gap-3">
-              {restaurant.menus.map((menu, index) => (
-                <div key={index} className="p-3 rounded-lg bg-gray-50">
+              {validMenus.map((menu) => (
+                <div
+                  key={menu.id || menu.name}
+                  className="p-3 rounded-lg bg-gray-50"
+                >
                   <div className="flex items-center justify-between mb-1 font-yeonsung">
                     <span className="text-lg font-medium">{menu.name}</span>
                     <span className="font-bold text-blue-600">
-                      {menu.price?.toLocaleString()}원
+                      {formatPrice(menu.price)}
                     </span>
                   </div>
                   {menu.description && menu.description !== "설명 없음" && (
@@ -129,7 +150,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
         )}
 
         {/* 좋아요 포인트 */}
-        {restaurant.likePoints && (
+        {restaurant.likePoints && restaurant.likePoints.length > 0 && (
           <div className="mb-6">
             <h3 className="mb-3 text-xl font-bold font-yeonsung">
               좋아요 포인트
@@ -145,7 +166,9 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
                     <div className="w-24 h-2 mr-2 bg-gray-200 rounded-full">
                       <div
                         className="h-full bg-blue-500 rounded-full"
-                        style={{ width: `${(point.score / 5) * 100}%` }}
+                        style={{
+                          width: `${(parseInt(point.score) / 10) * 100}%`,
+                        }}
                       ></div>
                     </div>
                     <span className="text-sm text-gray-600">{point.score}</span>
