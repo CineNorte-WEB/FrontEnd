@@ -31,8 +31,19 @@ const LeftSide = ({
     onUniversityChange && onUniversityChange(newUniversity);
   };
 
+  const formatRating = (rating) => {
+    // 평점이 0이거나 매우 낮으면 5점으로 고정
+    return rating > 0 ? rating.toFixed(1) : "5.0";
+  };
+
+  const renderStars = (rating) => {
+    // 항상 1개의 별 표시
+    return "⭐";
+  };
+
   const calculateLikePoints = (restaurant) => {
-    return restaurant.rating || 0;
+    // 평점이 0이거나 매우 낮으면 5점으로 고정
+    return restaurant.rating > 0 ? restaurant.rating.toFixed(1) : "5.0";
   };
 
   const handleSearch = (e) => {
@@ -70,10 +81,10 @@ const LeftSide = ({
   };
 
   return (
-    <div className="relative flex flex-col h-full font-yeonsung">
+    <div className="relative flex flex-col h-full font-['Song Myung']">
       {/* 대학교 선택 헤더 */}
       <div className="sticky top-0 z-10 bg-white">
-        <div className="flex items-center w-5/6 h-10 mx-8 my-4 border border-black shadow-lg rounded-xl">
+        <div className="flex items-center w-full h-10 my-3 border border-black rounded-lg shadow-lg">
           <img src="/images/졸업.png" alt="졸업" className="w-8 h-10 ml-2" />
           <p className="ml-2 text-sm font-bold">학교 정보 :</p>
           <img
@@ -82,7 +93,7 @@ const LeftSide = ({
             className="w-8 h-8 ml-5"
           />
           <select
-            className="py-1 ml-2 text-center border border-black rounded-md w-4/7"
+            className="ml-2 font-bold text-center border border-black rounded-md w-4/7"
             value={selectedUniversity}
             onChange={handleUniversityChange}
           >
@@ -99,7 +110,7 @@ const LeftSide = ({
           <input
             type="text"
             placeholder="🍽️ 가게 검색 :"
-            className="px-5 ml-16 text-black border border-black rounded-lg"
+            className="px-5 ml-16 font-bold text-black border border-black rounded-lg"
             value={searchQuery}
             onChange={handleSearch}
             onKeyDown={handleSearchKeyDown}
@@ -135,8 +146,12 @@ const LeftSide = ({
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-bold">{restaurant.name}</h2>
                   <div className="flex items-center">
-                    <span className="mr-1 text-yellow-400">⭐</span>
-                    <span className="text-sm">{restaurant.rating}</span>
+                    <span className="mr-1 text-yellow-400">
+                      {renderStars(restaurant.rating)}
+                    </span>
+                    <span className="text-sm">
+                      {formatRating(restaurant.rating)}
+                    </span>
                   </div>
                 </div>
               </div>

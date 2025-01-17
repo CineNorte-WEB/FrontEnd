@@ -10,6 +10,20 @@ export const universityLocations = {
   경희대: { lat: 37.597312, lng: 127.05165 },
 };
 
+// 카테고리 이모티콘 매핑
+const categoryEmojis = {
+  "항목 없음": "🍽️",
+  친절: "😊",
+  분위기: "✨",
+  주차: "🚗",
+  일식: "🍱",
+  이탈리안: "🍝",
+  중국요리: "🥢",
+  닭요리: "🍗",
+  "제과,베이커리": "🥐",
+  "스테이크,립": "🥩",
+  "초밥,롤": "🍣",
+};
 // 레스토랑 데이터
 export const restaurantData = [
   {
@@ -608,7 +622,7 @@ export const restaurantData = [
     address: "서울 서대문구 이화여대5길 5 1층 (우)03766",
     hours: "'월~금': '08:30 ~ 16:30', '토': '10:00 ~ 16:30'",
     reviewCount: 231,
-    rating: 0,
+    rating: 4.3,
     likePoints: "[]",
     imageUrl:
       "https://mblogthumb-phinf.pstatic.net/20160715_55/hausmann__146854597305280imi_JPEG/%C0%CC%B4%EB_%BA%A3%C0%CC%B1%DB_%B8%B6%B4%F5%B8%B0%B7%AF_%BA%A3%C0%CC%B1%DB_MATHER-IN-LAW_Bagel__Ewha_Women%27s_University_%2812%29.jpg?type=w800",
@@ -767,7 +781,7 @@ export const restaurantData = [
     address: "서울 서대문구 이화여대길 77-1 (우)03766",
     hours: "'월~토': '11:30 ~ 21:00', '월~토 휴게시간': '14:30 ~ 17:00'",
     reviewCount: 346,
-    rating: 0,
+    rating: 4.7,
     likePoints: "[]",
     imageUrl:
       "https://camchelin-bucket.s3.ap-northeast-2.amazonaws.com/Images/Ewha/%E1%84%87%E1%85%B5%E1%84%8B%E1%85%A137+%E1%84%89%E1%85%B5%E1%86%AB%E1%84%8E%E1%85%A9%E1%86%AB%E1%84%87%E1%85%A9%E1%86%AB%E1%84%8C%E1%85%A5%E1%86%B7_img.png",
@@ -1254,7 +1268,7 @@ export const restaurantData = [
     hours:
       "'화~토': '11:30 ~ 22:00', '화~토 라스트오더' : '~ 21:00', '화~토 라스트오더': '~ 13:30', '화~토 휴게시간': '14:00 ~ 16:30'",
     reviewCount: 453,
-    rating: 0,
+    rating: 4.8,
     likePoints: "[]",
     imageUrl:
       "https://camchelin-bucket.s3.ap-northeast-2.amazonaws.com/Images/Ewha/%E1%84%92%E1%85%A1%E1%84%82%E1%85%B3%E1%86%AF%E1%84%8E%E1%85%A9%E1%84%87%E1%85%A1%E1%86%B8_img.png",
@@ -1365,7 +1379,7 @@ export const restaurantData = [
     hours:
       "'화~일': '11:30 ~ 20:00', '화~일 휴게시간': '16:00 ~ 17:00', '월': '11:30 ~ 21:00', '월 휴게시간': '15:00 ~ 17:00'",
     reviewCount: 379,
-    rating: 0,
+    rating: 4.2,
     likePoints: "[]",
     imageUrl:
       "https://camchelin-bucket.s3.ap-northeast-2.amazonaws.com/Images/Ewha/%E1%84%89%E1%85%A9%E1%84%87%E1%85%A1%E1%84%8B%E1%85%A7%E1%86%AB%E1%84%80%E1%85%AE%E1%84%89%E1%85%A9_img.png",
@@ -2507,7 +2521,7 @@ export const restaurantData = [
     address: "서울 서대문구 연세로5나길 33 1층 (우)03787",
     hours: "'화~일': '12:00 ~ 23:00'",
     reviewCount: 774,
-    rating: 0,
+    rating: 3.9,
     likePoints: "[]",
     imageUrl:
       "https://camchelin-bucket.s3.ap-northeast-2.amazonaws.com/Images/Yonsei/%E1%84%83%E1%85%A2%E1%84%89%E1%85%A5%E1%86%BC%E1%84%8B%E1%85%B5%E1%84%82%E1%85%A6_img.png",
@@ -3376,7 +3390,7 @@ export const restaurantData = [
     address: "서울 동대문구 휘경로2가길 5 1층 (우)02441",
     hours: "'매일': '11:00 ~ 21:30', '매일 라스트오더': '~ 21:30'",
     reviewCount: 115,
-    rating: 0,
+    rating: 3.7,
     likePoints: "[]",
     imageUrl:
       "https://camchelin-bucket.s3.ap-northeast-2.amazonaws.com/Images/%EC%99%B8%EB%8C%80/%EC%83%A4%EB%A1%9C%EC%8A%A4%ED%86%A4+%EC%99%B8%EB%8C%80%EC%A0%90_img.png",
@@ -3842,7 +3856,7 @@ export const restaurantData = [
     hours:
       "'화~토': '17:00 ~ 01:00', '일': '17:00 ~ 24:00', '화~토 라스트오더': '~ 00:30', '일 라스트오더 ~ 23:30', '월요일']",
     reviewCount: 88,
-    rating: 0,
+    rating: 4.6,
     likePoints: "[]",
     imageUrl:
       "https://camchelin-bucket.s3.ap-northeast-2.amazonaws.com/Images/%EC%8B%9C%EB%A6%BD%EB%8C%80/%ED%9B%84%EB%A3%A8%EC%82%AC%ED%86%A0_img.png",
