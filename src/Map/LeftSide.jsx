@@ -139,9 +139,6 @@ const LeftSide = ({
                     <span className="text-sm">{restaurant.rating}</span>
                   </div>
                 </div>
-                <span className="text-sm text-gray-600">
-                  {restaurant.category}
-                </span>
               </div>
             </div>
             <div className="mt-2 text-sm text-gray-600">

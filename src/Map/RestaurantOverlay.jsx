@@ -43,7 +43,6 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
       >
         <div className="flex-shrink-0 w-24 h-24 mr-4">
           <img
-            src={restaurant.imageUrl || `/images/${restaurant.category}.png`}
             alt={restaurant.name}
             className="object-cover w-full h-full rounded-lg"
             onError={(e) => {
@@ -54,9 +53,6 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
         <div className="flex justify-between mb-2">
           <h3 className="text-lg font-bold font-yeonsung">{restaurant.name}</h3>
         </div>
-        <p className="mb-2 text-sm text-gray-600 font-yeonsung">
-          <strong>카테고리:</strong> {restaurant.category}
-        </p>
         <p className="mb-2 text-sm text-gray-600 font-yeonsung">
           <strong>주소:</strong> {restaurant.address}
         </p>
@@ -104,10 +100,6 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
                 {"⭐".repeat(Math.round(restaurant.rating))} (
                 {restaurant.rating})
               </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-bold">카테고리</span>
-              <span>{restaurant.category}</span>
             </div>
             <div className="flex justify-between">
               <span className="font-bold">주소</span>

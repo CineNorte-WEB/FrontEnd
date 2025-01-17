@@ -252,14 +252,31 @@ function KakaoMap() {
       processedMenus = place.menus
         .map((menu) => {
           if (!menu) return null;
+
+          // 메뉴 데이터의 JSON 문자열 처리
+          let processedMenu = menu;
+          if (typeof menu === "string") {
+            try {
+              processedMenu = JSON.parse(menu);
+            } catch (e) {
+              // JSON 파싱에 실패하면 원래 문자열 사용
+              processedMenu = { name: menu };
+            }
+          }
+
+          // 메뉴 객체가 유효한지 확인
+          if (!processedMenu || typeof processedMenu !== "object") {
+            return null;
+          }
+
           return {
-            id: menu.id || 0,
-            name: menu.name || "",
+            id: processedMenu.id || 0,
+            name: processedMenu.name || "메뉴 이름 없음",
             price:
-              menu.price !== undefined && menu.price !== ""
-                ? Number(menu.price)
+              processedMenu.price !== undefined && processedMenu.price !== ""
+                ? Number(processedMenu.price)
                 : 0,
-            description: menu.description || "설명 없음",
+            description: processedMenu.description || "설명 없음",
           };
         })
         .filter((menu) => menu && menu.name); // null과 빈 이름 필터링
@@ -283,13 +300,11 @@ function KakaoMap() {
       hours: place.hours || "",
       rating: place.rating || 0,
       reviewCount: place.reviewCount || 0,
-      likePoints: parseLikePoints(place.likePoints),
-      imageUrl: place.imageUrl || "",
+      likePoints: parseLikePoints(place.likePoints) || [],
+      imageUrl: place.imageUrl || "/images/한식식.png", // 기본 이미지 추가
       univName: place.univName || "",
       menus: processedMenus,
       position: position,
-      reviews: reviewData[place.id] || [],
-      analysis: analysisData[place.id] || null,
     };
   };
 
