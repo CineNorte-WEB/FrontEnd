@@ -47,7 +47,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
             alt={restaurant.name}
             className="object-cover w-full h-full rounded-lg"
             onError={(e) => {
-              e.target.src = "/images/default-restaurant.png";
+              e.target.src = "/images/한식.png";
             }}
           />
         </div>
@@ -99,14 +99,6 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
             }}
           />
           <div className="grid gap-2 font-['Song Myung']">
-            <div className="flex items-center justify-between">
-              <span className="font-bold">평점</span>
-              <span className="text-yellow-400">
-                {"⭐".repeat(Math.round(restaurant.rating))} (
-                {restaurant.rating})
-              </span>
-            </div>
-
             <div className="flex justify-between">
               <span className="font-bold">주소</span>
               <span className="flex-1 ml-4 text-right">
@@ -153,23 +145,20 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
             <h3 className="mb-3 text-xl font-bold font-['Song Myung']">
               좋아요 포인트
             </h3>
-            <div className="p-4 rounded-lg bg-gray-50">
+            <div className="p-4 space-y-4 rounded-lg bg-gray-50">
               {formatLikePoints(restaurant.likePoints).map((point, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between mb-2 font-['Song Myung']"
-                >
-                  <span className="font-medium">{point.category}</span>
-                  <div className="flex items-center">
-                    <div className="w-24 h-2 mr-2 bg-gray-200 rounded-full">
-                      <div
-                        className="h-full bg-blue-500 rounded-full"
-                        style={{
-                          width: `${(parseInt(point.score) / 10) * 100}%`,
-                        }}
-                      ></div>
-                    </div>
+                <div key={index} className="font-['Song Myung']">
+                  <div className="flex items-center justify-between mb-1">
+                    <span>{point.category}</span>
                     <span className="text-sm text-gray-600">{point.score}</span>
+                  </div>
+                  <div className="w-full h-2 overflow-hidden bg-gray-200 rounded-full">
+                    <div
+                      className="h-full bg-blue-500 rounded-full"
+                      style={{
+                        width: `${parseInt(point.score) * 10}%`,
+                      }}
+                    />
                   </div>
                 </div>
               ))}
