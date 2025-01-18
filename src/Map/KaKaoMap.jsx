@@ -457,14 +457,13 @@ function KakaoMap() {
     (newMap) => {
       if (!restaurantData.length || !newMap) return;
 
+      // Ensure we process all 66 markers
       const newMarkers = restaurantData
-        .slice(0, 66) // 1번부터 66번까지의 가게만 표시
+        .filter(
+          (place) =>
+            place && place.position && place.position.lat && place.position.lng
+        ) // Validate position
         .map((place) => {
-          if (!place.position) {
-            console.error("Invalid position data for restaurant:", place);
-            return null;
-          }
-
           const markerPosition = new window.kakao.maps.LatLng(
             place.position.lat,
             place.position.lng
@@ -474,19 +473,19 @@ function KakaoMap() {
           const content = document.createElement("div");
           content.className = "marker-content";
           content.innerHTML = `
-          <div style="
-            padding: 5px;
-            background: white;
-            border: 1px solid #888;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            white-space: nowrap;
-          ">
-            ${place.name}
-          </div>
-        `;
+            <div style="
+              padding: 5px;
+              background: white;
+              border: 1px solid #888;
+              border-radius: 5px;
+              font-size: 12px;
+              font-weight: bold;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+              white-space: nowrap;
+            ">
+              ${place.name}
+            </div>
+          `;
 
           const marker = new window.kakao.maps.Marker({
             position: markerPosition,
@@ -531,9 +530,9 @@ function KakaoMap() {
           });
 
           return { marker, overlay };
-        })
-        .filter(Boolean);
+        });
 
+      // Only set markers if successfully created
       setMarkers(newMarkers.map((item) => item.marker));
     },
     [restaurantData]
