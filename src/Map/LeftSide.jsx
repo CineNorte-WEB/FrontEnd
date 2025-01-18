@@ -175,45 +175,47 @@ const LeftSide = ({
                 <img
                   src={restaurant.imageUrl || "/images/default-restaurant.png"}
                   alt={restaurant.name}
-                  className="w-12 h-12 mr-4 rounded-lg"
+                  className="w-24 h-24 mr-4 rounded-lg"
                   onError={(e) => {
                     e.target.src = "/images/default-restaurant.png";
                   }}
                 />
                 <div className="flex-1">
-                  <h2 className="text-lg font-bold">{restaurant.name}</h2>
+                  <h2 className="text-2xl font-bold text-center">
+                    {restaurant.name}
+                  </h2>
                 </div>
               </div>
               {/* 긍정 및 부정 리뷰 대표 문장 */}
               <div className="text-sm">
                 <div
-                  className="p-2 mb-2 border border-green-300 rounded-lg cursor-pointer bg-green-50"
+                  className="p-2 font-['Song Myung'] mb-2 font-bold bg-blue-400 border-2 border-gray-400 rounded-lg text-white cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     openModal(
-                      "긍정 리뷰",
+                      "😃긍정 리뷰",
                       positiveSentences.length > 0
                         ? positiveSentences
                         : ["리뷰가 없습니다."]
                     );
                   }}
                 >
-                  <strong>좋아요:</strong>{" "}
+                  <strong>😃좋아요:</strong>{" "}
                   {positiveSentences[0] || "리뷰가 없습니다."}
                 </div>
                 <div
-                  className="p-2 border border-red-300 rounded-lg cursor-pointer bg-red-50"
+                  className="p-2 font-bold text-white bg-red-500 border-2 border-gray-400 rounded-lg cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     openModal(
-                      "부정 리뷰",
+                      "😡부정 리뷰",
                       negativeSentences.length > 0
                         ? negativeSentences
                         : ["리뷰가 없습니다."]
                     );
                   }}
                 >
-                  <strong>싫어요:</strong>{" "}
+                  <strong>😡싫어요:</strong>{" "}
                   {negativeSentences[0] || "리뷰가 없습니다."}
                 </div>
               </div>
