@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import RestaurantOverlay from "./RestaurantOverlay";
 
 const LeftSide = ({
@@ -31,27 +31,11 @@ const LeftSide = ({
     onUniversityChange && onUniversityChange(newUniversity);
   };
 
-  const formatRating = (rating) => {
-    // 평점이 0이거나 매우 낮으면 5점으로 고정
-    return rating > 0 ? rating.toFixed(1) : "5.0";
-  };
-
-  const renderStars = (rating) => {
-    // 항상 1개의 별 표시
-    return "⭐";
-  };
-
-  const calculateLikePoints = (restaurant) => {
-    // 평점이 0이거나 매우 낮으면 5점으로 고정
-    return restaurant.rating > 0 ? restaurant.rating.toFixed(1) : "5.0";
-  };
-
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
 
     if (query.trim() === "") {
-      // Reset to original state when search query is cleared
       setSelectedRestaurant(null);
     }
   };
@@ -143,31 +127,17 @@ const LeftSide = ({
                 }}
               />
               <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-bold">{restaurant.name}</h2>
-                  <div className="flex items-center">
-                    <span className="mr-1 text-yellow-400">
-                      {renderStars(restaurant.rating)}
-                    </span>
-                    <span className="text-sm">
-                      {formatRating(restaurant.rating)}
-                    </span>
-                  </div>
-                </div>
+                <h2 className="text-lg font-bold">{restaurant.name}</h2>
               </div>
             </div>
-            <div className="mt-2 text-sm text-gray-600">
-              <p>
-                <strong>리뷰:</strong> {restaurant.reviewCount}개
-              </p>
-              <p>
-                <strong>총 평점:</strong> {calculateLikePoints(restaurant)}점
-              </p>
-              {restaurant.menus && restaurant.menus.length > 0 && (
-                <p>
-                  <strong>메뉴 수:</strong> {restaurant.menus.length}개
-                </p>
-              )}
+            {/* 긍정 및 부정 리뷰 UI 추가 */}
+            <div className="text-sm">
+              <div className="p-2 mb-2 border border-green-300 rounded-lg bg-green-50">
+                <strong>좋아요:</strong> {restaurant.positiveReview || "N/A"}
+              </div>
+              <div className="p-2 border border-red-300 rounded-lg bg-red-50">
+                <strong>싫어요:</strong> {restaurant.negativeReview || "N/A"}
+              </div>
             </div>
           </div>
         ))}
