@@ -27,7 +27,7 @@ const MyPage = () => {
 
         // 리뷰와 일반 게시판 데이터를 하나로 합치기
         const combinedBoards = [
-          ...reviewsResponse.data.map((review) => ({
+          ...reviewsResponse.data.content.map((review) => ({
             id: review.id,
             title: review.title,
             category: "리뷰게시판",
@@ -37,7 +37,7 @@ const MyPage = () => {
             type: "review", // 리뷰 게시판 타입 추가
             createdAt: review.createdAt,
           })),
-          ...boardsResponse.data.map((board) => ({
+          ...boardsResponse.data.content.map((board) => ({
             id: board.id,
             title: board.title,
             category: "자유게시판",
