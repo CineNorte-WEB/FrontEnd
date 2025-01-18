@@ -23,13 +23,13 @@ const Community = () => {
         selectedCategory === "리뷰게시판"
           ? await apiClient.get("/review_posts")
           : await apiClient.get("/board_posts");
-      const formattedData = response.data.map((post) => ({
+      const formattedData = response.data.content.map((post) => ({
         id: post.id,
         title: post.title,
         content: post.content,
         author: post.userNickname,
         image: post.imageUrl || null, // 이미지 URL 포함
-        createdAt: new Date().toISOString(),
+        createdAt: post.createdAt,
         category: selectedCategory,
       }));
       setPosts(formattedData);
