@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import RestaurantOverlay from "./RestaurantOverlay";
 
 const LeftSide = ({
   restaurantData,
@@ -25,49 +24,40 @@ const LeftSide = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responses = await Promise.all(
+        const dataMap = {};
+        await Promise.all(
           restaurantData.map(async (restaurant) => {
-            const byIdResponse = await fetch(`/places/id/${restaurant.id}`)
-              .then((res) => (res.ok ? res.json() : null))
-              .catch((error) => {
-                console.error(
-                  `🔥 Error fetching data for ID ${restaurant.id}:`,
-                  error
-                );
-                return null;
-              });
+            try {
+              const response = await fetch(
+                `http://43.203.118.59:8080/places/id/${restaurant.id}`
+              );
+              const contentType = response.headers.get("Content-Type");
 
-            const byNameResponse = await fetch(
-              `/places/name/${restaurant.name}`
-            )
-              .then((res) => (res.ok ? res.json() : null))
-              .catch((error) => {
+              if (response.ok && contentType.includes("application/json")) {
+                const data = await response.json();
+                dataMap[restaurant.id] = data; // ID를 키로 매핑
+              } else {
                 console.error(
-                  `🔥 Error fetching data for Name ${restaurant.name}:`,
-                  error
+                  `ID ${restaurant.id} - API 호출 실패. 상태 코드:`,
+                  response.status
                 );
-                return null;
-              });
-
-            return { ...byIdResponse, ...byNameResponse };
+              }
+            } catch (error) {
+              console.error(
+                `ID ${restaurant.id} - API 호출 중 오류 발생:`,
+                error
+              );
+            }
           })
         );
-
-        const dataMap = {};
-        responses.forEach((data, index) => {
-          if (data) {
-            dataMap[restaurantData[index].id] = data;
-          }
-        });
-
-        setFetchedData(dataMap);
+        setFetchedData(dataMap); // 모든 데이터를 상태로 저장
       } catch (error) {
-        console.error("데이터를 가져오는 중 오류 발생:", error);
+        console.error("데이터 가져오기 중 오류:", error);
       }
     };
 
     fetchData();
-  }, [restaurantData]);
+  }, []);
 
   const handleRestaurantClick = (restaurant) => {
     setSelectedRestaurant(restaurant);
@@ -162,11 +152,13 @@ const LeftSide = ({
       {/* 레스토랑 리스트 */}
       <div className="flex-1 px-4 overflow-y-auto">
         {restaurantData.map((restaurant) => {
-          const restaurantInfo = fetchedData[restaurant.id] || {};
+          const restaurantDetails = fetchedData[restaurant.id] || {};
           const positiveSentences =
-            restaurantInfo.representativeSentenceMap?.positiveSentences || [];
+            restaurantDetails.representativeSentenceMap?.positiveSentences ||
+            [];
           const negativeSentences =
-            restaurantInfo.representativeSentenceMap?.negativeSentences || [];
+            restaurantDetails.representativeSentenceMap?.negativeSentences ||
+            [];
 
           return (
             <div
@@ -198,19 +190,31 @@ const LeftSide = ({
                   className="p-2 mb-2 border border-green-300 rounded-lg cursor-pointer bg-green-50"
                   onClick={(e) => {
                     e.stopPropagation();
-                    openModal("긍정 리뷰", positiveSentences);
+                    openModal(
+                      "긍정 리뷰",
+                      positiveSentences.length > 0
+                        ? positiveSentences
+                        : ["리뷰가 없습니다."]
+                    );
                   }}
                 >
-                  <strong>좋아요:</strong> {positiveSentences[0] || "N/A"}
+                  <strong>좋아요:</strong>{" "}
+                  {positiveSentences[0] || "리뷰가 없습니다."}
                 </div>
                 <div
                   className="p-2 border border-red-300 rounded-lg cursor-pointer bg-red-50"
                   onClick={(e) => {
                     e.stopPropagation();
-                    openModal("부정 리뷰", negativeSentences);
+                    openModal(
+                      "부정 리뷰",
+                      negativeSentences.length > 0
+                        ? negativeSentences
+                        : ["리뷰가 없습니다."]
+                    );
                   }}
                 >
-                  <strong>싫어요:</strong> {negativeSentences[0] || "N/A"}
+                  <strong>싫어요:</strong>{" "}
+                  {negativeSentences[0] || "리뷰가 없습니다."}
                 </div>
               </div>
             </div>
