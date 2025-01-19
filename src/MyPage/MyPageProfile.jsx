@@ -8,7 +8,8 @@ export default function MyPageProfile({
   profile,
   setProfile, // 부모에서 전달받은 상태 업데이트 함수
   bookmarks = [],
-  boards = [],
+  posts = [],
+  totalPosts = 0, // totalElements를 props로 받음
 }) {
   const [editedProfile, setEditedProfile] = useState({ ...profile });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -99,7 +100,7 @@ export default function MyPageProfile({
         <div className="profile-row font-['Song Myung']">
           <span className="profile-label font-['Song Myung']">내가 쓴 글:</span>
           <span className="profile-value font-['Song Myung']">
-            {Array.isArray(boards) ? boards.length : 0}개
+          {totalPosts}개
           </span>
         </div>
         <div className="profile-row font-['Song Myung']">

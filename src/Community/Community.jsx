@@ -168,7 +168,7 @@ const Community = () => {
                       작성자: {post.author}
                     </p>
                     <p className="text-sm text-gray-500 font-semibold font-['Song Myung'] font-semibold">
-                      작성일: {new Date(post.createdAt).toLocaleDateString()}
+                      작성일: {post.createdAt}
                     </p>
                   </div>
                   <div>
