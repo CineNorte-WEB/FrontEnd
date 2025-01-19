@@ -17,7 +17,6 @@ const MyPage = () => {
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호
   const [pageSize, setPageSize] = useState(5); // 한 페이지에 표시할 게시글 수
   const [totalPosts, setTotalPosts] = useState(0); // totalElements 저장
-
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [profile, setProfile] = useState(null); // 프로필 상태 추가
   const [loading, setLoading] = useState(true); // 로딩 상태 추가

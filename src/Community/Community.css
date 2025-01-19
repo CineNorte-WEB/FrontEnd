@@ -110,26 +110,6 @@
   height: 40px;
 }
 
-.community-pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 1rem;
-}
-
-.community-pagination span {
-  margin: 0 0.5rem;
-  cursor: pointer;
-  color: gray;
-  font-weight: bold;
-  font-size: 1rem;
-  transition: color 0.3s ease;
-}
-
-.community-pagination span:hover {
-  color: red;
-}
-
 .floating-button {
   position: fixed;
   bottom: 2rem;
@@ -228,4 +208,35 @@
 
 .community-cancel-button:hover {
   background-color: #d32f2f;
+}
+
+.community-pagination {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.community-pagination-button {
+  padding: 0.5rem 1rem;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  color: #333;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.community-pagination-button:hover {
+  background-color: #e0e0e0;
+  border-color: #aaa;
+}
+
+.community-pagination-button.active {
+  background-color: #c02231; /* 강조 색상 */
+  color: #fff;
+  border-color: #c02231;
+  font-weight: bold;
 }

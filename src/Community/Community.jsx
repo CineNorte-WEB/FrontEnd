@@ -4,6 +4,7 @@ import Common from "../components/Common";
 import { PiPencilLineDuotone } from "react-icons/pi";
 import Brand from "../components/Brand";
 import apiClient from "../api/axios";
+import './Community.css';
 
 const Community = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const Community = () => {
     category: "자유게시판",
     title: "",
     content: "",
+    image: null, // 추가된 속성
   }); // 글 작성 폼 데이터
 
   // 게시판 데이터 가져오기
@@ -74,6 +76,17 @@ const Community = () => {
     });
     setIsWriteModalOpen(false);
   };
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({ ...prev, image: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -84,20 +97,27 @@ const Community = () => {
     try {
       const endpoint =
         formData.category === "리뷰게시판" ? "/review_posts" : "/board_posts";
-
-      await apiClient.post(endpoint, {
+  
+      const payload = {
         title: formData.title,
         content: formData.content,
-      });
-
+      };
+  
+      if (formData.image) {
+        payload.image = formData.image; // 이미지 추가
+      }
+  
+      await apiClient.post(endpoint, payload);
+  
       alert("게시글이 성공적으로 등록되었습니다.");
       handleCloseWriteModal();
-      fetchPosts(); // 게시글 목록 새로고침
+      fetchPosts();
     } catch (error) {
       console.error("게시글 작성 중 오류 발생:", error);
       alert("게시글 작성에 실패했습니다. 다시 시도해주세요.");
     }
   };
+  
 
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
   const currentPosts = posts.slice(
@@ -187,24 +207,20 @@ const Community = () => {
         ) : (
           <p>게시물이 없습니다.</p>
         )}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center m-4">
-            {pageNumbers.map((num) => (
-              <span
-                key={num}
-                onClick={() => handlePageChange(num)}
-                className={`mx-2 text-base font-bold cursor-pointer transition-colors duration-300 ${
-                  currentPage === num
-                    ? "text-red-500"
-                    : "text-gray-500 hover:text-red-500"
-                }`}
-              >
-                {num}
-              </span>
-            ))}
-          </div>
-        )}
+        <div className="community-pagination">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => onPageChange(index)}
+            className={`pagination-button ${index === currentPage ? "active" : ""
+              }`}
+          >
+            {index + 1}
+          </button>
+        ))}
       </div>
+      </div>
+
       <button
         onClick={handleOpenWriteModal}
         className="fixed bottom-8 right-8 bg-gray-100 text-black rounded-lg w-[60px] h-[60px] text-2xl flex items-center justify-center shadow-lg cursor-pointer transition-colors duration-300 hover:bg-white"
@@ -234,6 +250,7 @@ const Community = () => {
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
+                placeholder={formData.category === "리뷰게시판" ? "가게명을 입력하세요" : "제목을 입력하세요"}
                 className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
               />
             </div>
@@ -246,6 +263,27 @@ const Community = () => {
                 className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
               />
             </div>
+            {formData.category === "리뷰게시판" && (
+        <div>
+          <label className="block font-bold mb-1">사진 첨부</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
+          />
+          {formData.image && (
+            <div className="mb-4">
+              <p className="font-bold mb-2">미리보기:</p>
+              <img
+                src={formData.image}
+                alt="미리보기"
+                className="w-48 h-48 object-cover rounded-lg shadow-md"
+              />
+            </div>
+          )}
+        </div>
+      )}
             <div className="flex justify-end">
               <button
                 onClick={handleSubmitPost}
