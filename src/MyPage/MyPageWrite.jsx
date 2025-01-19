@@ -12,42 +12,50 @@ export default function MyPageWrite({ boards, setBoards }) {
     author: "",
   });
 
+  // 페이지네이션 상태
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호
+  const itemsPerPage = 5; // 한 페이지에 표시할 게시글 수
+  const totalPages = Math.ceil(boards.length / itemsPerPage); // 전체 페이지 수
+
+  // 현재 페이지에 표시할 게시글
+  const currentBoards = boards.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
+
   const handleDeleteClick = (index) => {
-    setCurrentBoardIndex(index);
+    setCurrentBoardIndex(index + currentPage * itemsPerPage); // 현재 페이지 인덱스 보정
     setIsDeleteModalOpen(true);
   };
 
   const handleEditClick = (index) => {
-    setCurrentBoardIndex(index);
-    setEditedBoard(boards[index]);
+    setCurrentBoardIndex(index + currentPage * itemsPerPage); // 현재 페이지 인덱스 보정
+    setEditedBoard(boards[index + currentPage * itemsPerPage]);
     setIsEditModalOpen(true);
   };
 
   const confirmDelete = async () => {
     const postToDelete = boards[currentBoardIndex];
-  
+
     if (!postToDelete) {
       console.error("삭제할 게시물이 없습니다.");
       return;
     }
-  
-    const { id, type } = postToDelete; // type 추가
-  
+
+    const { id, type } = postToDelete;
+
     try {
       if (type === "review") {
-        // 리뷰 게시판 삭제 API 호출
         await apiClient.delete(`/review_posts/${id}`);
         console.log(`리뷰 게시물(ID: ${id})이 성공적으로 삭제되었습니다.`);
       } else if (type === "board") {
-        // 일반 게시판 삭제 API 호출
         await apiClient.delete(`/board_posts/${id}`);
         console.log(`일반 게시물(ID: ${id})이 성공적으로 삭제되었습니다.`);
       } else {
         console.error("알 수 없는 게시물 타입입니다.");
         return;
       }
-  
-      // 로컬 상태에서 삭제
+
       setBoards((prevBoards) =>
         prevBoards.filter((_, index) => index !== currentBoardIndex)
       );
@@ -55,11 +63,11 @@ export default function MyPageWrite({ boards, setBoards }) {
       console.error("게시물 삭제 중 오류 발생:", error);
       alert("게시물 삭제에 실패했습니다. 다시 시도해주세요.");
     }
-  
+
     setIsDeleteModalOpen(false);
     setCurrentBoardIndex(null);
   };
-  
+
   const cancelDelete = () => {
     setIsDeleteModalOpen(false);
     setCurrentBoardIndex(null);
@@ -68,21 +76,19 @@ export default function MyPageWrite({ boards, setBoards }) {
   const saveEdit = async () => {
     const boardToEdit = boards[currentBoardIndex];
     const placeId = boardToEdit?.id;
-  
+
     try {
       if (placeId) {
-        // API 호출
         const response = await apiClient.put(`/users/bookmarks/${placeId}`, {
           title: editedBoard.title,
           category: editedBoard.category,
           author: editedBoard.author,
         });
-  
+
         console.log("게시물 수정 성공:", response.data);
-  
-        // 로컬 상태 업데이트
+
         const updatedBoards = [...boards];
-        updatedBoards[currentBoardIndex] = response.data; // 서버 응답 데이터로 업데이트
+        updatedBoards[currentBoardIndex] = response.data;
         setBoards(updatedBoards);
       } else {
         console.error("수정할 게시물의 ID가 없습니다.");
@@ -91,11 +97,10 @@ export default function MyPageWrite({ boards, setBoards }) {
       console.error("게시물 수정 중 오류 발생:", error);
       alert("게시물 수정에 실패했습니다. 다시 시도해주세요.");
     }
-  
+
     setIsEditModalOpen(false);
     setCurrentBoardIndex(null);
   };
-  
 
   const cancelEdit = () => {
     setIsEditModalOpen(false);
@@ -107,9 +112,15 @@ export default function MyPageWrite({ boards, setBoards }) {
     setEditedBoard((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handlePageChange = (page) => {
+    if (page >= 0 && page < totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
   return (
     <div className="write-container font-yeonsung">
-      {boards.length === 0 ? (
+      {currentBoards.length === 0 ? (
         <div className="empty-message">
           작성한 게시물이 없습니다.
           <br />
@@ -117,7 +128,7 @@ export default function MyPageWrite({ boards, setBoards }) {
         </div>
       ) : (
         <div className="write-list">
-          {boards.map((board, index) => (
+          {currentBoards.map((board, index) => (
             <div className="write-item font-yeonsung" key={index}>
               <div className="write-info">
                 <h2 className="write-post-title font-yeonsung">{board.title}</h2>
@@ -146,6 +157,19 @@ export default function MyPageWrite({ boards, setBoards }) {
           ))}
         </div>
       )}
+      <div className="pagination">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index)}
+            className={`pagination-button ${
+              index === currentPage ? "active" : ""
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
 
       {isDeleteModalOpen && (
         <div className="modal-overlay">

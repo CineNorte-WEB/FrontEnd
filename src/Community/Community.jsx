@@ -7,34 +7,39 @@ import apiClient from "../api/axios";
 
 const Community = () => {
   const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState("자유게시판");
   const POSTS_PER_PAGE = 5;
   const [selectedPost, setSelectedPost] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isWriteModalOpen, setIsWriteModalOpen] = useState(false); // 글 작성 모달 상태 추가
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState("자유게시판");
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    category: "자유게시판",
+    title: "",
+    content: "",
+  }); // 글 작성 폼 데이터
 
   // 게시판 데이터 가져오기
   const fetchPosts = async () => {
     setLoading(true);
     try {
       const response =
-        selectedCategory === "리뷰게시판"
+      selectedCategory  === "리뷰게시판"
           ? await apiClient.get("/review_posts")
           : await apiClient.get("/board_posts");
-      const formattedData = response.data.map((post) => ({
+      const formattedData = response.data.content.map((post) => ({
         id: post.id,
         title: post.title,
         content: post.content,
         author: post.userNickname,
-        image: post.imageUrl || null, // 이미지 URL 포함
-        createdAt: new Date().toISOString(),
-        category: selectedCategory,
+        createdAt: post.createdAt,
+        category: selectedCategory ,
       }));
       setPosts(formattedData);
     } catch (error) {
-      console.error(`${selectedCategory} 데이터를 가져오는 중 오류 발생:`, error);
+      console.error(`${selectedCategory } 데이터를 가져오는 중 오류 발생:`, error);
     }
     setLoading(false);
   };
@@ -42,11 +47,10 @@ const Community = () => {
   // 카테고리 변경 시 API 호출
   useEffect(() => {
     fetchPosts();
-  }, [selectedCategory]);
+  }, [selectedCategory ]);
 
-  const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
-    setCurrentPage(1); // 카테고리 변경 시 첫 페이지로 이동
+  const handleTabClick = (category) => {
+    setSelectedCategory(category);
   };
 
   const handlePostClick = (post) => {
@@ -57,6 +61,42 @@ const Community = () => {
   const handleCloseDetailModal = () => {
     setSelectedPost(null);
     setIsDetailModalOpen(false);
+  };
+  const handleOpenWriteModal = () => {
+    setIsWriteModalOpen(true);
+  };
+
+  const handleCloseWriteModal = () => {
+    setFormData({
+      category: "자유게시판",
+      title: "",
+      content: "",
+    });
+    setIsWriteModalOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmitPost = async () => {
+    try {
+      const endpoint =
+        formData.category === "리뷰게시판" ? "/review_posts" : "/board_posts";
+
+      await apiClient.post(endpoint, {
+        title: formData.title,
+        content: formData.content,
+      });
+
+      alert("게시글이 성공적으로 등록되었습니다.");
+      handleCloseWriteModal();
+      fetchPosts(); // 게시글 목록 새로고침
+    } catch (error) {
+      console.error("게시글 작성 중 오류 발생:", error);
+      alert("게시글 작성에 실패했습니다. 다시 시도해주세요.");
+    }
   };
 
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
@@ -83,14 +123,29 @@ const Community = () => {
         맛집부터 일상까지, 자유롭게 소통해요!
       </p>
       <div className="w-[70%] min-h-[60vh] mx-auto my-4 bg-white rounded-2xl shadow-lg overflow-hidden p-4">
-        <select
-          onChange={handleCategoryChange}
-          value={selectedCategory}
-          className="mb-4 px-4 py-2 text-lg border-2 border-gray-300 rounded-lg"
-        >
-          <option value="자유게시판">자유게시판</option>
-          <option value="리뷰게시판">리뷰게시판</option>
-        </select>
+        {/* 탭 메뉴 */}
+        <div className="flex justify-around border-b border-gray-300">
+          <button
+            className={`flex-1 text-center text-2xl font-semibold py-4 transition-colors duration-300 ${
+              selectedCategory === "자유게시판"
+                ? "text-[#c02231] border-b-4 border-[#c02231]"
+                : "text-gray-500 hover:text-[#c02231] border-b-4 border-transparent"
+            }`}
+            onClick={() => handleTabClick("자유게시판")}
+          >
+            자유게시판
+          </button>
+          <button
+            className={`flex-1 text-center text-2xl font-semibold py-4 transition-colors duration-300 ${
+              selectedCategory === "리뷰게시판"
+                ? "text-[#c02231] border-b-4 border-[#c02231]"
+                : "text-gray-500 hover:text-[#c02231] border-b-4 border-transparent"
+            }`}
+            onClick={() => handleTabClick("리뷰게시판")}
+          >
+            리뷰게시판
+          </button>
+        </div>
         {loading ? (
           <p>데이터를 불러오는 중입니다...</p>
         ) : currentPosts.length > 0 ? (
@@ -150,6 +205,64 @@ const Community = () => {
           </div>
         )}
       </div>
+      <button
+        onClick={handleOpenWriteModal}
+        className="fixed bottom-8 right-8 bg-gray-100 text-black rounded-lg w-[60px] h-[60px] text-2xl flex items-center justify-center shadow-lg cursor-pointer transition-colors duration-300 hover:bg-white"
+      >
+        <PiPencilLineDuotone />
+      </button>
+      {isWriteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
+          <div className="bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] font-['Song Myung']">
+            <h2 className="text-3xl font-bold text-center mb-4">게시글 작성</h2>
+            <div>
+              <label className="block font-bold mb-1">카테고리</label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
+              >
+                <option value="자유게시판">자유게시판</option>
+                <option value="리뷰게시판">리뷰게시판</option>
+              </select>
+            </div>
+            <div>
+              <label className="block font-bold mb-1">제목</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
+              />
+            </div>
+            <div>
+              <label className="block font-bold mb-1">내용</label>
+              <textarea
+                name="content"
+                value={formData.content}
+                onChange={handleInputChange}
+                className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
+              />
+            </div>
+            <div className="flex justify-end">
+              <button
+                onClick={handleSubmitPost}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-600"
+              >
+                작성
+              </button>
+              <button
+                onClick={handleCloseWriteModal}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       
       {isDetailModalOpen && selectedPost && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
