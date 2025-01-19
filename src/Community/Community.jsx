@@ -96,7 +96,7 @@ const Community = () => {
   const handleSubmitPost = async () => {
     try {
       const endpoint =
-        formData.category === "리뷰게시판" ? "/review_posts" : "/board_posts";
+        formData.category === "리뷰게시판" ? "/review_posts/write" : "/board_posts/write";
   
       const payload = {
         title: formData.title,
@@ -228,42 +228,57 @@ const Community = () => {
         <PiPencilLineDuotone />
       </button>
       {isWriteModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
-          <div className="bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] font-['Song Myung']">
-            <h2 className="text-3xl font-bold text-center mb-4">게시글 작성</h2>
-            <div>
-              <label className="block font-bold mb-1">카테고리</label>
-              <select
-                name="category"
-                value={formData.category}
-                onChange={handleInputChange}
-                className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
-              >
-                <option value="자유게시판">자유게시판</option>
-                <option value="리뷰게시판">리뷰게시판</option>
-              </select>
-            </div>
-            <div>
-              <label className="block font-bold mb-1">제목</label>
-              <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleInputChange}
-                placeholder={formData.category === "리뷰게시판" ? "가게명을 입력하세요" : "제목을 입력하세요"}
-                className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
-              />
-            </div>
-            <div>
-              <label className="block font-bold mb-1">내용</label>
-              <textarea
-                name="content"
-                value={formData.content}
-                onChange={handleInputChange}
-                className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
-              />
-            </div>
-            {formData.category === "리뷰게시판" && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
+    <div className="bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] font-['Song Myung']">
+      <h2 className="text-3xl font-bold text-center mb-4">게시글 작성</h2>
+      
+      {/* 카테고리 선택 */}
+      <div>
+        <label className="block font-bold mb-1">카테고리</label>
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleInputChange}
+          className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
+        >
+          <option value="자유게시판">자유게시판</option>
+          <option value="리뷰게시판">리뷰게시판</option>
+        </select>
+      </div>
+
+      {/* 제목 입력 */}
+      <div>
+        <label className="block font-bold mb-1">
+          {formData.category === "리뷰게시판" ? "가게명" : "제목"}
+        </label>
+        <input
+          type="text"
+          name="title"
+          value={formData.title}
+          onChange={handleInputChange}
+          placeholder={
+            formData.category === "리뷰게시판" 
+              ? "가게명을 입력하세요" 
+              : "제목을 입력하세요"
+          }
+          className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
+        />
+      </div>
+
+      {/* 내용 입력 */}
+      <div>
+        <label className="block font-bold mb-1">내용</label>
+        <textarea
+          name="content"
+          value={formData.content}
+          onChange={handleInputChange}
+          placeholder="내용을 입력하세요"
+          className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
+        />
+      </div>
+
+      {/* 리뷰게시판일 경우 사진 첨부 */}
+      {formData.category === "리뷰게시판" && (
         <div>
           <label className="block font-bold mb-1">사진 첨부</label>
           <input
@@ -284,23 +299,32 @@ const Community = () => {
           )}
         </div>
       )}
-            <div className="flex justify-end">
-              <button
-                onClick={handleSubmitPost}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-600"
-              >
-                작성
-              </button>
-              <button
-                onClick={handleCloseWriteModal}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-              >
-                취소
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
+      {/* 작성 및 취소 버튼 */}
+      <div className="flex justify-end">
+        <button
+          onClick={async () => {
+            if (!formData.title.trim() || !formData.content.trim()) {
+              alert("제목과 내용을 모두 입력해주세요.");
+              return;
+            }
+            await handleSubmitPost();
+          }}
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-600"
+        >
+          작성
+        </button>
+        <button
+          onClick={handleCloseWriteModal}
+          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+        >
+          취소
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
       
       {isDetailModalOpen && selectedPost && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
