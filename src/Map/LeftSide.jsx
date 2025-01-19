@@ -115,7 +115,7 @@ const LeftSide = ({
     <div className="relative flex flex-col h-full font-nanum">
       {/* 대학교 선택 헤더 */}
       <div className="sticky top-0 z-10 bg-white">
-        <div className="flex items-center w-full h-10 my-3 border border-black rounded-lg shadow-lg">
+        <div className="flex items-center h-10 mx-2 my-2 border-2 border-black rounded-lg">
           <img src="/images/졸업.png" alt="졸업" className="w-8 h-10 ml-2" />
           <p className="ml-2 text-sm font-bold">학교 정보 :</p>
           <img
@@ -141,12 +141,13 @@ const LeftSide = ({
           <input
             type="text"
             placeholder="🍽️ 가게 검색 :"
-            className="px-5 ml-16 font-bold text-black border border-black rounded-lg"
+            className="w-5/6 px-3 ml-6 font-bold text-black border border-black rounded-lg"
             value={searchQuery}
             onChange={handleSearch}
             onKeyDown={handleSearchKeyDown}
           />
         </div>
+        <hr className="mx-4 mb-2 border-2 border-gray-500 rounded-xl" />
       </div>
 
       {/* 레스토랑 리스트 */}
@@ -175,15 +176,13 @@ const LeftSide = ({
                 <img
                   src={restaurant.imageUrl || "/images/default-restaurant.png"}
                   alt={restaurant.name}
-                  className="w-24 h-24 mr-4 rounded-lg"
+                  className="w-20 h-20 mr-4 rounded-lg"
                   onError={(e) => {
                     e.target.src = "/images/default-restaurant.png";
                   }}
                 />
                 <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-center">
-                    {restaurant.name}
-                  </h2>
+                  <h2 className="text-xl font-bold">{restaurant.name}</h2>
                 </div>
               </div>
               {/* 긍정 및 부정 리뷰 대표 문장 */}
@@ -206,9 +205,8 @@ const LeftSide = ({
                       alt="좋아요"
                       className="w-[40px] h-[40px]"
                     />
-                    <strong className="mt-2 text-lg">좋아요:</strong>
+                    <strong className="mt-2 text-lg font-bold">좋아요:</strong>
                     <span className="mt-3">
-                      {" "}
                       {positiveSentences[0] || "리뷰가 없습니다."}
                     </span>
                   </div>

@@ -61,10 +61,10 @@ function SignUp() {
   return (
     <div className="flex items-center justify-end min-h-screen bg-rose-800">
       <div className="mx-12">
-        <p className="text-5xl text-white font-nanum">
+        <p className="text-5xl text-white font-yeonsung">
           신촌과 회기역 주변 대학가의
         </p>
-        <p className="text-5xl text-white font-nanum">
+        <p className="text-5xl text-white font-yeonsung">
           숨겨진 맛집을 캠슐랭에서 발견하세요!
         </p>
         <div className="flex mt-12 space-x-4">
@@ -202,12 +202,12 @@ function SignUp() {
         </p>
         <div className="relative flex mt-5">
           <FaUserGraduate className="ml-3 text-2xl" />
-          <p className="absolute block text-xl font-bold text-black left-12 font-nanum">
+          <p className="absolute block ml-2 text-xl font-bold text-black left-8 font-nanum">
             아직 계정이 없으신가요?
           </p>
           <p
             onClick={() => navigate("/signin")}
-            className="absolute font-bold cursor-pointer right-8 text-rose-400 hover:underline hover:text-rose-600 font-nanum"
+            className="absolute mt-1 font-bold cursor-pointer right-1 text-rose-400 hover:underline hover:text-rose-600 font-nanum"
           >
             지금, 바로 가입해보세요!
           </p>

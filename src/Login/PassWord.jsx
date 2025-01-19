@@ -92,7 +92,7 @@ const PassWord = () => {
             {serverError && serverError}
           </div>
           <div className="relative flex">
-            <FaPaperPlane className="absolute text-2xl text-white left-28 top-7" />
+            <FaPaperPlane className="absolute text-2xl text-white left-24 top-7" />
             <button
               type="submit"
               disabled={isLoading}
@@ -109,13 +109,13 @@ const PassWord = () => {
           <hr className="flex-grow border-gray-300" />
         </div>
         <p
-          className="text-2xl text-center text-black underline transition cursor-pointer underline-offset-4 hover:text-gray-500 font-nanum"
-          onClick={() => louting("/signup")}
+          className="text-2xl font-bold text-center text-black underline transition cursor-pointer underline-offset-4 hover:text-gray-500 font-nanum"
+          onClick={() => louting("/signin")}
         >
           새로운 계정 만들기
         </p>
         <div className="relative flex">
-          <ImExit className="absolute text-2xl font-bold text-white top-10 left-24" />
+          <ImExit className="absolute text-2xl font-bold text-white top-10 left-20" />
           <button
             type="button"
             className="w-full pl-8 text-center py-3.5 mt-6 text-xl font-bold text-white transition duration-300 rounded-lg shadow bg-rose-800 font-nanum hover:bg-rose-600"
