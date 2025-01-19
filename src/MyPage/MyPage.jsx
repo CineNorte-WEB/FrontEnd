@@ -13,51 +13,51 @@ const MyPage = () => {
   const [userId, setUserId] = useState(null);
   const [currentComponent, setCurrentComponent] = useState("profile");
   const [bookmarks, setBookmarks] = useState([]);
-  const [boards, setBoards] = useState([]);
+  const [combinedBoards, setCombinedBoards] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호
+  const [pageSize, setPageSize] = useState(5); // 한 페이지에 표시할 게시글 수
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [profile, setProfile] = useState(null); // 프로필 상태 추가
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
   useEffect(() => {
-    const fetchBoards = async () => {
+    const fetchPosts = async () => {
+      setLoading(true);
       try {
-        const [reviewsResponse, boardsResponse] = await Promise.all([
-          apiClient.get("/users/reviews"),
-          apiClient.get("/users/boards"),
-        ]);
-
-        // 리뷰와 일반 게시판 데이터를 하나로 합치기
-        const combinedBoards = [
-          ...reviewsResponse.data.content.map((review) => ({
-            id: review.id,
-            title: review.title,
-            category: "리뷰게시판",
-            content: review.content,
-            author: review.userNickname,
-            placeName: review.placeName, // 장소 이름 추가
-            type: "review", // 리뷰 게시판 타입 추가
-            createdAt: review.createdAt,
-          })),
-          ...boardsResponse.data.content.map((board) => ({
-            id: board.id,
-            title: board.title,
-            category: "자유게시판",
-            content: board.content,
-            author: board.userNickname,
-            type: "board", // 일반 게시판 타입 추가
-            createdAt: board.createdAt,
-          })),
-        ];
-
-        setBoards(combinedBoards);
-        setLoading(false);
+        const response = await apiClient.get("/users/posts", {
+          params: {
+            page: currentPage,
+            size: pageSize,
+          },
+        });
+    
+        // 데이터 처리
+        const postsData = response.data.content.map((post) => ({
+          id: post.id,
+          title: post.title,
+          content: post.content,
+          category: post.category,
+          createdAt: post.createdAt,
+        }));
+        setCombinedBoards(postsData);
+    
+        // 전체 페이지 수 업데이트
+        setTotalPages(response.data.totalPages);
       } catch (error) {
-        console.error("게시판 데이터를 가져오는 중 오류:", error);
-        setLoading(false);
+        console.error("게시글 데이터를 가져오는 중 오류 발생:", error);
       }
+      setLoading(false);
     };
+    
 
-    fetchBoards();
-  }, []);
+    fetchPosts();
+  }, [currentPage, pageSize]);
+  const handlePageChange = (page) => {
+    if (page >= 0 && page < totalPages) {
+      setCurrentPage(page);
+    }
+  };
+  
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -104,14 +104,13 @@ const MyPage = () => {
   const renderComponent = () => {
     switch (currentComponent) {
       case "profile":
-        return <MyPageProfile   setProfile={setProfile}
-        profile={profile} bookmarks={bookmarks} boards={boards} />;
+        return <MyPageProfile profile={profile} setProfile={setProfile} bookmarks={bookmarks} posts={combinedBoards} />;
       case "mylist":
         return <MyPageList bookmarks={bookmarks} setBookmarks={setBookmarks} />;
       case "write":
-        return <MyPageWrite boards={boards} setBoards={setBoards} />;
+        return <MyPageWrite boards={combinedBoards} setBoards={setCombinedBoards} />;
       default:
-        return <MyPageProfile profile={profile} bookmarks={bookmarks} boards={boards} />;
+        return <MyPageProfile profile={profile} bookmarks={bookmarks} posts={combinedBoards} />;
     }
   };
 
