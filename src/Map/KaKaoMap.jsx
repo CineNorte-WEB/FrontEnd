@@ -279,7 +279,6 @@ function KakaoMap() {
     }
 
     // 수동 좌표 우선, 없으면 대학교 위치 기반 좌표
-    // transformPlaceData 함수 내부의 position 설정 부분만 수정
     const position =
       place.name && manualCoordinates[place.name]
         ? manualCoordinates[place.name]

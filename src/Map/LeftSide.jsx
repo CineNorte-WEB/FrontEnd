@@ -189,7 +189,7 @@ const LeftSide = ({
               {/* 긍정 및 부정 리뷰 대표 문장 */}
               <div className="text-sm">
                 <div
-                  className="p-2 font-['Song Myung'] mb-2 font-bold bg-blue-400 border-2 border-gray-400 rounded-lg text-white cursor-pointer"
+                  className="p-2 font-['Song Myung'] mb-2 font-bold bg-white border-2 border-blue-500 rounded-lg text-black cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     openModal(
@@ -204,7 +204,7 @@ const LeftSide = ({
                   {positiveSentences[0] || "리뷰가 없습니다."}
                 </div>
                 <div
-                  className="p-2 font-bold text-white bg-red-500 border-2 border-gray-400 rounded-lg cursor-pointer"
+                  className="p-2 font-bold text-black bg-white border-2 border-red-600 rounded-lg cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     openModal(
