@@ -112,7 +112,7 @@ const LeftSide = ({
   };
 
   return (
-    <div className="relative flex flex-col h-full font-['Song Myung']">
+    <div className="relative flex flex-col h-full font-nanum">
       {/* 대학교 선택 헤더 */}
       <div className="sticky top-0 z-10 bg-white">
         <div className="flex items-center w-full h-10 my-3 border border-black rounded-lg shadow-lg">
@@ -189,7 +189,7 @@ const LeftSide = ({
               {/* 긍정 및 부정 리뷰 대표 문장 */}
               <div className="text-sm">
                 <div
-                  className="p-2 font-['Song Myung'] mb-2 font-bold bg-white border-2 border-blue-500 rounded-lg text-black cursor-pointer"
+                  className="p-2 mb-2 font-bold text-black bg-white border-2 border-blue-500 rounded-lg cursor-pointer font-nanum"
                   onClick={(e) => {
                     e.stopPropagation();
                     openModal(
@@ -200,8 +200,18 @@ const LeftSide = ({
                     );
                   }}
                 >
-                  <strong>😃좋아요:</strong>{" "}
-                  {positiveSentences[0] || "리뷰가 없습니다."}
+                  <div className="flex space-x-3">
+                    <img
+                      src="/images/like.png"
+                      alt="좋아요"
+                      className="w-[40px] h-[40px]"
+                    />
+                    <strong className="mt-2 text-lg">좋아요:</strong>
+                    <span className="mt-3">
+                      {" "}
+                      {positiveSentences[0] || "리뷰가 없습니다."}
+                    </span>
+                  </div>
                 </div>
                 <div
                   className="p-2 font-bold text-black bg-white border-2 border-red-600 rounded-lg cursor-pointer"
@@ -215,8 +225,18 @@ const LeftSide = ({
                     );
                   }}
                 >
-                  <strong>😡싫어요:</strong>{" "}
-                  {negativeSentences[0] || "리뷰가 없습니다."}
+                  <div className="flex space-x-3">
+                    <img
+                      src="/images/dislike.png"
+                      alt="싫어요"
+                      className="w-[40px] h-[40px]"
+                    />
+                    <strong className="mt-2 text-lg">싫어요:</strong>
+                    <span className="mt-3 text-sm">
+                      {" "}
+                      {negativeSentences[0] || "리뷰가 없습니다."}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

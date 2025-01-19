@@ -116,7 +116,7 @@ const MyPage = () => {
   };
 
   return (
-    <div className="mypage font-['Song Myung']">
+    <div className="mypage font-nanum">
       <Common />
       <header className="mypage-header">
         <Brand />
@@ -124,9 +124,9 @@ const MyPage = () => {
       </header>
       <p className="community-subtitle">내 정보와 맛집 기록을 확인해보세요!</p>
       <div className="container">
-        <div className="mypage-menubar font-['Song Myung']">
+        <div className="mypage-menubar font-nanum">
           <div
-            className={`menu font-['Song Myung'] ${
+            className={`menu font-nanum ${
               currentComponent === "profile" ? "active" : ""
             }`}
             onClick={() => handleMenuClick("profile")}
@@ -134,7 +134,7 @@ const MyPage = () => {
             회원정보
           </div>
           <div
-            className={`menu font-['Song Myung'] ${
+            className={`menu font-nanum ${
               currentComponent === "write" ? "active" : ""
             }`}
             onClick={() => handleMenuClick("write")}
@@ -142,7 +142,7 @@ const MyPage = () => {
             내가 쓴 글
           </div>
           <div
-            className={`menu font-['Song Myung'] ${
+            className={`menu font-nanum ${
               currentComponent === "mylist" ? "active" : ""
             }`}
             onClick={() => handleMenuClick("mylist")}
@@ -150,7 +150,7 @@ const MyPage = () => {
             찜한 리스트
           </div>
         </div>
-        <div className="menu-content font-['Song Myung']">{renderComponent()}</div>
+        <div className="menu-content font-nanum">{renderComponent()}</div>
       </div>
     </div>
   );

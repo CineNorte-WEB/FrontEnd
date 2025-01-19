@@ -66,11 +66,11 @@ function SignIn() {
                 alt="스타"
                 className="w-[75px] h-[75px]"
               />
-              <p className="mt-4 text-5xl font-bold text-white font-yeonsung">
+              <p className="mt-4 text-5xl font-bold text-white font-nanum">
                 캠슐랭 1스타
               </p>
             </div>
-            <p className="mt-5 text-4xl text-white ml- font-yeonsung">
+            <p className="mt-5 text-4xl text-white ml- font-nanum">
               가성비와 맛을 모두 잡은 실속 맛집
             </p>
           </div>
@@ -85,11 +85,11 @@ function SignIn() {
               alt="스타"
               className="w-[75px] h-[75px]"
             />
-            <p className="mt-4 text-5xl font-bold text-white font-yeonsung">
+            <p className="mt-4 text-5xl font-bold text-white font-nanum">
               캠슐랭 2스타
             </p>
           </div>
-          <p className="text-4xl text-white font-yeonsung">
+          <p className="text-4xl text-white font-nanum">
             맛뿐만 아니라 분위기까지 특별한 곳
           </p>
           <div className="flex space-x-3">
@@ -108,11 +108,11 @@ function SignIn() {
               alt="스타"
               className="w-[75px] h-[75px]"
             />
-            <p className="mt-4 text-5xl font-bold text-white font-yeonsung">
+            <p className="mt-4 text-5xl font-bold text-white font-nanum">
               캠슐랭 3스타
             </p>
           </div>
-          <p className="text-4xl text-white font-yeonsung">
+          <p className="text-4xl text-white font-nanum">
             여기를 가기 위해선 먼 길도 마다하지 않을 레전드 맛집!
           </p>
         </div>
@@ -120,13 +120,13 @@ function SignIn() {
 
       {/* 회원가입 폼 */}
       <div className="w-[550px] h-[650px] px-12 py-8 mr-32 bg-white rounded-lg shadow-lg">
-        <h2 className="text-5xl font-bold text-center font-yeonsung">
+        <h2 className="text-5xl font-bold text-center font-nanum">
           회원가입
         </h2>
         <form className="mt-5 space-y-4" onSubmit={handleSubmit(onSubmit)}>
           {/* 이메일 입력 */}
           <div>
-            <p className="mb-2 text-lg font-bold text-gray-700 font-yeonsung">
+            <p className="mb-2 text-lg font-bold text-gray-700 font-nanum">
               아이디(이메일 주소)
             </p>
             <div className="relative">
@@ -134,7 +134,7 @@ function SignIn() {
               <input
                 type="email"
                 placeholder="이메일 주소를 입력해주세요."
-                className="w-full px-12 py-3 border border-black rounded-lg font-yeonsung"
+                className="w-full px-12 py-3 border border-black rounded-lg font-nanum"
                 {...register("email", {
                   required: "이메일은 필수 입력입니다.",
                   pattern: {
@@ -145,7 +145,7 @@ function SignIn() {
               />
             </div>
             {errors.email && (
-              <p className="mt-2 text-sm font-bold text-red-500 font-yeonsung">
+              <p className="mt-2 text-sm font-bold text-red-500 font-nanum">
                 {errors.email.message}
               </p>
             )}
@@ -153,14 +153,14 @@ function SignIn() {
 
           {/* 비밀번호 입력 */}
           <div className="relative">
-            <p className="mb-2 text-lg font-bold text-gray-700 font-yeonsung">
+            <p className="mb-2 text-lg font-bold text-gray-700 font-nanum">
               비밀번호
             </p>
             <MdLock className="absolute text-2xl text-gray-500 left-3 bottom-3" />
             <input
               type={keyVisible ? "text" : "password"}
               placeholder="숫자 및 특수문자를 포함하여 8자 이상 작성해주세요."
-              className="w-full px-12 py-3 border border-black rounded-lg font-yeonsung"
+              className="w-full px-12 py-3 border border-black rounded-lg font-nanum"
               {...register("password", {
                 required: "비밀번호는 필수 입력입니다.",
                 minLength: {
@@ -182,21 +182,21 @@ function SignIn() {
             )}
           </div>
           {errors.password && (
-            <p className="text-sm font-bold text-red-500 font-yeonsung">
+            <p className="text-sm font-bold text-red-500 font-nanum">
               {errors.password.message}
             </p>
           )}
 
           {/* 비밀번호 확인 */}
           <div className="relative">
-            <p className="mb-2 text-lg font-bold text-gray-700 font-yeonsung">
+            <p className="mb-2 text-lg font-bold text-gray-700 font-nanum">
               비밀번호 확인
             </p>
             <MdLockPerson className="absolute text-2xl text-gray-500 left-3 bottom-3" />
             <input
               type={confirmVisible ? "text" : "password"}
               placeholder="입력한 비밀번호를 다시 한 번 입력해주세요."
-              className="w-full px-12 py-3 border border-black rounded-lg font-yeonsung"
+              className="w-full px-12 py-3 border border-black rounded-lg font-nanum"
               {...register("passwordConfirm", {
                 required: "비밀번호 확인은 필수입니다.",
                 validate: (value) =>
@@ -216,21 +216,21 @@ function SignIn() {
             )}
           </div>
           {errors.passwordConfirm && (
-            <p className="text-sm font-bold text-red-500 font-yeonsung">
+            <p className="text-sm font-bold text-red-500 font-nanum">
               {errors.passwordConfirm.message}
             </p>
           )}
 
           {/* 닉네임 입력 */}
           <div className="relative">
-            <p className="mb-2 text-lg font-bold text-gray-700 font-yeonsung">
+            <p className="mb-2 text-lg font-bold text-gray-700 font-nanum">
               닉네임
             </p>
             <TbUser className="absolute text-2xl text-gray-500 left-3 bottom-3" />
             <input
               type="text"
               placeholder="닉네임을 입력해주세요."
-              className="w-full px-12 py-3 border border-black rounded-lg font-yeonsung"
+              className="w-full px-12 py-3 border border-black rounded-lg font-nanum"
               {...register("nickname", {
                 required: "닉네임은 필수 입력입니다.",
                 minLength: {
@@ -240,7 +240,7 @@ function SignIn() {
               })}
             />
             {errors.nickname && (
-              <p className="text-sm font-bold text-red-500 font-yeonsung">
+              <p className="text-sm font-bold text-red-500 font-nanum">
                 {errors.nickname.message}
               </p>
             )}
@@ -249,7 +249,7 @@ function SignIn() {
           {/* 가입 버튼 */}
           <button
             type="submit"
-            className="w-full py-3 mt-4 text-xl font-bold text-white bg-red-700 rounded-lg font-yeonsung hover:bg-red-600"
+            className="w-full py-3 mt-4 text-xl font-bold text-white bg-red-700 rounded-lg font-nanum hover:bg-red-600"
           >
             가입하여 나만의 맛집 찾기
           </button>

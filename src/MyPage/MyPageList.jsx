@@ -18,7 +18,7 @@ export default function MyPageList({ bookmarks, setBookmarks }) {
   
 
   return (
-    <div className="list-container font-['Song Myung']">
+    <div className="list-container font-nanum">
       {bookmarks.length === 0 ? (
         <div className="empty-message">
           찜한 리스트가 존재하지 않습니다.
@@ -28,25 +28,25 @@ export default function MyPageList({ bookmarks, setBookmarks }) {
       ) : (
         <div className="list-content">
           {bookmarks.map((bookmark, index) => (
-            <div className="list-item font-['Song Myung']" key={index}>
+            <div className="list-item font-nanum" key={index}>
               <img
                 src={bookmark.image}
                 alt={bookmark.title}
                 className="list-item-image"
               />
               <div className="list-item-info">
-                <h2 className="list-item-title font-['Song Myung']">
+                <h2 className="list-item-title font-nanum">
                   {bookmark.title}
                 </h2>
-                <p className="list-item-menu font-['Song Myung']">
+                <p className="list-item-menu font-nanum">
                   메뉴: {bookmark.menu}
                 </p>
-                <p className="list-item-summary font-['Song Myung']">
+                <p className="list-item-summary font-nanum">
                   {bookmark.summary}
                 </p>
               </div>
               <div
-                className="list-item-heart font-['Song Myung']"
+                className="list-item-heart font-nanum"
                 onClick={() => handleDeleteBookmark(bookmark.id)}
               >
                 ❤️
