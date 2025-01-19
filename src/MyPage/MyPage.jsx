@@ -40,6 +40,7 @@ const MyPage = () => {
           content: post.content,
           category: post.category,
           createdAt: post.createdAt,
+          type: post.type,
         }));
         setCombinedBoards(postsData);
         setTotalPosts(response.data.totalElements); // totalElements 저장
