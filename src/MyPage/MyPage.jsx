@@ -16,64 +16,54 @@ const MyPage = () => {
   const [combinedBoards, setCombinedBoards] = useState([]);
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호
   const [pageSize, setPageSize] = useState(5); // 한 페이지에 표시할 게시글 수
+  const [totalPosts, setTotalPosts] = useState(0); // totalElements 저장
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [profile, setProfile] = useState(null); // 프로필 상태 추가
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
+  // 초기 데이터 가져오기
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchInitialData = async () => {
       setLoading(true);
       try {
-        const response = await apiClient.get("/users/posts", {
-          params: {
-            page: currentPage,
-            size: pageSize,
-          },
-        });
-    
-        // 데이터 처리
-        const postsData = response.data.content.map((post) => ({
+        const [profileResponse, postsResponse] = await Promise.all([
+          apiClient.get("/users/profile"),
+          apiClient.get("/users/posts", {
+            params: { page: currentPage, size: pageSize },
+          }),
+        ]);
+
+        // 프로필 데이터 설정
+        setProfile(profileResponse.data);
+        setUserId(profileResponse.data.id);
+
+        // 게시글 데이터 설정
+        const postsData = postsResponse.data.content.map((post) => ({
           id: post.id,
           title: post.title,
           content: post.content,
           category: post.category,
           createdAt: post.createdAt,
+          type: post.type,
         }));
         setCombinedBoards(postsData);
-    
-        // 전체 페이지 수 업데이트
-        setTotalPages(response.data.totalPages);
+        setTotalPosts(postsResponse.data.totalElements);
+        setTotalPages(postsResponse.data.totalPages);
       } catch (error) {
-        console.error("게시글 데이터를 가져오는 중 오류 발생:", error);
+        console.error("데이터 로딩 중 오류 발생:", error);
       }
       setLoading(false);
     };
-    
 
-    fetchPosts();
+    fetchInitialData();
   }, [currentPage, pageSize]);
+
   const handlePageChange = (page) => {
     if (page >= 0 && page < totalPages) {
       setCurrentPage(page);
     }
   };
   
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await apiClient.get("/users/profile"); // axios.js가 Authorization 헤더 처리
-        setProfile(response.data); // 프로필 데이터 설정
-        setUserId(response.data.id); // userId를 상태로 저장
-        setLoading(false);
-      } catch (error) {
-        console.error("프로필 데이터를 가져오는 중 오류:", error);
-        setLoading(false);
-      }
-    };
-  
-    fetchProfile();
-  }, []);
 
   // 북마크 정보 가져오기
   useEffect(() => {
@@ -104,11 +94,11 @@ const MyPage = () => {
   const renderComponent = () => {
     switch (currentComponent) {
       case "profile":
-        return <MyPageProfile profile={profile} setProfile={setProfile} bookmarks={bookmarks} posts={combinedBoards} />;
+        return <MyPageProfile profile={profile} setProfile={setProfile} boards={combinedBoards} totalPosts={totalPosts}/>;
       case "mylist":
         return <MyPageList bookmarks={bookmarks} setBookmarks={setBookmarks} />;
       case "write":
-        return <MyPageWrite boards={combinedBoards} setBoards={setCombinedBoards} />;
+        return <MyPageWrite currentPage={currentPage} bookmarks={bookmarks} boards={combinedBoards} totalPages={totalPages} onPageChange={handlePageChange} setBoards={setCombinedBoards} setCombinedBoards={setCombinedBoards}/>;
       default:
         return <MyPageProfile profile={profile} bookmarks={bookmarks} posts={combinedBoards} />;
     }
