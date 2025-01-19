@@ -16,19 +16,23 @@ const Community = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isPlaceModalOpen, setIsPlaceModalOpen] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
   const [formData, setFormData] = useState({
     category: "자유게시판",
     title: "",
     content: "",
     image: null, // 추가된 속성
-  }); // 글 작성 폼 데이터
+    place: { id: null, name: "" }, // 장소 데이터 추가
+  });
+
 
   // 게시판 데이터 가져오기
   const fetchPosts = async () => {
     setLoading(true);
     try {
       const response =
-      selectedCategory  === "리뷰게시판"
+        selectedCategory === "리뷰게시판"
           ? await apiClient.get("/review_posts")
           : await apiClient.get("/board_posts");
       const formattedData = response.data.content.map((post) => ({
@@ -37,11 +41,11 @@ const Community = () => {
         content: post.content,
         author: post.userNickname,
         createdAt: post.createdAt,
-        category: selectedCategory ,
+        category: selectedCategory,
       }));
       setPosts(formattedData);
     } catch (error) {
-      console.error(`${selectedCategory } 데이터를 가져오는 중 오류 발생:`, error);
+      console.error(`${selectedCategory} 데이터를 가져오는 중 오류 발생:`, error);
     }
     setLoading(false);
   };
@@ -49,7 +53,7 @@ const Community = () => {
   // 카테고리 변경 시 API 호출
   useEffect(() => {
     fetchPosts();
-  }, [selectedCategory ]);
+  }, [selectedCategory]);
 
   const handleTabClick = (category) => {
     setSelectedCategory(category);
@@ -86,7 +90,34 @@ const Community = () => {
       reader.readAsDataURL(file);
     }
   };
-  
+
+  const handleSearchPlace = async () => {
+    if (!formData.title.trim()) {
+      alert("가게명을 입력해주세요.");
+      return;
+    }
+
+    try {
+      const encodedQuery = encodeURIComponent(formData.title.trim());
+      const response = await apiClient.get(`/places/search?name=${encodedQuery}`);
+      console.log("검색 결과:", response.data.content);
+      setSearchResults(response.data.content); // 검색 결과 저장
+      setIsPlaceModalOpen(true); // 검색 결과 모달 열기
+    } catch (error) {
+      console.error("가게명 검색 중 오류 발생:", error);
+      alert("가게명을 검색하는 데 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  const handleSelectPlace = (place) => {
+    setFormData((prev) => ({
+      ...prev,
+      title: place.name, // 제목에 선택한 가게명 설정
+      place: { id: place.id, name: place.name }, // place 정보 업데이트
+    }));
+    setIsPlaceModalOpen(false); // 모달 닫기
+  };
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -94,21 +125,26 @@ const Community = () => {
   };
 
   const handleSubmitPost = async () => {
+    if (formData.category === "리뷰게시판" && !formData.place.id) {
+      alert("리뷰 게시판의 경우 가게를 선택해야 합니다.");
+      return;
+    }
     try {
       const endpoint =
         formData.category === "리뷰게시판" ? "/review_posts/write" : "/board_posts/write";
-  
+
       const payload = {
         title: formData.title,
         content: formData.content,
+        place: formData.category === "리뷰게시판" ? formData.place : undefined, // 리뷰게시판이면 place 포함
       };
-  
+
       if (formData.image) {
         payload.image = formData.image; // 이미지 추가
       }
-  
+
       await apiClient.post(endpoint, payload);
-  
+
       alert("게시글이 성공적으로 등록되었습니다.");
       handleCloseWriteModal();
       fetchPosts();
@@ -117,7 +153,7 @@ const Community = () => {
       alert("게시글 작성에 실패했습니다. 다시 시도해주세요.");
     }
   };
-  
+
 
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
   const currentPosts = posts.slice(
@@ -143,29 +179,27 @@ const Community = () => {
         맛집부터 일상까지, 자유롭게 소통해요!
       </p>
       <div className="w-[70%] min-h-[60vh] mx-auto my-4 bg-white rounded-2xl shadow-lg overflow-hidden p-4">
-        {/* 탭 메뉴 */}
-        <div className="flex justify-around border-b border-gray-300">
+        <div className="flex justify-around border-b-2 border-gray-300">
           <button
-            className={`flex-1 text-center text-2xl font-semibold py-4 transition-colors duration-300 ${
-              selectedCategory === "자유게시판"
-                ? "text-[#c02231] border-b-4 border-[#c02231]"
-                : "text-gray-500 hover:text-[#c02231] border-b-4 border-transparent"
-            }`}
+            className={`flex-1 text-center text-[2rem] font-semibold py-3 transition-colors duration-300 ${selectedCategory === "자유게시판"
+              ? "text-[#c02231] border-b-4 border-[#c02231]"
+              : "text-gray-500 hover:text-[#c02231] border-b-4 border-transparent"
+              }`}
             onClick={() => handleTabClick("자유게시판")}
           >
             자유게시판
           </button>
           <button
-            className={`flex-1 text-center text-2xl font-semibold py-4 transition-colors duration-300 ${
-              selectedCategory === "리뷰게시판"
-                ? "text-[#c02231] border-b-4 border-[#c02231]"
-                : "text-gray-500 hover:text-[#c02231] border-b-4 border-transparent"
-            }`}
+            className={`flex-1 text-center text-[2rem] font-semibold py-3 transition-colors duration-300 ${selectedCategory === "리뷰게시판"
+              ? "text-[#c02231] border-b-4 border-[#c02231]"
+              : "text-gray-500 hover:text-[#c02231] border-b-4 border-transparent"
+              }`}
             onClick={() => handleTabClick("리뷰게시판")}
           >
             리뷰게시판
           </button>
         </div>
+
         {loading ? (
           <p>데이터를 불러오는 중입니다...</p>
         ) : currentPosts.length > 0 ? (
@@ -208,17 +242,17 @@ const Community = () => {
           <p>게시물이 없습니다.</p>
         )}
         <div className="community-pagination">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => onPageChange(index)}
-            className={`pagination-button ${index === currentPage ? "active" : ""
-              }`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index}
+              onClick={() => onPageChange(index)}
+              className={`pagination-button ${index === currentPage ? "active" : ""
+                }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
       </div>
 
       <button
@@ -228,104 +262,113 @@ const Community = () => {
         <PiPencilLineDuotone />
       </button>
       {isWriteModalOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
-    <div className="bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] font-['Song Myung']">
-      <h2 className="text-3xl font-bold text-center mb-4">게시글 작성</h2>
-      
-      {/* 카테고리 선택 */}
-      <div>
-        <label className="block font-bold mb-1">카테고리</label>
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleInputChange}
-          className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
-        >
-          <option value="자유게시판">자유게시판</option>
-          <option value="리뷰게시판">리뷰게시판</option>
-        </select>
-      </div>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
+          <div className="bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] font-['Song Myung']">
+            <h2 className="text-3xl font-bold text-center mb-4">게시글 작성</h2>
 
-      {/* 제목 입력 */}
-      <div>
-        <label className="block font-bold mb-1">
-          {formData.category === "리뷰게시판" ? "가게명" : "제목"}
-        </label>
-        <input
-          type="text"
-          name="title"
-          value={formData.title}
-          onChange={handleInputChange}
-          placeholder={
-            formData.category === "리뷰게시판" 
-              ? "가게명을 입력하세요" 
-              : "제목을 입력하세요"
-          }
-          className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
-        />
-      </div>
+            {/* 카테고리 선택 */}
+            <div>
+              <label className="block font-bold mb-1">카테고리</label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
+              >
+                <option value="자유게시판">자유게시판</option>
+                <option value="리뷰게시판">리뷰게시판</option>
+              </select>
+            </div>
 
-      {/* 내용 입력 */}
-      <div>
-        <label className="block font-bold mb-1">내용</label>
-        <textarea
-          name="content"
-          value={formData.content}
-          onChange={handleInputChange}
-          placeholder="내용을 입력하세요"
-          className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
-        />
-      </div>
+            {/* 제목 입력 */}
+            <div>
+              <label className="block font-bold mb-1">
+                {formData.category === "리뷰게시판" ? "가게명" : "제목"}
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  placeholder={
+                    formData.category === "리뷰게시판"
+                      ? "가게명을 입력하세요"
+                      : "제목을 입력하세요"
+                  }
+                  className="flex-1 p-2 border-2 border-gray-300 rounded-lg"
+                />
+                {formData.category === "리뷰게시판" && (
+                  <button
+                    onClick={handleSearchPlace}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                  >
+                    확인
+                  </button>
+                )}
+              </div>
+            </div>
 
-      {/* 리뷰게시판일 경우 사진 첨부 */}
-      {formData.category === "리뷰게시판" && (
-        <div>
-          <label className="block font-bold mb-1">사진 첨부</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
-          />
-          {formData.image && (
-            <div className="mb-4">
-              <p className="font-bold mb-2">미리보기:</p>
-              <img
-                src={formData.image}
-                alt="미리보기"
-                className="w-48 h-48 object-cover rounded-lg shadow-md"
+            {/* 내용 입력 */}
+            <div>
+              <label className="block font-bold mb-1">내용</label>
+              <textarea
+                name="content"
+                value={formData.content}
+                onChange={handleInputChange}
+                placeholder="내용을 입력하세요"
+                className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
               />
             </div>
-          )}
+
+            {/* 리뷰게시판일 경우 사진 첨부 */}
+            {formData.category === "리뷰게시판" && (
+              <div>
+                <label className="block font-bold mb-1">사진 첨부</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="w-full mb-4 p-2 border-2 border-gray-300 rounded-lg"
+                />
+                {formData.image && (
+                  <div className="mb-4">
+                    <p className="font-bold mb-2">미리보기:</p>
+                    <img
+                      src={formData.image}
+                      alt="미리보기"
+                      className="w-48 h-48 object-cover rounded-lg shadow-md"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 작성 및 취소 버튼 */}
+            <div className="flex justify-end">
+              <button
+                onClick={async () => {
+                  if (!formData.title.trim() || !formData.content.trim()) {
+                    alert("제목과 내용을 모두 입력해주세요.");
+                    return;
+                  }
+                  await handleSubmitPost();
+                }}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-600"
+              >
+                작성
+              </button>
+              <button
+                onClick={handleCloseWriteModal}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+              >
+                취소
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* 작성 및 취소 버튼 */}
-      <div className="flex justify-end">
-        <button
-          onClick={async () => {
-            if (!formData.title.trim() || !formData.content.trim()) {
-              alert("제목과 내용을 모두 입력해주세요.");
-              return;
-            }
-            await handleSubmitPost();
-          }}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-blue-600"
-        >
-          작성
-        </button>
-        <button
-          onClick={handleCloseWriteModal}
-          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-        >
-          취소
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-      
       {isDetailModalOpen && selectedPost && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
           <div className="bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] max-h-[95%] font-['Song Myung']">
@@ -368,6 +411,36 @@ const Community = () => {
                   handleCloseDetailModal();
                 }}
                 className="px-4 py-2 text-white transition-colors duration-200 bg-gray-500 rounded-lg hover:bg-gray-600"
+              >
+                닫기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isPlaceModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
+          <div className="bg-white p-6 rounded-2xl shadow-lg w-[80%] max-w-[500px]">
+            <h2 className="text-2xl font-bold text-center mb-4">검색 결과</h2>
+            {searchResults.length > 0 ? (
+              <ul className="space-y-2">
+                {searchResults.map((place) => (
+                  <li
+                    key={place.id}
+                    className="p-2 border-b cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSelectPlace(place)}
+                  >
+                    {place.name}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-center text-gray-500">검색 결과가 없습니다.</p>
+            )}
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => setIsPlaceModalOpen(false)}
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
               >
                 닫기
               </button>

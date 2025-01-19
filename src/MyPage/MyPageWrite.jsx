@@ -84,6 +84,7 @@ export default function MyPageWrite({ boards, totalPages, currentPage, onPageCha
                 </p>
               </div>
               <div className="write-actions">
+                
                 <button
                   className="delete-button"
                   onClick={() => handleDeleteClick(index)}

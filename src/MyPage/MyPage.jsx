@@ -21,19 +21,24 @@ const MyPage = () => {
   const [profile, setProfile] = useState(null); // 프로필 상태 추가
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
+  // 초기 데이터 가져오기
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchInitialData = async () => {
       setLoading(true);
       try {
-        const response = await apiClient.get("/users/posts", {
-          params: {
-            page: currentPage,
-            size: pageSize,
-          },
-        });
-    
-        // 데이터 처리
-        const postsData = response.data.content.map((post) => ({
+        const [profileResponse, postsResponse] = await Promise.all([
+          apiClient.get("/users/profile"),
+          apiClient.get("/users/posts", {
+            params: { page: currentPage, size: pageSize },
+          }),
+        ]);
+
+        // 프로필 데이터 설정
+        setProfile(profileResponse.data);
+        setUserId(profileResponse.data.id);
+
+        // 게시글 데이터 설정
+        const postsData = postsResponse.data.content.map((post) => ({
           id: post.id,
           title: post.title,
           content: post.content,
@@ -42,17 +47,15 @@ const MyPage = () => {
           type: post.type,
         }));
         setCombinedBoards(postsData);
-        setTotalPosts(response.data.totalElements); // totalElements 저장
-        // 전체 페이지 수 업데이트
-        setTotalPages(response.data.totalPages);
+        setTotalPosts(postsResponse.data.totalElements);
+        setTotalPages(postsResponse.data.totalPages);
       } catch (error) {
-        console.error("게시글 데이터를 가져오는 중 오류 발생:", error);
+        console.error("데이터 로딩 중 오류 발생:", error);
       }
       setLoading(false);
     };
-    
 
-    fetchPosts();
+    fetchInitialData();
   }, [currentPage, pageSize]);
 
   const handlePageChange = (page) => {
@@ -61,22 +64,6 @@ const MyPage = () => {
     }
   };
   
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await apiClient.get("/users/profile"); // axios.js가 Authorization 헤더 처리
-        setProfile(response.data); // 프로필 데이터 설정
-        setUserId(response.data.id); // userId를 상태로 저장
-        setLoading(false);
-      } catch (error) {
-        console.error("프로필 데이터를 가져오는 중 오류:", error);
-        setLoading(false);
-      }
-    };
-  
-    fetchProfile();
-  }, []);
 
   // 북마크 정보 가져오기
   useEffect(() => {
@@ -111,7 +98,7 @@ const MyPage = () => {
       case "mylist":
         return <MyPageList bookmarks={bookmarks} setBookmarks={setBookmarks} />;
       case "write":
-        return <MyPageWrite currentPage={currentPage} bookmarks={bookmarks} boards={combinedBoards} totalPages={totalPages} onPageChange={handlePageChange} setBoards={setCombinedBoards} />;
+        return <MyPageWrite currentPage={currentPage} bookmarks={bookmarks} boards={combinedBoards} totalPages={totalPages} onPageChange={handlePageChange} setBoards={setCombinedBoards} setCombinedBoards={setCombinedBoards}/>;
       default:
         return <MyPageProfile profile={profile} bookmarks={bookmarks} posts={combinedBoards} />;
     }

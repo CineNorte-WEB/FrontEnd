@@ -240,3 +240,10 @@
   border-color: #c02231;
   font-weight: bold;
 }
+
+.text-gray-500 {
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #9ca3af;
+}
+
