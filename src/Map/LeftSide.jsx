@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import RestaurantOverlay from "./RestaurantOverlay"; // RestaurantOverlay 컴포넌트 import
 
 const LeftSide = ({
   restaurantData,
@@ -103,8 +104,15 @@ const LeftSide = ({
   }, [restaurantData]);
 
   const handleRestaurantClick = (restaurant) => {
-    setSelectedRestaurant(restaurant);
-    onSelectRestaurant && onSelectRestaurant(restaurant);
+    const restaurantDetails = fetchedData[restaurant.id] || {}; // fetchedData에서 추가 데이터 가져오기
+    const fullRestaurantData = {
+      ...restaurant, // 기본 데이터
+      ...restaurantDetails, // fetchedData의 상세 데이터 병합
+    };
+
+    console.log("Selected Restaurant with Details:", fullRestaurantData); // 디버깅용 로그
+    setSelectedRestaurant(fullRestaurantData); // 병합된 데이터로 상태 설정
+    onSelectRestaurant && onSelectRestaurant(fullRestaurantData); // 병합된 데이터 상위로 전달
   };
 
   const handleUniversityChange = (e) => {
@@ -300,6 +308,15 @@ const LeftSide = ({
           );
         })}
       </div>
+
+      {/* 선택된 레스토랑 정보를 전달 */}
+      {selectedRestaurant && (
+        <RestaurantOverlay
+          restaurant={selectedRestaurant}
+          onClose={() => setSelectedRestaurant(null)}
+          source="list"
+        />
+      )}
     </div>
   );
 };

@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const RestaurantOverlay = ({ restaurant, onClose, source }) => {
   if (!restaurant) return null;
 
+  // 디버깅 로그 추가
+  console.log("Received restaurant data:", restaurant);
+  console.log(
+    "Representative Sentence Map:",
+    restaurant.representativeSentenceMap
+  );
   const formatPrice = (price) => {
     if (
       price === 0 ||
