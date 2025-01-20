@@ -35,12 +35,12 @@ const Common = () => {
   return (
     <>
       <nav
-        className="fixed z-50 flex flex-col items-center justify-center text-center bg-white border rounded-lg shadow-lg mt-28 right-2 border-slate-500 w-35"
+        className="fixed z-50 flex flex-col items-center mt-20 text-center bg-white border rounded-lg shadow-lg right-2 border-slate-500 w-35"
         style={{ top: "32%", transform: "translateY(-100%)" }}
       >
         <label
           onClick={() => onHandleClick(0)}
-          className={`block my-3 hover:text-slate-500 hover:cursor-pointer ${
+          className={`block my-2 hover:text-slate-500 hover:cursor-pointer ${
             click === 0 ? "text-black font-bold" : "text-gray-500 opacity-50"
           }`}
         >
@@ -54,16 +54,21 @@ const Common = () => {
         <hr className="w-full border border-slate-400" />
         <label
           onClick={() => onHandleClick(1)}
-          className={`block my-4 hover:text-slate-500 hover:cursor-pointer ${
+          className={`block my-2 hover:text-slate-500 hover:cursor-pointer ${
             click === 1 ? "text-black font-bold" : "text-gray-500 opacity-50"
           }`}
         >
           <img
             src="/images/커뮤니티.png"
             alt="커뮤니티"
-            className="w-[40px] h-[40px] ml-3.5"
+            className="w-[40px] h-[40px] ml-3"
           />
-          <p className="px-2 text-xl font-nanum">커뮤니티</p>
+          <p
+            className="px-2 text-xl font-bold font-nanum"
+            style={{ fontStyle: "normal" }}
+          >
+            커뮤니티
+          </p>
         </label>
         <hr className="w-full border border-slate-400" />
         <label
@@ -75,9 +80,14 @@ const Common = () => {
           <img
             src="/images/사람.png"
             alt="사람"
-            className="w-[40px] h-[40px] ml-3.5"
+            className="w-[40px] h-[40px] ml-4"
           />
-          <p className="text-xl font-nanum ">마이페이지</p>
+          <p
+            className="text-lg font-bold font-nanum "
+            style={{ fontStyle: "normal" }}
+          >
+            마이페이지
+          </p>
         </label>
       </nav>
     </>
