@@ -32,66 +32,66 @@ const LeftSide = ({
     const fetchData = async () => {
       try {
         const dataMap = {};
-        await Promise.all(
+        await Promise.allSettled(
           restaurantData.map(async (restaurant) => {
             try {
               const response = await fetch(
-                `http://43.203.118.59:8080/places/name/${encodeURIComponent(
+                `http://3.36.90.46:8080/places/name/${encodeURIComponent(
                   restaurant.name
                 )}`
               );
-              const contentType = response.headers.get("Content-Type");
 
-              if (response.ok && contentType.includes("application/json")) {
-                const data = await response.json();
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
 
-                // likePoints 파싱 및 필터링
-                let likePoints = [];
-                if (data.likePoints) {
-                  try {
-                    const parsedPoints = JSON.parse(
-                      data.likePoints.replace(/'/g, '"')
-                    );
-                    likePoints = parsedPoints.filter(
-                      (point) =>
-                        point.category !== "항목 없음" &&
-                        point.category.trim() !== ""
-                    );
-                  } catch (e) {
-                    console.warn("likePoints 파싱 오류:", e);
-                  }
-                }
-
-                // 데이터 구조화
-                dataMap[restaurant.id] = {
-                  ...data,
-                  likePoints,
-                  representativeSentenceMap: {
-                    positiveSentences:
-                      data.representativeSentenceMap?.positiveSentences || {},
-                    negativeSentences:
-                      data.representativeSentenceMap?.negativeSentences || {},
-                  },
-                };
-
-                console.log(
-                  `Data for ${restaurant.name}:`,
-                  dataMap[restaurant.id]
-                ); // 확인용 로그
-              } else {
-                console.error(
-                  `Name ${restaurant.name} - API 호출 실패. 상태 코드:`,
-                  response.status
+              const contentType = response.headers.get("Content-Type") || "";
+              if (!contentType.includes("application/json")) {
+                throw new Error(
+                  "Invalid content type received from the server."
                 );
               }
+
+              const data = await response.json();
+
+              let likePoints = [];
+              if (data.likePoints && typeof data.likePoints === "string") {
+                try {
+                  const parsedPoints = JSON.parse(
+                    data.likePoints.replace(/'/g, '"')
+                  );
+                  likePoints = Array.isArray(parsedPoints)
+                    ? parsedPoints.filter(
+                        (point) =>
+                          point.category &&
+                          point.category !== "항목 없음" &&
+                          point.category.trim() !== ""
+                      )
+                    : [];
+                } catch (e) {
+                  console.warn("likePoints 파싱 오류:", e);
+                }
+              }
+
+              dataMap[restaurant.id] = {
+                ...data,
+                likePoints,
+                representativeSentenceMap: {
+                  positiveSentences:
+                    data.representativeSentenceMap?.positiveSentences || {},
+                  negativeSentences:
+                    data.representativeSentenceMap?.negativeSentences || {},
+                },
+              };
             } catch (error) {
               console.error(
-                `Name ${restaurant.name} - API 호출 중 오류 발생:`,
+                `Error processing restaurant: ${restaurant.name}`,
                 error
               );
             }
           })
         );
+
         setFetchedData(dataMap);
         console.log("Fetched Data Map:", dataMap); // 디버깅용 로그
       } catch (error) {
@@ -260,24 +260,19 @@ const LeftSide = ({
                       alt="좋아요"
                       className="w-[35px] h-[35px]"
                     />
-                    <h3 className="mt-1 ml-3 text-2xl font-bold text-blue-700 ">
-                      좋아요:
+                    <h3 className="mt-1 ml-3 text-2xl font-bold text-blue-700">
+                      긍정 리뷰:
                     </h3>
                   </div>
                   <p className="mt-1 font-bold">
-                    {Object.keys(positiveSentences).length > 0
-                      ? `${Object.keys(positiveSentences)[0]}: ${
-                          positiveSentences[Object.keys(positiveSentences)[0]]
+                    {positiveSentences &&
+                    Object.entries(positiveSentences).length > 0
+                      ? `${Object.entries(positiveSentences)[0][0]}: ${
+                          Object.entries(positiveSentences)[0][1]
                         }`
                       : "리뷰가 없습니다."}
                   </p>
-                  {/* 첫 번째 긍정 리뷰 추가 */}
-                  {Object.keys(positiveSentences).length > 0 && (
-                    <p className="mt-2 text-gray-700">
-                      <strong>첫 번째 긍정 리뷰:</strong>{" "}
-                      {positiveSentences[Object.keys(positiveSentences)[0]]}
-                    </p>
-                  )}
+                  
                 </div>
 
                 {/* 부정 리뷰 섹션 */}
@@ -289,23 +284,18 @@ const LeftSide = ({
                       className="w-[35px] h-[35px]"
                     />
                     <h3 className="ml-3 text-2xl font-bold text-red-700">
-                      싫어요:
+                      부정 리뷰:
                     </h3>
                   </div>
                   <p className="mt-1 font-bold">
-                    {Object.keys(negativeSentences).length > 0
-                      ? `${Object.keys(negativeSentences)[0]}: ${
-                          negativeSentences[Object.keys(negativeSentences)[0]]
+                    {negativeSentences &&
+                    Object.entries(negativeSentences).length > 0
+                      ? `${Object.entries(negativeSentences)[0][0]}: ${
+                          Object.entries(negativeSentences)[0][1]
                         }`
                       : "리뷰가 없습니다."}
                   </p>
-                  {/* 첫 번째 부정 리뷰 추가 */}
-                  {Object.keys(negativeSentences).length > 0 && (
-                    <p className="mt-2 text-gray-700">
-                      <strong>첫 번째 부정 리뷰:</strong>{" "}
-                      {negativeSentences[Object.keys(negativeSentences)[0]]}
-                    </p>
-                  )}
+                  
                 </div>
               </div>
             </div>
@@ -314,17 +304,17 @@ const LeftSide = ({
       </div>
 
       {/* 상세 정보에 긍정/부정 리뷰 전체 표시 */}
-      {selectedRestaurant && (
+      {selectedRestaurant && fetchedData[selectedRestaurant.id] && (
         <div className="p-4 mb-4 bg-gray-100 border-2 border-gray-300 rounded-md">
           <h3 className="text-xl font-bold">긍정 리뷰 전체:</h3>
-          {Object.keys(
+          {Object.entries(
             fetchedData[selectedRestaurant.id]?.representativeSentenceMap
               ?.positiveSentences || {}
           ).length > 0 ? (
             <ul>
               {Object.entries(
                 fetchedData[selectedRestaurant.id]?.representativeSentenceMap
-                  ?.positiveSentences || {}
+                  ?.positiveSentences
               ).map(([category, sentence], index) => (
                 <li key={index} className="mb-1">
                   <strong>{category}:</strong> {sentence}
@@ -336,14 +326,14 @@ const LeftSide = ({
           )}
 
           <h3 className="mt-4 text-xl font-bold">부정 리뷰 전체:</h3>
-          {Object.keys(
+          {Object.entries(
             fetchedData[selectedRestaurant.id]?.representativeSentenceMap
               ?.negativeSentences || {}
           ).length > 0 ? (
             <ul>
               {Object.entries(
                 fetchedData[selectedRestaurant.id]?.representativeSentenceMap
-                  ?.negativeSentences || {}
+                  ?.negativeSentences
               ).map(([category, sentence], index) => (
                 <li key={index} className="mb-1">
                   <strong>{category}:</strong> {sentence}
