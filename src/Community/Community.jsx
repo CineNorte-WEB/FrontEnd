@@ -12,12 +12,15 @@ const Community = () => {
   const POSTS_PER_PAGE = 5;
   const [selectedPost, setSelectedPost] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [communityTotalPages, setCommunityTotalPages] = useState(1); // 변수명 변경
   const [isWriteModalOpen, setIsWriteModalOpen] = useState(false); // 글 작성 모달 상태 추가
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize] = useState(5); // 한 페이지에 표시할 게시글 수
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isPlaceModalOpen, setIsPlaceModalOpen] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+
   const [formData, setFormData] = useState({
     category: "자유게시판",
     title: "",
@@ -31,10 +34,16 @@ const Community = () => {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      const response =
+      const endpoint =
         selectedCategory === "리뷰게시판"
-          ? await apiClient.get("/review_posts")
-          : await apiClient.get("/board_posts");
+          ? "/review_posts"
+          : "/board_posts";
+      const response = await apiClient.get(endpoint, {
+        params: { page: currentPage, size: pageSize }, // API에서 page와 size를 사용
+      });
+      setPosts(response.data.content); // 게시글 데이터 설정
+      setCommunityTotalPages(response.data.totalPages); // 전체 페이지 수 설정
+
       const formattedData = response.data.content.map((post) => ({
         id: post.id,
         title: post.title,
@@ -43,7 +52,9 @@ const Community = () => {
         createdAt: post.createdAt,
         category: selectedCategory,
       }));
+
       setPosts(formattedData);
+      setCommunityTotalPages(response.data.totalPages); // communityTotalPages로 변경
     } catch (error) {
       console.error(`${selectedCategory} 데이터를 가져오는 중 오류 발생:`, error);
     }
@@ -53,10 +64,11 @@ const Community = () => {
   // 카테고리 변경 시 API 호출
   useEffect(() => {
     fetchPosts();
-  }, [selectedCategory]);
+  }, [selectedCategory, currentPage]); // currentPage 추가
 
   const handleTabClick = (category) => {
     setSelectedCategory(category);
+    setCurrentPage(0); // 카테고리 변경 시 페이지 초기화
   };
 
   const handlePostClick = (post) => {
@@ -154,17 +166,29 @@ const Community = () => {
     }
   };
 
-
-  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
-  const currentPosts = posts.slice(
-    (currentPage - 1) * POSTS_PER_PAGE,
-    currentPage * POSTS_PER_PAGE
-  );
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
-
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    if (pageNumber >= 0 && pageNumber < communityTotalPages) {
+      setCurrentPage(pageNumber); // 페이지 변경
+    }
   };
+  
+  <div className="community-pagination">
+    {Array.from({ length: communityTotalPages }, (_, index) => (
+      <button
+        key={index}
+        onClick={() => handlePageChange(index)}
+        className={`pagination-button ${index === currentPage ? "active" : ""}`}
+      >
+        {index + 1}
+      </button>
+    ))}
+  </div>
+  
+  // useEffect 수정
+  useEffect(() => {
+    fetchPosts();
+  }, [selectedCategory, currentPage]); // currentPage 추가
+
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-[#c02231] w-full relative font-['Song Myung']">
@@ -202,8 +226,8 @@ const Community = () => {
 
         {loading ? (
           <p>데이터를 불러오는 중입니다...</p>
-        ) : currentPosts.length > 0 ? (
-          currentPosts.map((post) => (
+        ) : posts.length > 0 ? (
+          posts.map((post) => (
             <div
               key={post.id}
               onClick={() => handlePostClick(post)}
@@ -241,11 +265,12 @@ const Community = () => {
         ) : (
           <p>게시물이 없습니다.</p>
         )}
+        {/* 페이지네이션 */}
         <div className="community-pagination">
-          {Array.from({ length: totalPages }, (_, index) => (
+          {Array.from({ length: communityTotalPages }, (_, index) => (
             <button
               key={index}
-              onClick={() => onPageChange(index)}
+              onClick={() => handlePageChange(index)}
               className={`pagination-button ${index === currentPage ? "active" : ""
                 }`}
             >
@@ -253,6 +278,8 @@ const Community = () => {
             </button>
           ))}
         </div>
+
+
       </div>
 
       <button
