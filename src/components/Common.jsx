@@ -36,7 +36,7 @@ const Common = () => {
     <>
       <nav
         className="fixed z-50 flex flex-col items-center justify-center text-center bg-white border rounded-lg shadow-lg right-2 border-slate-500 w-35"
-        style={{ top: "32%", transform: "translateY(-100%)" }}
+        style={{ top: "40%", transform: "translateY(-100%)" }}
       >
         <label
           onClick={() => onHandleClick(0)}
@@ -83,7 +83,7 @@ const Common = () => {
             alt="사람"
             className="w-[30px] h-[30px] ml-3"
           />
-          <p className="font-yeonsung">마이페이지</p>
+          <p className="font-yeonsung text-sm">마이페이지</p>
         </label>
       </nav>
     </>

@@ -171,7 +171,7 @@ const Community = () => {
       setCurrentPage(pageNumber); // 페이지 변경
     }
   };
-  
+
   <div className="community-pagination">
     {Array.from({ length: communityTotalPages }, (_, index) => (
       <button
@@ -183,7 +183,7 @@ const Community = () => {
       </button>
     ))}
   </div>
-  
+
   // useEffect 수정
   useEffect(() => {
     fetchPosts();
@@ -235,18 +235,23 @@ const Community = () => {
             >
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <h2 className="mb-2 text-lg font-bold">{post.title}</h2>
+                  <h2 className="mb-4 text-2xl font-bold font-['Song Myung']">{post.title}</h2>
+                </div>
+                <div className="mb-4">
+                  <p className="text-sm font-semibold text-gray-600 font-['Song Myung']">
+                    <span className="text-gray-800 font-bold">미리보기:</span>
+                    {post.content.length > 100
+                      ? `${post.content.slice(0, 100)}...`
+                      : post.content}
+                  </p>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="space-y-5">
+                  <div className="space-y-2">
                     <p className="text-sm text-gray-500 font-semibold font-['Song Myung']">
-                      {post.category}
+                      <span className="text-gray-800 font-bold">작성자:</span> {post.author}
                     </p>
                     <p className="text-sm text-gray-500 font-semibold font-['Song Myung']">
-                      작성자: {post.author}
-                    </p>
-                    <p className="text-sm text-gray-500 font-semibold font-['Song Myung'] font-semibold">
-                      작성일: {post.createdAt}
+                      <span className="text-gray-800 font-bold">작성일:</span> {post.createdAt}
                     </p>
                   </div>
                   <div>
@@ -260,6 +265,8 @@ const Community = () => {
                   </div>
                 </div>
               </div>
+
+
             </div>
           ))
         ) : (
