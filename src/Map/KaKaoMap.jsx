@@ -3,7 +3,7 @@ import Common from "../components/Common";
 import LeftSide from "./LeftSide";
 import RestaurantOverlay from "./RestaurantOverlay";
 
-const BASE_URL = "http://43.203.118.59:8080";
+const BASE_URL = "http://3.36.90.46:8080";
 
 const universityLocations = {
   서강대: { lat: 37.551292, lng: 126.940108 },
@@ -63,18 +63,31 @@ function KakaoMap() {
       });
 
       if (!response.ok) {
-        console.error(
-          `❌ API 호출 실패 (HTTP ${response.status}) - URL: ${url}`
-        );
+        if (response.status === 500) {
+          console.error(`❌ Server error (500) for endpoint: ${url}`);
+          console.error(`📝 API Path: ${url.replace(BASE_URL, "")}`);
+          return {};
+        }
+        if (response.status === 404) {
+          console.error(`❌ Not Found (404) for endpoint: ${url}`);
+          console.error(`📝 API Path: ${url.replace(BASE_URL, "")}`);
+          return {};
+        }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log(`✅ API 호출 성공: ${url}`);
+      console.log(`✅ Successful API call to: ${url.replace(BASE_URL, "")}`);
       return data;
     } catch (error) {
-      console.error(`🔥 API 호출 중 오류: ${url}`, error);
-      throw error; // 호출 측에서 처리 가능하도록 예외 던짐
+      console.error(
+        `🔥 Error details for ${url.replace(BASE_URL, "")}:`,
+        error
+      );
+      if (error.name === "SyntaxError") {
+        console.error("📄 Invalid JSON response from server");
+      }
+      return {};
     }
   };
 

@@ -10,6 +10,7 @@ const LeftSide = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [fetchedData, setFetchedData] = useState({});
   const restaurantRefs = useRef({});
+  const [likeStatus, setLikeStatus] = useState({}); // 찜 상태 관리
 
   const universities = {
     연대: "/images/연대.png",
@@ -20,6 +21,13 @@ const LeftSide = ({
     외대: "/images/외대.png",
   };
 
+  const toggleLike = (restaurantId) => {
+    setLikeStatus((prevState) => ({
+      ...prevState,
+      [restaurantId]: !prevState[restaurantId], // 현재 상태를 토글
+    }));
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,7 +36,9 @@ const LeftSide = ({
           restaurantData.map(async (restaurant) => {
             try {
               const response = await fetch(
-                `http://43.203.118.59:8080/places/id/${restaurant.id}`
+                `http://43.203.118.59:8080/places/name/${encodeURIComponent(
+                  restaurant.name
+                )}`
               );
               const contentType = response.headers.get("Content-Type");
 
@@ -55,7 +65,7 @@ const LeftSide = ({
                 // 데이터 구조화
                 dataMap[restaurant.id] = {
                   ...data,
-                  likePoints, // 정리된 likePoints 추가
+                  likePoints,
                   representativeSentenceMap: {
                     positiveSentences:
                       data.representativeSentenceMap?.positiveSentences || {},
@@ -63,21 +73,27 @@ const LeftSide = ({
                       data.representativeSentenceMap?.negativeSentences || {},
                   },
                 };
+
+                console.log(
+                  `Data for ${restaurant.name}:`,
+                  dataMap[restaurant.id]
+                ); // 확인용 로그
               } else {
                 console.error(
-                  `ID ${restaurant.id} - API 호출 실패. 상태 코드:`,
+                  `Name ${restaurant.name} - API 호출 실패. 상태 코드:`,
                   response.status
                 );
               }
             } catch (error) {
               console.error(
-                `ID ${restaurant.id} - API 호출 중 오류 발생:`,
+                `Name ${restaurant.name} - API 호출 중 오류 발생:`,
                 error
               );
             }
           })
         );
-        setFetchedData(dataMap); // 상태로 저장
+        setFetchedData(dataMap);
+        console.log("Fetched Data Map:", dataMap); // 디버깅용 로그
       } catch (error) {
         console.error("데이터 가져오기 중 오류:", error);
       }
@@ -184,7 +200,7 @@ const LeftSide = ({
             <div
               key={restaurant.id}
               ref={(el) => (restaurantRefs.current[restaurant.id] = el)}
-              className={`p-4 mb-4 bg-white border-2 ${
+              className={`px-4 py-2 mb-4 bg-white border-2 ${
                 selectedRestaurant && selectedRestaurant.id === restaurant.id
                   ? "border-blue-500 bg-blue-50"
                   : "border-gray-400"
@@ -195,28 +211,48 @@ const LeftSide = ({
                 <img
                   src={`/images/${restaurant.category}.png`} // 카테고리 기반 이미지 경로
                   alt={restaurant.name}
-                  className="w-[125px] h-[125px] rounded-lg mr-3"
+                  className="w-[115px] h-[115px] rounded-lg mr-3"
                   onError={(e) => {
                     e.target.src = "/images/default.png"; // 기본 이미지로 대체
                   }}
                 />
                 <div className="space-y-3">
                   <div className="flex-1">
-                    <h2 className="text-2xl font-bold">{restaurant.name}</h2>
+                    <h2 className="text-xl font-bold whitespace-normal break-words max-w-[15ch]">
+                      {restaurant.name}
+                    </h2>
                   </div>
                   {/* 카테고리 표시 */}
-                  <div className="flex mb-4 space-x-2 text-sm font-semibold text-gray-600">
+                  <div className="flex p-1 mb-4 space-x-2 font-semibold text-gray-600 border-2 border-gray-500 rounded-lg">
                     <img
                       src="/images/menu.png"
                       alt="메뉴"
                       className="w-[40px] h-[40px]"
                     />
-                    <p className="mt-2 text-xl">{restaurant.category}</p>
+                    <p className="mt-1 text-2xl "> : {restaurant.category}</p>
+                  </div>
+                  {/* 하트 모양 아이콘 */}
+                  <div className="flex items-center px-2 mt-2 border-2 border-gray-500 rounded-lg">
+                    <p className="text-xl font-bold text-red-600">찜하기 : </p>
+                    <img
+                      src={
+                        likeStatus[restaurant.id]
+                          ? "/images/love.png"
+                          : "/images/empty.png"
+                      } // 상태에 따라 이미지 변경
+                      alt="찜 상태"
+                      className="w-[40px] h-[40px] cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation(); // 이벤트 전파 중지
+                        toggleLike(restaurant.id); // 찜 상태 토글
+                      }}
+                    />
                   </div>
                 </div>
               </div>
               {/* 긍정 및 부정 리뷰 대표 문장 */}
               <div className="text-sm">
+                {/* 긍정 리뷰 섹션 */}
                 <div className="p-2 mb-2 border-2 border-blue-500 rounded-md bg-blue-50">
                   <div className="flex">
                     <img
@@ -225,7 +261,6 @@ const LeftSide = ({
                       className="w-[35px] h-[35px]"
                     />
                     <h3 className="mt-1 ml-3 text-2xl font-bold text-blue-700 ">
-                      {" "}
                       좋아요:
                     </h3>
                   </div>
@@ -236,8 +271,16 @@ const LeftSide = ({
                         }`
                       : "리뷰가 없습니다."}
                   </p>
+                  {/* 첫 번째 긍정 리뷰 추가 */}
+                  {Object.keys(positiveSentences).length > 0 && (
+                    <p className="mt-2 text-gray-700">
+                      <strong>첫 번째 긍정 리뷰:</strong>{" "}
+                      {positiveSentences[Object.keys(positiveSentences)[0]]}
+                    </p>
+                  )}
                 </div>
 
+                {/* 부정 리뷰 섹션 */}
                 <div className="p-2 border-2 border-red-500 rounded-md bg-red-50">
                   <div className="flex">
                     <img
@@ -256,6 +299,13 @@ const LeftSide = ({
                         }`
                       : "리뷰가 없습니다."}
                   </p>
+                  {/* 첫 번째 부정 리뷰 추가 */}
+                  {Object.keys(negativeSentences).length > 0 && (
+                    <p className="mt-2 text-gray-700">
+                      <strong>첫 번째 부정 리뷰:</strong>{" "}
+                      {negativeSentences[Object.keys(negativeSentences)[0]]}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
