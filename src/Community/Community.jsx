@@ -9,7 +9,6 @@ import './Community.css';
 const Community = () => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("자유게시판");
-  const POSTS_PER_PAGE = 5;
   const [selectedPost, setSelectedPost] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [communityTotalPages, setCommunityTotalPages] = useState(1); // 변수명 변경
@@ -30,6 +29,19 @@ const Community = () => {
   });
 
 
+  // UTC 시간 -> KST 시간 변환 함수
+  const formatCreatedAt = (createdAt) => {
+    const utcDate = new Date(createdAt); // UTC 시간
+    const kstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000); // 9시간 추가
+    return kstDate.toLocaleString("ko-KR", { // 한국 시간 형식으로 변환
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  };
   // 게시판 데이터 가져오기
   const fetchPosts = async () => {
     setLoading(true);
@@ -171,7 +183,7 @@ const Community = () => {
       setCurrentPage(pageNumber); // 페이지 변경
     }
   };
-  
+
   <div className="community-pagination">
     {Array.from({ length: communityTotalPages }, (_, index) => (
       <button
@@ -183,7 +195,7 @@ const Community = () => {
       </button>
     ))}
   </div>
-  
+
   // useEffect 수정
   useEffect(() => {
     fetchPosts();
@@ -235,18 +247,23 @@ const Community = () => {
             >
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <h2 className="mb-2 text-lg font-bold">{post.title}</h2>
+                  <h2 className="mb-4 text-2xl font-bold font-['Song Myung']">{post.title}</h2>
+                </div>
+                <div className="mb-4">
+                  <p className="text-sm font-semibold text-gray-600 font-['Song Myung']">
+                    <span className="text-gray-800 font-bold">미리보기:</span>
+                    {post.content.length > 100
+                      ? `${post.content.slice(0, 100)}...`
+                      : post.content}
+                  </p>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="space-y-5">
+                  <div className="space-y-2">
                     <p className="text-sm text-gray-500 font-semibold font-['Song Myung']">
-                      {post.category}
+                      <span className="text-gray-800">작성자:</span> {post.author}
                     </p>
                     <p className="text-sm text-gray-500 font-semibold font-['Song Myung']">
-                      작성자: {post.author}
-                    </p>
-                    <p className="text-sm text-gray-500 font-semibold font-['Song Myung'] font-semibold">
-                      작성일: {post.createdAt}
+                      <span className="text-gray-800">작성일:</span> {formatCreatedAt(post.createdAt)}
                     </p>
                   </div>
                   <div>
@@ -260,6 +277,8 @@ const Community = () => {
                   </div>
                 </div>
               </div>
+
+
             </div>
           ))
         ) : (
@@ -398,53 +417,62 @@ const Community = () => {
 
       {isDetailModalOpen && selectedPost && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
-          <div className="bg-white p-8 rounded-2xl shadow-lg w-[80%] max-w-[700px] max-h-[95%] font-['Song Myung']">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-3xl font-bold">
-                📑제목 : {selectedPost.title}
-              </h2>
-            </div>
-            <div className="flex items-center justify-between mb-4 text-gray-600">
-              <div className="flex flex-col space-y-5 font-semibold">
-                <span className="mr-4">👤작성자: {selectedPost.author}</span>
-                <span>🏷️카테고리: {selectedPost.category}</span>
-              </div>
-              <span className="flex font-semibold">
-                <p className="mr-3"> ⏱️작성 일자 :</p>
-                {new Date(selectedPost.createdAt).toLocaleDateString()}
-              </span>
-            </div>
-            <div className="py-6 my-4 border-t border-b">
-              <p className="mb-3 text-2xl font-semibold">📜글 내용</p>
-              <p className="text-lg text-gray-800 whitespace-pre-wrap">
-                {selectedPost.content}
-              </p>
-              <hr className="my-3" />
-              <p className="my-2 text-2xl font-semibold">🗃️이미지</p>
-              {selectedPost.image && (
-                <div>
-                  <img
-                    src={selectedPost.image}
-                    alt="게시글 이미지"
-                    className="h-auto max-w-full rounded-lg shadow-sm"
-                  />
-                </div>
-              )}
-            </div>
-            <div className="flex justify-end">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCloseDetailModal();
-                }}
-                className="px-4 py-2 text-white transition-colors duration-200 bg-gray-500 rounded-lg hover:bg-gray-600"
-              >
-                닫기
-              </button>
-            </div>
+          <div
+  className="bg-white rounded-2xl shadow-lg w-[80%] max-w-[700px] max-h-[95%] font-['Song Myung'] overflow-hidden"
+>
+  <div className="p-8">
+    <div className="overflow-y-auto max-h-[80vh] -mx-8 px-8">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-3xl font-bold">
+          📑제목 : {selectedPost.title}
+        </h2>
+      </div>
+      <div className="flex items-center justify-between mb-4 text-gray-600">
+        <div className="flex flex-col space-y-5 font-semibold">
+          <span className="mr-4">👤작성자: {selectedPost.author}</span>
+          <span>🏷️카테고리: {selectedPost.category}</span>
+        </div>
+        <span className="flex font-semibold">
+          <p className="mr-3"> ⏱️작성 일자 :</p>
+          {new Date(selectedPost.createdAt).toLocaleDateString()}
+        </span>
+      </div>
+      <div className="py-6 my-4 border-t border-b">
+        <p className="mb-3 text-2xl font-semibold">📜글 내용</p>
+        <p className="text-lg text-gray-800 whitespace-pre-wrap">
+          {selectedPost.content}
+        </p>
+        <hr className="my-3" />
+        <p className="my-2 text-2xl font-semibold">🗃️이미지</p>
+        {selectedPost.image && (
+          <div>
+            <img
+              src={selectedPost.image}
+              alt="게시글 이미지"
+              className="h-auto max-w-full rounded-lg shadow-sm"
+            />
           </div>
+        )}
+      </div>
+    </div>
+    <div className="flex justify-end mt-4">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          handleCloseDetailModal();
+        }}
+        className="px-4 py-2 text-white transition-colors duration-200 bg-gray-500 rounded-lg hover:bg-gray-600"
+      >
+        닫기
+      </button>
+    </div>
+  </div>
+</div>
+
         </div>
       )}
+
+
       {isPlaceModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
           <div className="bg-white p-6 rounded-2xl shadow-lg w-[80%] max-w-[500px]">
