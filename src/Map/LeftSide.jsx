@@ -205,8 +205,13 @@ const LeftSide = ({
                     <h2 className="text-2xl font-bold">{restaurant.name}</h2>
                   </div>
                   {/* 카테고리 표시 */}
-                  <div className="mb-4 text-sm font-semibold text-gray-600">
-                    메뉴: {restaurant.category}
+                  <div className="flex mb-4 space-x-2 text-sm font-semibold text-gray-600">
+                    <img
+                      src="/images/menu.png"
+                      alt="메뉴"
+                      className="w-[40px] h-[40px]"
+                    />
+                    <p className="mt-2 text-xl">{restaurant.category}</p>
                   </div>
                 </div>
               </div>
