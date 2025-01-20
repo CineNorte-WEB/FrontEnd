@@ -261,7 +261,7 @@ const LeftSide = ({
                       className="w-[35px] h-[35px]"
                     />
                     <h3 className="mt-1 ml-3 text-2xl font-bold text-blue-700">
-                      긍정 리뷰:
+                      좋아요:
                     </h3>
                   </div>
                   <p className="mt-1 font-bold">
@@ -272,7 +272,6 @@ const LeftSide = ({
                         }`
                       : "리뷰가 없습니다."}
                   </p>
-                  
                 </div>
 
                 {/* 부정 리뷰 섹션 */}
@@ -284,7 +283,7 @@ const LeftSide = ({
                       className="w-[35px] h-[35px]"
                     />
                     <h3 className="ml-3 text-2xl font-bold text-red-700">
-                      부정 리뷰:
+                      싫어요:
                     </h3>
                   </div>
                   <p className="mt-1 font-bold">
@@ -295,56 +294,12 @@ const LeftSide = ({
                         }`
                       : "리뷰가 없습니다."}
                   </p>
-                  
                 </div>
               </div>
             </div>
           );
         })}
       </div>
-
-      {/* 상세 정보에 긍정/부정 리뷰 전체 표시 */}
-      {selectedRestaurant && fetchedData[selectedRestaurant.id] && (
-        <div className="p-4 mb-4 bg-gray-100 border-2 border-gray-300 rounded-md">
-          <h3 className="text-xl font-bold">긍정 리뷰 전체:</h3>
-          {Object.entries(
-            fetchedData[selectedRestaurant.id]?.representativeSentenceMap
-              ?.positiveSentences || {}
-          ).length > 0 ? (
-            <ul>
-              {Object.entries(
-                fetchedData[selectedRestaurant.id]?.representativeSentenceMap
-                  ?.positiveSentences
-              ).map(([category, sentence], index) => (
-                <li key={index} className="mb-1">
-                  <strong>{category}:</strong> {sentence}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>긍정 리뷰가 없습니다.</p>
-          )}
-
-          <h3 className="mt-4 text-xl font-bold">부정 리뷰 전체:</h3>
-          {Object.entries(
-            fetchedData[selectedRestaurant.id]?.representativeSentenceMap
-              ?.negativeSentences || {}
-          ).length > 0 ? (
-            <ul>
-              {Object.entries(
-                fetchedData[selectedRestaurant.id]?.representativeSentenceMap
-                  ?.negativeSentences
-              ).map(([category, sentence], index) => (
-                <li key={index} className="mb-1">
-                  <strong>{category}:</strong> {sentence}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>부정 리뷰가 없습니다.</p>
-          )}
-        </div>
-      )}
     </div>
   );
 };

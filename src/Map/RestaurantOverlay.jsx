@@ -114,6 +114,43 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
           </div>
         </div>
 
+        {/* 상세 정보에 긍정/부정 리뷰 전체 표시 */}
+        <div className="p-4 mb-4 bg-gray-100 border-2 border-gray-300 rounded-md">
+          <h3 className="text-xl font-bold">긍정 리뷰 전체:</h3>
+          {restaurant.representativeSentenceMap?.positiveSentences &&
+          Object.keys(restaurant.representativeSentenceMap.positiveSentences)
+            .length > 0 ? (
+            <ul>
+              {Object.entries(
+                restaurant.representativeSentenceMap.positiveSentences
+              ).map(([category, sentence], index) => (
+                <li key={index} className="mb-1">
+                  <strong>{category}:</strong> {sentence}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>긍정 리뷰가 없습니다.</p>
+          )}
+
+          <h3 className="mt-4 text-xl font-bold">부정 리뷰 전체:</h3>
+          {restaurant.representativeSentenceMap?.negativeSentences &&
+          Object.keys(restaurant.representativeSentenceMap.negativeSentences)
+            .length > 0 ? (
+            <ul>
+              {Object.entries(
+                restaurant.representativeSentenceMap.negativeSentences
+              ).map(([category, sentence], index) => (
+                <li key={index} className="mb-1">
+                  <strong>{category}:</strong> {sentence}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>부정 리뷰가 없습니다.</p>
+          )}
+        </div>
+
         {/* 메뉴 정보 */}
         {validMenus.length > 0 && (
           <div className="mb-6">
