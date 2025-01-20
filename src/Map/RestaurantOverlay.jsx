@@ -121,40 +121,59 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
         </div>
 
         {/* 상세 정보에 긍정/부정 리뷰 전체 표시 */}
-        <div className="p-4 mb-4 bg-gray-100 border-2 border-gray-300 rounded-md">
-          <h3 className="text-xl font-bold">긍정 리뷰 전체:</h3>
-          {restaurant.representativeSentenceMap?.positiveSentences &&
-          Object.keys(restaurant.representativeSentenceMap.positiveSentences)
-            .length > 0 ? (
-            <ul>
-              {Object.entries(
-                restaurant.representativeSentenceMap.positiveSentences
-              ).map(([category, sentence], index) => (
-                <li key={index} className="mb-1">
-                  <strong>{category}:</strong> {sentence}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>긍정 리뷰가 없습니다.</p>
-          )}
+        <div className="mb-3 ">
+          <div className="p-2 mb-2 bg-white border-2 border-blue-500 rounded-lg">
+            <div className="flex mb-2 space-x-3">
+              {" "}
+              <img
+                src="/images/like.png"
+                alt="좋아요"
+                className="w-[40px] h-[40px]"
+              />
+              <h3 className="mt-2 text-xl font-bold">긍정 리뷰 :</h3>
+            </div>
 
-          <h3 className="mt-4 text-xl font-bold">부정 리뷰 전체:</h3>
-          {restaurant.representativeSentenceMap?.negativeSentences &&
-          Object.keys(restaurant.representativeSentenceMap.negativeSentences)
-            .length > 0 ? (
-            <ul>
-              {Object.entries(
-                restaurant.representativeSentenceMap.negativeSentences
-              ).map(([category, sentence], index) => (
-                <li key={index} className="mb-1">
-                  <strong>{category}:</strong> {sentence}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>부정 리뷰가 없습니다.</p>
-          )}
+            {restaurant.representativeSentenceMap?.positiveSentences &&
+            Object.keys(restaurant.representativeSentenceMap.positiveSentences)
+              .length > 0 ? (
+              <ul>
+                {Object.entries(
+                  restaurant.representativeSentenceMap.positiveSentences
+                ).map(([category, sentence], index) => (
+                  <li key={index} className="mb-1">
+                    <strong>{category}:</strong> {sentence}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>긍정 리뷰가 없습니다.</p>
+            )}
+          </div>
+          <div className="p-2 bg-white border-2 border-red-400 rounded-lg">
+            <div className="flex mb-2 space-x-3">
+              <img
+                src="/images/dislike.png"
+                alt="싫어요"
+                className="w-[40px] h-[40px]"
+              />
+              <h3 className="mt-1 text-xl font-bold ">부정 리뷰 :</h3>
+            </div>
+            {restaurant.representativeSentenceMap?.negativeSentences &&
+            Object.keys(restaurant.representativeSentenceMap.negativeSentences)
+              .length > 0 ? (
+              <ul>
+                {Object.entries(
+                  restaurant.representativeSentenceMap.negativeSentences
+                ).map(([category, sentence], index) => (
+                  <li key={index} className="mb-1">
+                    <strong>{category}:</strong> {sentence}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>부정 리뷰가 없습니다.</p>
+            )}
+          </div>
         </div>
 
         {/* 메뉴 정보 */}
