@@ -193,24 +193,38 @@ const LeftSide = ({
             >
               <div className="flex items-center mb-4">
                 <img
-                  src={
-                    restaurant.imageUrl ||
-                    `/images/${restaurant.category || "default"}.png`
-                  }
+                  src={`/images/${restaurant.category}.png`} // 카테고리 기반 이미지 경로
                   alt={restaurant.name}
+                  className="w-[125px] h-[125px] rounded-lg mr-3"
                   onError={(e) => {
-                    e.target.src = "/images/한식.png"; // 기본 이미지로 대체
+                    e.target.src = "/images/default.png"; // 기본 이미지로 대체
                   }}
                 />
-                <div className="flex-1">
-                  <h2 className="text-xl font-bold">{restaurant.name}</h2>
+                <div className="space-y-3">
+                  <div className="flex-1">
+                    <h2 className="text-2xl font-bold">{restaurant.name}</h2>
+                  </div>
+                  {/* 카테고리 표시 */}
+                  <div className="mb-4 text-sm font-semibold text-gray-600">
+                    메뉴: {restaurant.category}
+                  </div>
                 </div>
               </div>
               {/* 긍정 및 부정 리뷰 대표 문장 */}
               <div className="text-sm">
                 <div className="p-2 mb-2 border-2 border-blue-500 rounded-md bg-blue-50">
-                  <h3 className="font-bold text-blue-700">😃 긍정 리뷰:</h3>
-                  <p>
+                  <div className="flex">
+                    <img
+                      src="/images/like.png"
+                      alt="좋아요"
+                      className="w-[35px] h-[35px]"
+                    />
+                    <h3 className="mt-1 ml-3 text-2xl font-bold text-blue-700 ">
+                      {" "}
+                      좋아요:
+                    </h3>
+                  </div>
+                  <p className="mt-1 font-bold">
                     {Object.keys(positiveSentences).length > 0
                       ? `${Object.keys(positiveSentences)[0]}: ${
                           positiveSentences[Object.keys(positiveSentences)[0]]
@@ -220,8 +234,17 @@ const LeftSide = ({
                 </div>
 
                 <div className="p-2 border-2 border-red-500 rounded-md bg-red-50">
-                  <h3 className="font-bold text-red-700">😡 부정 리뷰:</h3>
-                  <p>
+                  <div className="flex">
+                    <img
+                      src="/images/dislike.png"
+                      alt="싫어요"
+                      className="w-[35px] h-[35px]"
+                    />
+                    <h3 className="ml-3 text-2xl font-bold text-red-700">
+                      싫어요:
+                    </h3>
+                  </div>
+                  <p className="mt-1 font-bold">
                     {Object.keys(negativeSentences).length > 0
                       ? `${Object.keys(negativeSentences)[0]}: ${
                           negativeSentences[Object.keys(negativeSentences)[0]]
