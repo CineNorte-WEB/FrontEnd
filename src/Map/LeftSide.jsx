@@ -8,8 +8,7 @@ const LeftSide = ({
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [selectedUniversity, setSelectedUniversity] = useState("연대");
   const [searchQuery, setSearchQuery] = useState("");
-  const [modalContent, setModalContent] = useState(null); // 모달 내용 상태
-  const [fetchedData, setFetchedData] = useState({}); // 서버에서 가져온 데이터 저장
+  const [fetchedData, setFetchedData] = useState({});
   const restaurantRefs = useRef({});
 
   const universities = {
@@ -35,7 +34,35 @@ const LeftSide = ({
 
               if (response.ok && contentType.includes("application/json")) {
                 const data = await response.json();
-                dataMap[restaurant.id] = data; // ID를 키로 매핑
+
+                // likePoints 파싱 및 필터링
+                let likePoints = [];
+                if (data.likePoints) {
+                  try {
+                    const parsedPoints = JSON.parse(
+                      data.likePoints.replace(/'/g, '"')
+                    );
+                    likePoints = parsedPoints.filter(
+                      (point) =>
+                        point.category !== "항목 없음" &&
+                        point.category.trim() !== ""
+                    );
+                  } catch (e) {
+                    console.warn("likePoints 파싱 오류:", e);
+                  }
+                }
+
+                // 데이터 구조화
+                dataMap[restaurant.id] = {
+                  ...data,
+                  likePoints, // 정리된 likePoints 추가
+                  representativeSentenceMap: {
+                    positiveSentences:
+                      data.representativeSentenceMap?.positiveSentences || {},
+                    negativeSentences:
+                      data.representativeSentenceMap?.negativeSentences || {},
+                  },
+                };
               } else {
                 console.error(
                   `ID ${restaurant.id} - API 호출 실패. 상태 코드:`,
@@ -50,14 +77,14 @@ const LeftSide = ({
             }
           })
         );
-        setFetchedData(dataMap); // 모든 데이터를 상태로 저장
+        setFetchedData(dataMap); // 상태로 저장
       } catch (error) {
         console.error("데이터 가져오기 중 오류:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [restaurantData]);
 
   const handleRestaurantClick = (restaurant) => {
     setSelectedRestaurant(restaurant);
@@ -101,14 +128,6 @@ const LeftSide = ({
         alert("존재하지 않는 가게입니다.");
       }
     }
-  };
-
-  const openModal = (title, content) => {
-    setModalContent({ title, content });
-  };
-
-  const closeModal = () => {
-    setModalContent(null);
   };
 
   return (
@@ -156,10 +175,10 @@ const LeftSide = ({
           const restaurantDetails = fetchedData[restaurant.id] || {};
           const positiveSentences =
             restaurantDetails.representativeSentenceMap?.positiveSentences ||
-            [];
+            {};
           const negativeSentences =
             restaurantDetails.representativeSentenceMap?.negativeSentences ||
-            [];
+            {};
 
           return (
             <div
@@ -174,11 +193,13 @@ const LeftSide = ({
             >
               <div className="flex items-center mb-4">
                 <img
-                  src={restaurant.imageUrl || "/images/default-restaurant.png"}
+                  src={
+                    restaurant.imageUrl ||
+                    `/images/${restaurant.category || "default"}.png`
+                  }
                   alt={restaurant.name}
-                  className="w-20 h-20 mr-4 rounded-lg"
                   onError={(e) => {
-                    e.target.src = "/images/default-restaurant.png";
+                    e.target.src = "/images/한식.png"; // 기본 이미지로 대체
                   }}
                 />
                 <div className="flex-1">
@@ -187,54 +208,26 @@ const LeftSide = ({
               </div>
               {/* 긍정 및 부정 리뷰 대표 문장 */}
               <div className="text-sm">
-                <div
-                  className="p-2 mb-2 font-bold text-black bg-white border-2 border-blue-500 rounded-lg cursor-pointer font-nanum"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openModal(
-                      "😃긍정 리뷰",
-                      positiveSentences.length > 0
-                        ? positiveSentences
-                        : ["리뷰가 없습니다."]
-                    );
-                  }}
-                >
-                  <div className="flex space-x-3">
-                    <img
-                      src="/images/like.png"
-                      alt="좋아요"
-                      className="w-[40px] h-[40px]"
-                    />
-                    <strong className="mt-2 text-lg font-bold">좋아요:</strong>
-                    <span className="mt-3">
-                      {positiveSentences[0] || "리뷰가 없습니다."}
-                    </span>
-                  </div>
+                <div className="p-2 mb-2 border-2 border-blue-500 rounded-md bg-blue-50">
+                  <h3 className="font-bold text-blue-700">😃 긍정 리뷰:</h3>
+                  <p>
+                    {Object.keys(positiveSentences).length > 0
+                      ? `${Object.keys(positiveSentences)[0]}: ${
+                          positiveSentences[Object.keys(positiveSentences)[0]]
+                        }`
+                      : "리뷰가 없습니다."}
+                  </p>
                 </div>
-                <div
-                  className="p-2 font-bold text-black bg-white border-2 border-red-600 rounded-lg cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openModal(
-                      "😡부정 리뷰",
-                      negativeSentences.length > 0
-                        ? negativeSentences
-                        : ["리뷰가 없습니다."]
-                    );
-                  }}
-                >
-                  <div className="flex space-x-3">
-                    <img
-                      src="/images/dislike.png"
-                      alt="싫어요"
-                      className="w-[40px] h-[40px]"
-                    />
-                    <strong className="mt-2 text-lg">싫어요:</strong>
-                    <span className="mt-3 text-sm">
-                      {" "}
-                      {negativeSentences[0] || "리뷰가 없습니다."}
-                    </span>
-                  </div>
+
+                <div className="p-2 border-2 border-red-500 rounded-md bg-red-50">
+                  <h3 className="font-bold text-red-700">😡 부정 리뷰:</h3>
+                  <p>
+                    {Object.keys(negativeSentences).length > 0
+                      ? `${Object.keys(negativeSentences)[0]}: ${
+                          negativeSentences[Object.keys(negativeSentences)[0]]
+                        }`
+                      : "리뷰가 없습니다."}
+                  </p>
                 </div>
               </div>
             </div>
@@ -242,25 +235,46 @@ const LeftSide = ({
         })}
       </div>
 
-      {/* 모달 창 */}
-      {modalContent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="p-6 bg-white rounded-lg shadow-lg w-96">
-            <h2 className="mb-4 text-lg font-bold">{modalContent.title}</h2>
-            <ul className="pl-5 list-disc">
-              {modalContent.content.map((sentence, index) => (
-                <li key={index} className="mb-2 text-sm">
-                  {sentence}
+      {/* 상세 정보에 긍정/부정 리뷰 전체 표시 */}
+      {selectedRestaurant && (
+        <div className="p-4 mb-4 bg-gray-100 border-2 border-gray-300 rounded-md">
+          <h3 className="text-xl font-bold">긍정 리뷰 전체:</h3>
+          {Object.keys(
+            fetchedData[selectedRestaurant.id]?.representativeSentenceMap
+              ?.positiveSentences || {}
+          ).length > 0 ? (
+            <ul>
+              {Object.entries(
+                fetchedData[selectedRestaurant.id]?.representativeSentenceMap
+                  ?.positiveSentences || {}
+              ).map(([category, sentence], index) => (
+                <li key={index} className="mb-1">
+                  <strong>{category}:</strong> {sentence}
                 </li>
               ))}
             </ul>
-            <button
-              className="px-4 py-2 mt-4 text-white bg-blue-500 rounded-md"
-              onClick={closeModal}
-            >
-              닫기
-            </button>
-          </div>
+          ) : (
+            <p>긍정 리뷰가 없습니다.</p>
+          )}
+
+          <h3 className="mt-4 text-xl font-bold">부정 리뷰 전체:</h3>
+          {Object.keys(
+            fetchedData[selectedRestaurant.id]?.representativeSentenceMap
+              ?.negativeSentences || {}
+          ).length > 0 ? (
+            <ul>
+              {Object.entries(
+                fetchedData[selectedRestaurant.id]?.representativeSentenceMap
+                  ?.negativeSentences || {}
+              ).map(([category, sentence], index) => (
+                <li key={index} className="mb-1">
+                  <strong>{category}:</strong> {sentence}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>부정 리뷰가 없습니다.</p>
+          )}
         </div>
       )}
     </div>

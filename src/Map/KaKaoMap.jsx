@@ -63,31 +63,18 @@ function KakaoMap() {
       });
 
       if (!response.ok) {
-        if (response.status === 500) {
-          console.error(`❌ Server error (500) for endpoint: ${url}`);
-          console.error(`📝 API Path: ${url.replace(BASE_URL, "")}`);
-          return {};
-        }
-        if (response.status === 404) {
-          console.error(`❌ Not Found (404) for endpoint: ${url}`);
-          console.error(`📝 API Path: ${url.replace(BASE_URL, "")}`);
-          return {};
-        }
+        console.error(
+          `❌ API 호출 실패 (HTTP ${response.status}) - URL: ${url}`
+        );
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log(`✅ Successful API call to: ${url.replace(BASE_URL, "")}`);
+      console.log(`✅ API 호출 성공: ${url}`);
       return data;
     } catch (error) {
-      console.error(
-        `🔥 Error details for ${url.replace(BASE_URL, "")}:`,
-        error
-      );
-      if (error.name === "SyntaxError") {
-        console.error("📄 Invalid JSON response from server");
-      }
-      return {};
+      console.error(`🔥 API 호출 중 오류: ${url}`, error);
+      throw error; // 호출 측에서 처리 가능하도록 예외 던짐
     }
   };
 

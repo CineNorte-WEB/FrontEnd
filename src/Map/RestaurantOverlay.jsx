@@ -20,11 +20,10 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
     try {
       let points = [];
       if (typeof likePoints === "string") {
-        points = JSON.parse(likePoints);
+        points = JSON.parse(likePoints); // JSON 문자열 파싱
       } else {
         points = likePoints || [];
       }
-      // 항목없음 카테고리 제외하고 반환
       return points.filter(
         (point) =>
           point.category !== "항목 없음" && point.category.trim() !== ""
@@ -59,9 +58,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
           />
         </div>
         <div className="flex justify-between mb-2">
-          <h3 className="text-lg font-bold font-nanum">
-            {restaurant.name}
-          </h3>
+          <h3 className="text-lg font-bold font-nanum">{restaurant.name}</h3>
         </div>
         <p className="mb-2 text-sm text-gray-600 font-nanum">
           <strong>주소:</strong> {restaurant.address}
@@ -80,9 +77,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
       onClick={(e) => e.stopPropagation()}
     >
       <div className="sticky top-0 z-10 flex justify-between p-3 bg-white border-2 border-gray-200">
-        <h2 className="text-2xl font-bold font-nanum">
-          {restaurant.name}
-        </h2>
+        <h2 className="text-2xl font-bold font-nanum">{restaurant.name}</h2>
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -149,9 +144,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
         {/* 좋아요 포인트 */}
         {restaurant.likePoints && restaurant.likePoints.length > 0 && (
           <div className="mb-6">
-            <h3 className="mb-3 text-xl font-bold font-nanum">
-              좋아요 포인트
-            </h3>
+            <h3 className="mb-3 text-xl font-bold font-nanum">좋아요 포인트</h3>
             <div className="p-4 space-y-4 rounded-lg bg-gray-50">
               {formatLikePoints(restaurant.likePoints).map((point, index) => (
                 <div key={index} className="font-nanum">
@@ -188,9 +181,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
                       {"⭐".repeat(Math.round(review.rating))}
                     </span>
                   </div>
-                  <p className="text-gray-700 font-nanum">
-                    {review.content}
-                  </p>
+                  <p className="text-gray-700 font-nanum">{review.content}</p>
                   <p className="mt-2 text-sm text-gray-500 font-nanum">
                     {review.date}
                   </p>

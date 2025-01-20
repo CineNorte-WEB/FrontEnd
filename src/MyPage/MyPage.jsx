@@ -13,67 +13,57 @@ const MyPage = () => {
   const [userId, setUserId] = useState(null);
   const [currentComponent, setCurrentComponent] = useState("profile");
   const [bookmarks, setBookmarks] = useState([]);
-  const [boards, setBoards] = useState([]);
+  const [combinedBoards, setCombinedBoards] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 번호
+  const [pageSize, setPageSize] = useState(5); // 한 페이지에 표시할 게시글 수
+  const [totalPosts, setTotalPosts] = useState(0); // totalElements 저장
+  const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
   const [profile, setProfile] = useState(null); // 프로필 상태 추가
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
+  // 초기 데이터 가져오기
   useEffect(() => {
-    const fetchBoards = async () => {
+    const fetchInitialData = async () => {
+      setLoading(true);
       try {
-        const [reviewsResponse, boardsResponse] = await Promise.all([
-          apiClient.get("/users/reviews"),
-          apiClient.get("/users/boards"),
+        const [profileResponse, postsResponse] = await Promise.all([
+          apiClient.get("/users/profile"),
+          apiClient.get("/users/posts", {
+            params: { page: currentPage, size: pageSize },
+          }),
         ]);
 
-        // 리뷰와 일반 게시판 데이터를 하나로 합치기
-        const combinedBoards = [
-          ...reviewsResponse.data.map((review) => ({
-            id: review.id,
-            title: review.title,
-            category: "리뷰게시판",
-            content: review.content,
-            author: review.userNickname,
-            placeName: review.placeName, // 장소 이름 추가
-            type: "review", // 리뷰 게시판 타입 추가
-            createdAt: review.createdAt,
-          })),
-          ...boardsResponse.data.map((board) => ({
-            id: board.id,
-            title: board.title,
-            category: "자유게시판",
-            content: board.content,
-            author: board.userNickname,
-            type: "board", // 일반 게시판 타입 추가
-            createdAt: board.createdAt,
-          })),
-        ];
+        // 프로필 데이터 설정
+        setProfile(profileResponse.data);
+        setUserId(profileResponse.data.id);
 
-        setBoards(combinedBoards);
-        setLoading(false);
+        // 게시글 데이터 설정
+        const postsData = postsResponse.data.content.map((post) => ({
+          id: post.id,
+          title: post.title,
+          content: post.content,
+          category: post.category,
+          createdAt: post.createdAt,
+          type: post.type,
+        }));
+        setCombinedBoards(postsData);
+        setTotalPosts(postsResponse.data.totalElements);
+        setTotalPages(postsResponse.data.totalPages);
       } catch (error) {
-        console.error("게시판 데이터를 가져오는 중 오류:", error);
-        setLoading(false);
+        console.error("데이터 로딩 중 오류 발생:", error);
       }
+      setLoading(false);
     };
 
-    fetchBoards();
-  }, []);
+    fetchInitialData();
+  }, [currentPage, pageSize]);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await apiClient.get("/users/profile"); // axios.js가 Authorization 헤더 처리
-        setProfile(response.data); // 프로필 데이터 설정
-        setUserId(response.data.id); // userId를 상태로 저장
-        setLoading(false);
-      } catch (error) {
-        console.error("프로필 데이터를 가져오는 중 오류:", error);
-        setLoading(false);
-      }
-    };
+  const handlePageChange = (page) => {
+    if (page >= 0 && page < totalPages) {
+      setCurrentPage(page);
+    }
+  };
   
-    fetchProfile();
-  }, []);
 
   // 북마크 정보 가져오기
   useEffect(() => {
@@ -104,19 +94,18 @@ const MyPage = () => {
   const renderComponent = () => {
     switch (currentComponent) {
       case "profile":
-        return <MyPageProfile   setProfile={setProfile}
-        profile={profile} bookmarks={bookmarks} boards={boards} />;
+        return <MyPageProfile profile={profile} setProfile={setProfile} boards={combinedBoards} totalPosts={totalPosts}/>;
       case "mylist":
         return <MyPageList bookmarks={bookmarks} setBookmarks={setBookmarks} />;
       case "write":
-        return <MyPageWrite boards={boards} setBoards={setBoards} />;
+        return <MyPageWrite currentPage={currentPage} bookmarks={bookmarks} boards={combinedBoards} totalPages={totalPages} onPageChange={handlePageChange} setBoards={setCombinedBoards} setCombinedBoards={setCombinedBoards}/>;
       default:
-        return <MyPageProfile profile={profile} bookmarks={bookmarks} boards={boards} />;
+        return <MyPageProfile profile={profile} bookmarks={bookmarks} posts={combinedBoards} />;
     }
   };
 
   return (
-    <div className="mypage font-nanum">
+    <div className="mypage font-['Song Myung']">
       <Common />
       <header className="mypage-header">
         <Brand />
@@ -124,9 +113,9 @@ const MyPage = () => {
       </header>
       <p className="community-subtitle">내 정보와 맛집 기록을 확인해보세요!</p>
       <div className="container">
-        <div className="mypage-menubar font-nanum">
+        <div className="mypage-menubar font-['Song Myung']">
           <div
-            className={`menu font-nanum ${
+            className={`menu font-['Song Myung'] ${
               currentComponent === "profile" ? "active" : ""
             }`}
             onClick={() => handleMenuClick("profile")}
@@ -134,7 +123,7 @@ const MyPage = () => {
             회원정보
           </div>
           <div
-            className={`menu font-nanum ${
+            className={`menu font-['Song Myung'] ${
               currentComponent === "write" ? "active" : ""
             }`}
             onClick={() => handleMenuClick("write")}
@@ -142,7 +131,7 @@ const MyPage = () => {
             내가 쓴 글
           </div>
           <div
-            className={`menu font-nanum ${
+            className={`menu font-['Song Myung'] ${
               currentComponent === "mylist" ? "active" : ""
             }`}
             onClick={() => handleMenuClick("mylist")}
@@ -150,7 +139,7 @@ const MyPage = () => {
             찜한 리스트
           </div>
         </div>
-        <div className="menu-content font-nanum">{renderComponent()}</div>
+        <div className="menu-content font-['Song Myung']">{renderComponent()}</div>
       </div>
     </div>
   );

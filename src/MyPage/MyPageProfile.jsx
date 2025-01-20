@@ -8,7 +8,8 @@ export default function MyPageProfile({
   profile,
   setProfile, // 부모에서 전달받은 상태 업데이트 함수
   bookmarks = [],
-  boards = [],
+  posts = [],
+  totalPosts = 0, // totalElements를 props로 받음
 }) {
   const [editedProfile, setEditedProfile] = useState({ ...profile });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -86,34 +87,34 @@ export default function MyPageProfile({
   };
 
   return (
-    <div className="profile-container font-nanum">
-      <div className="profile-content font-nanum">
-        <div className="profile-row font-nanum">
-          <span className="profile-label font-nanum">닉네임:</span>
-          <span className="profile-value font-nanum">{profile.nickname}</span>
+    <div className="profile-container font-['Song Myung']">
+      <div className="profile-content font-['Song Myung']">
+        <div className="profile-row font-['Song Myung']">
+          <span className="profile-label font-['Song Myung']">닉네임:</span>
+          <span className="profile-value font-['Song Myung']">{profile.nickname}</span>
         </div>
-        <div className="profile-row font-nanum">
-          <span className="profile-label font-nanum">ID(이메일):</span>
-          <span className="profile-value font-nanum">{profile.email}</span>
+        <div className="profile-row font-['Song Myung']">
+          <span className="profile-label font-['Song Myung']">ID(이메일):</span>
+          <span className="profile-value font-['Song Myung']">{profile.email}</span>
         </div>
-        <div className="profile-row font-nanum">
-          <span className="profile-label font-nanum">내가 쓴 글:</span>
-          <span className="profile-value font-nanum">
-            {Array.isArray(boards) ? boards.length : 0}개
+        <div className="profile-row font-['Song Myung']">
+          <span className="profile-label font-['Song Myung']">내가 쓴 글:</span>
+          <span className="profile-value font-['Song Myung']">
+          {totalPosts}개
           </span>
         </div>
-        <div className="profile-row font-nanum">
-          <span className="profile-label font-nanum">내가 찜한 리스트:</span>
-          <span className="profile-value font-nanum">
+        <div className="profile-row font-['Song Myung']">
+          <span className="profile-label font-['Song Myung']">내가 찜한 리스트:</span>
+          <span className="profile-value font-['Song Myung']">
             {Array.isArray(bookmarks) ? bookmarks.length : 0}곳
           </span>
         </div>
-        <div className="profile-buttons font-nanum">
-          <button className="edit-button font-nanum" onClick={handleEditClick}>
+        <div className="profile-buttons font-['Song Myung']">
+          <button className="edit-button font-['Song Myung']" onClick={handleEditClick}>
             <GoPencil />
             수정하기
           </button>
-          <button className="logout-button font-nanum" onClick={handleDeleteClick}>
+          <button className="logout-button font-['Song Myung']" onClick={handleDeleteClick}>
             <IoExitOutline />
             탈퇴하기
           </button>
@@ -122,7 +123,7 @@ export default function MyPageProfile({
 
       {isEditModalOpen && (
         <div className="modal-overlay">
-          <div className="modal font-nanum">
+          <div className="modal font-['Song Myung']">
             <h2>프로필 수정</h2>
             <div className="modal-input-group">
               <label>닉네임</label>
@@ -131,7 +132,7 @@ export default function MyPageProfile({
                 name="nickname"
                 value={editedProfile.nickname}
                 onChange={handleInputChange}
-                className="modal-input font-nanum"
+                className="modal-input font-['Song Myung']"
               />
             </div>
             <div className="modal-input-group">
@@ -141,14 +142,14 @@ export default function MyPageProfile({
                 name="email"
                 value={editedProfile.email}
                 onChange={handleInputChange}
-                className="modal-input font-nanum"
+                className="modal-input font-['Song Myung']"
               />
             </div>
             <div className="modal-buttons">
-              <button onClick={saveEdit} className="confirm-button font-nanum">
+              <button onClick={saveEdit} className="confirm-button font-['Song Myung']">
                 저장
               </button>
-              <button onClick={cancelEdit} className="cancel-button font-nanum">
+              <button onClick={cancelEdit} className="cancel-button font-['Song Myung']">
                 취소
               </button>
             </div>
@@ -158,13 +159,13 @@ export default function MyPageProfile({
 
       {isDeleteModalOpen && (
         <div className="modal-overlay">
-          <div className="modal font-nanum">
+          <div className="modal font-['Song Myung']">
             <h2>정말로 탈퇴하시겠습니까?</h2>
             <div className="modal-buttons">
-              <button onClick={confirmDelete} className="confirm-button font-nanum">
+              <button onClick={confirmDelete} className="confirm-button font-['Song Myung']">
                 탈퇴
               </button>
-              <button onClick={cancelDelete} className="cancel-button font-nanum">
+              <button onClick={cancelDelete} className="cancel-button font-['Song Myung']">
                 취소
               </button>
             </div>

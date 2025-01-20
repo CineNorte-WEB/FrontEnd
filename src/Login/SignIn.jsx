@@ -132,7 +132,7 @@ function SignIn() {
               <input
                 type="email"
                 placeholder="이메일 주소를 입력해주세요."
-                className="w-full px-12 py-3 border border-black rounded-lg font-nanum"
+                className="w-full px-8 py-3 border border-black rounded-lg font-nanum"
                 {...register("email", {
                   required: "이메일은 필수 입력입니다.",
                   pattern: {
@@ -154,11 +154,11 @@ function SignIn() {
             <p className="mb-2 text-lg font-bold text-gray-700 font-nanum">
               비밀번호
             </p>
-            <MdLock className="absolute text-2xl text-gray-500 left-3 bottom-3" />
+            <MdLock className="absolute text-3xl text-gray-500 left-3 bottom-4" />
             <input
               type={keyVisible ? "text" : "password"}
               placeholder="숫자 및 특수문자를 포함하여 8자 이상 작성해주세요."
-              className="w-full px-12 py-3 border border-black rounded-lg font-nanum"
+              className="w-full px-8 py-3 border border-black rounded-lg font-nanum"
               {...register("password", {
                 required: "비밀번호는 필수 입력입니다.",
                 minLength: {
@@ -190,11 +190,11 @@ function SignIn() {
             <p className="mb-2 text-lg font-bold text-gray-700 font-nanum">
               비밀번호 확인
             </p>
-            <MdLockPerson className="absolute text-2xl text-gray-500 left-3 bottom-3" />
+            <MdLockPerson className="absolute text-2xl text-gray-500 left-3 bottom-4" />
             <input
               type={confirmVisible ? "text" : "password"}
               placeholder="입력한 비밀번호를 다시 한 번 입력해주세요."
-              className="w-full px-12 py-3 border border-black rounded-lg font-nanum"
+              className="w-full px-8 py-3 border border-black rounded-lg font-nanum"
               {...register("passwordConfirm", {
                 required: "비밀번호 확인은 필수입니다.",
                 validate: (value) =>
@@ -224,11 +224,11 @@ function SignIn() {
             <p className="mb-2 text-lg font-bold text-gray-700 font-nanum">
               닉네임
             </p>
-            <TbUser className="absolute text-2xl text-gray-500 left-3 bottom-3" />
+            <TbUser className="absolute text-2xl text-gray-500 left-3 bottom-8" />
             <input
               type="text"
               placeholder="닉네임을 입력해주세요."
-              className="w-full px-12 py-3 border border-black rounded-lg font-nanum"
+              className="w-full px-8 py-3 mb-4 border border-black rounded-lg font-nanum"
               {...register("nickname", {
                 required: "닉네임은 필수 입력입니다.",
                 minLength: {
@@ -247,7 +247,7 @@ function SignIn() {
           {/* 가입 버튼 */}
           <button
             type="submit"
-            className="w-full py-3 mt-4 text-xl font-bold text-white bg-red-700 rounded-lg font-nanum hover:bg-red-600"
+            className="w-full py-3 text-xl font-bold text-white bg-red-700 rounded-lg font-nanum hover:bg-red-600"
           >
             🍴가입하여 나만의 맛집 찾기
           </button>
