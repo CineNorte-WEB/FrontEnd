@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import RestaurantOverlay from "./RestaurantOverlay"; // RestaurantOverlay 컴포넌트 import
 import axios from "axios";
+import apiClient from "../api/axios";
 const LeftSide = ({
   restaurantData,
   onSelectRestaurant,
@@ -24,28 +25,26 @@ const LeftSide = ({
   };
 
   const toggleLike = async (restaurantId) => {
-    const isLiked = likeStatus[restaurantId];
-
+    const isLiked = likeStatus[restaurantId]; // 현재 찜 상태 확인
+  
     try {
       if (!isLiked) {
         // 찜 추가 요청
         await apiClient.post(`/users/bookmarks/${restaurantId}`, {});
-
+  
         setLikeStatus((prevState) => ({
           ...prevState,
           [restaurantId]: true, // 찜 상태를 true로 업데이트
         }));
-
         console.log(`Bookmark added for restaurant ${restaurantId}`);
       } else {
         // 찜 삭제 요청
         await apiClient.delete(`/users/bookmarks/${restaurantId}`);
-
+  
         setLikeStatus((prevState) => ({
           ...prevState,
           [restaurantId]: false, // 찜 상태를 false로 업데이트
         }));
-
         console.log(`Bookmark removed for restaurant ${restaurantId}`);
       }
     } catch (error) {
@@ -53,6 +52,7 @@ const LeftSide = ({
       alert("찜하기 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
+  
 
   useEffect(() => {
     const fetchData = async () => {
