@@ -203,7 +203,7 @@ const Community = () => {
 
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-[#c02231] w-full relative font-['Song Myung']">
+    <div className="flex flex-col justify-center items-center min-h-screen bg-rose-800 w-full relative font-['Song Myung']">
       <Common />
       <header className="relative flex items-center justify-between w-full px-8 pt-4">
         <Brand className="w-[200px] aspect-[2] absolute top-1/2 left-8 -translate-y-1/2 cursor-pointer border-b-[3px] border-white pb-[0.2rem]" />
