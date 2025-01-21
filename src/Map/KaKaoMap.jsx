@@ -3,7 +3,7 @@ import Common from "../components/Common";
 import LeftSide from "./LeftSide";
 import RestaurantOverlay from "./RestaurantOverlay";
 
-const BASE_URL = "http://43.203.118.59:8080";
+const BASE_URL = "http://3.36.90.46:8080";
 
 const universityLocations = {
   서강대: { lat: 37.551292, lng: 126.940108 },

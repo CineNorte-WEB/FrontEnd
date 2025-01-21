@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import RestaurantOverlay from "./RestaurantOverlay"; // RestaurantOverlay 컴포넌트 import
 
 const LeftSide = ({
   restaurantData,
@@ -8,9 +9,9 @@ const LeftSide = ({
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [selectedUniversity, setSelectedUniversity] = useState("연대");
   const [searchQuery, setSearchQuery] = useState("");
-  const [modalContent, setModalContent] = useState(null); // 모달 내용 상태
-  const [fetchedData, setFetchedData] = useState({}); // 서버에서 가져온 데이터 저장
+  const [fetchedData, setFetchedData] = useState({});
   const restaurantRefs = useRef({});
+  const [likeStatus, setLikeStatus] = useState({}); // 찜 상태 관리
 
   const universities = {
     연대: "/images/연대.png",
@@ -21,47 +22,97 @@ const LeftSide = ({
     외대: "/images/외대.png",
   };
 
+  const toggleLike = (restaurantId) => {
+    setLikeStatus((prevState) => ({
+      ...prevState,
+      [restaurantId]: !prevState[restaurantId], // 현재 상태를 토글
+    }));
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const dataMap = {};
-        await Promise.all(
+        await Promise.allSettled(
           restaurantData.map(async (restaurant) => {
             try {
               const response = await fetch(
-                `http://43.203.118.59:8080/places/id/${restaurant.id}`
+                `http://3.36.90.46:8080/places/name/${encodeURIComponent(
+                  restaurant.name
+                )}`
               );
-              const contentType = response.headers.get("Content-Type");
 
-              if (response.ok && contentType.includes("application/json")) {
-                const data = await response.json();
-                dataMap[restaurant.id] = data; // ID를 키로 매핑
-              } else {
-                console.error(
-                  `ID ${restaurant.id} - API 호출 실패. 상태 코드:`,
-                  response.status
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+
+              const contentType = response.headers.get("Content-Type") || "";
+              if (!contentType.includes("application/json")) {
+                throw new Error(
+                  "Invalid content type received from the server."
                 );
               }
+
+              const data = await response.json();
+
+              let likePoints = [];
+              if (data.likePoints && typeof data.likePoints === "string") {
+                try {
+                  const parsedPoints = JSON.parse(
+                    data.likePoints.replace(/'/g, '"')
+                  );
+                  likePoints = Array.isArray(parsedPoints)
+                    ? parsedPoints.filter(
+                        (point) =>
+                          point.category &&
+                          point.category !== "항목 없음" &&
+                          point.category.trim() !== ""
+                      )
+                    : [];
+                } catch (e) {
+                  console.warn("likePoints 파싱 오류:", e);
+                }
+              }
+
+              dataMap[restaurant.id] = {
+                ...data,
+                likePoints,
+                representativeSentenceMap: {
+                  positiveSentences:
+                    data.representativeSentenceMap?.positiveSentences || {},
+                  negativeSentences:
+                    data.representativeSentenceMap?.negativeSentences || {},
+                },
+              };
             } catch (error) {
               console.error(
-                `ID ${restaurant.id} - API 호출 중 오류 발생:`,
+                `Error processing restaurant: ${restaurant.name}`,
                 error
               );
             }
           })
         );
-        setFetchedData(dataMap); // 모든 데이터를 상태로 저장
+
+        setFetchedData(dataMap);
+        console.log("Fetched Data Map:", dataMap); // 디버깅용 로그
       } catch (error) {
         console.error("데이터 가져오기 중 오류:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [restaurantData]);
 
   const handleRestaurantClick = (restaurant) => {
-    setSelectedRestaurant(restaurant);
-    onSelectRestaurant && onSelectRestaurant(restaurant);
+    const restaurantDetails = fetchedData[restaurant.id] || {}; // fetchedData에서 추가 데이터 가져오기
+    const fullRestaurantData = {
+      ...restaurant, // 기본 데이터
+      ...restaurantDetails, // fetchedData의 상세 데이터 병합
+    };
+
+    console.log("Selected Restaurant with Details:", fullRestaurantData); // 디버깅용 로그
+    setSelectedRestaurant(fullRestaurantData); // 병합된 데이터로 상태 설정
+    onSelectRestaurant && onSelectRestaurant(fullRestaurantData); // 병합된 데이터 상위로 전달
   };
 
   const handleUniversityChange = (e) => {
@@ -103,19 +154,11 @@ const LeftSide = ({
     }
   };
 
-  const openModal = (title, content) => {
-    setModalContent({ title, content });
-  };
-
-  const closeModal = () => {
-    setModalContent(null);
-  };
-
   return (
-    <div className="relative flex flex-col h-full font-['Song Myung']">
+    <div className="relative flex flex-col h-full font-nanum">
       {/* 대학교 선택 헤더 */}
       <div className="sticky top-0 z-10 bg-white">
-        <div className="flex items-center w-full h-10 my-3 border border-black rounded-lg shadow-lg">
+        <div className="flex items-center h-10 mx-2 my-2 border-2 border-black rounded-lg">
           <img src="/images/졸업.png" alt="졸업" className="w-8 h-10 ml-2" />
           <p className="ml-2 text-sm font-bold">학교 정보 :</p>
           <img
@@ -141,12 +184,13 @@ const LeftSide = ({
           <input
             type="text"
             placeholder="🍽️ 가게 검색 :"
-            className="px-5 ml-16 font-bold text-black border border-black rounded-lg"
+            className="w-5/6 px-3 ml-6 font-bold text-black border border-black rounded-lg"
             value={searchQuery}
             onChange={handleSearch}
             onKeyDown={handleSearchKeyDown}
           />
         </div>
+        <hr className="mx-4 mb-2 border-2 border-gray-500 rounded-xl" />
       </div>
 
       {/* 레스토랑 리스트 */}
@@ -155,16 +199,16 @@ const LeftSide = ({
           const restaurantDetails = fetchedData[restaurant.id] || {};
           const positiveSentences =
             restaurantDetails.representativeSentenceMap?.positiveSentences ||
-            [];
+            {};
           const negativeSentences =
             restaurantDetails.representativeSentenceMap?.negativeSentences ||
-            [];
+            {};
 
           return (
             <div
               key={restaurant.id}
               ref={(el) => (restaurantRefs.current[restaurant.id] = el)}
-              className={`p-4 mb-4 bg-white border-2 ${
+              className={`px-4 py-2 mb-4 bg-white border-2 ${
                 selectedRestaurant && selectedRestaurant.id === restaurant.id
                   ? "border-blue-500 bg-blue-50"
                   : "border-gray-400"
@@ -173,50 +217,91 @@ const LeftSide = ({
             >
               <div className="flex items-center mb-4">
                 <img
-                  src={restaurant.imageUrl || "/images/default-restaurant.png"}
+                  src={`/images/${restaurant.category}.png`} // 카테고리 기반 이미지 경로
                   alt={restaurant.name}
-                  className="w-24 h-24 mr-4 rounded-lg"
+                  className="w-[115px] h-[115px] rounded-lg mr-3"
                   onError={(e) => {
-                    e.target.src = "/images/default-restaurant.png";
+                    e.target.src = "/images/default.png"; // 기본 이미지로 대체
                   }}
                 />
-                <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-center">
-                    {restaurant.name}
-                  </h2>
+                <div className="space-y-3">
+                  <div className="flex-1">
+                    <h2 className="text-xl font-bold whitespace-normal break-words max-w-[15ch]">
+                      {restaurant.name}
+                    </h2>
+                  </div>
+                  {/* 카테고리 표시 */}
+                  <div className="flex p-1 mb-4 space-x-2 font-semibold text-gray-600 border-2 border-gray-500 rounded-lg">
+                    <img
+                      src="/images/menu.png"
+                      alt="메뉴"
+                      className="w-[40px] h-[40px]"
+                    />
+                    <p className="mt-1 text-2xl "> : {restaurant.category}</p>
+                  </div>
+                  {/* 하트 모양 아이콘 */}
+                  <div className="flex items-center px-2 mt-2 border-2 border-gray-500 rounded-lg">
+                    <p className="text-xl font-bold text-red-600">찜하기 : </p>
+                    <img
+                      src={
+                        likeStatus[restaurant.id]
+                          ? "/images/love.png"
+                          : "/images/empty.png"
+                      } // 상태에 따라 이미지 변경
+                      alt="찜 상태"
+                      className="w-[40px] h-[40px] cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation(); // 이벤트 전파 중지
+                        toggleLike(restaurant.id); // 찜 상태 토글
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
               {/* 긍정 및 부정 리뷰 대표 문장 */}
               <div className="text-sm">
-                <div
-                  className="p-2 font-['Song Myung'] mb-2 font-bold bg-white border-2 border-blue-500 rounded-lg text-black cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openModal(
-                      "😃긍정 리뷰",
-                      positiveSentences.length > 0
-                        ? positiveSentences
-                        : ["리뷰가 없습니다."]
-                    );
-                  }}
-                >
-                  <strong>😃좋아요:</strong>{" "}
-                  {positiveSentences[0] || "리뷰가 없습니다."}
+                {/* 긍정 리뷰 섹션 */}
+                <div className="p-2 mb-2 border-2 border-blue-500 rounded-md bg-blue-50">
+                  <div className="flex">
+                    <img
+                      src="/images/like.png"
+                      alt="좋아요"
+                      className="w-[35px] h-[35px]"
+                    />
+                    <h3 className="mt-1 ml-3 text-2xl font-bold text-blue-700">
+                      좋아요:
+                    </h3>
+                  </div>
+                  <p className="mt-1 font-bold">
+                    {positiveSentences &&
+                    Object.entries(positiveSentences).length > 0
+                      ? `${Object.entries(positiveSentences)[0][0]}: ${
+                          Object.entries(positiveSentences)[0][1]
+                        }`
+                      : "리뷰가 없습니다."}
+                  </p>
                 </div>
-                <div
-                  className="p-2 font-bold text-black bg-white border-2 border-red-600 rounded-lg cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openModal(
-                      "😡부정 리뷰",
-                      negativeSentences.length > 0
-                        ? negativeSentences
-                        : ["리뷰가 없습니다."]
-                    );
-                  }}
-                >
-                  <strong>😡싫어요:</strong>{" "}
-                  {negativeSentences[0] || "리뷰가 없습니다."}
+
+                {/* 부정 리뷰 섹션 */}
+                <div className="p-2 border-2 border-red-500 rounded-md bg-red-50">
+                  <div className="flex">
+                    <img
+                      src="/images/dislike.png"
+                      alt="싫어요"
+                      className="w-[35px] h-[35px]"
+                    />
+                    <h3 className="ml-3 text-2xl font-bold text-red-700">
+                      싫어요:
+                    </h3>
+                  </div>
+                  <p className="mt-1 font-bold">
+                    {negativeSentences &&
+                    Object.entries(negativeSentences).length > 0
+                      ? `${Object.entries(negativeSentences)[0][0]}: ${
+                          Object.entries(negativeSentences)[0][1]
+                        }`
+                      : "리뷰가 없습니다."}
+                  </p>
                 </div>
               </div>
             </div>
@@ -224,26 +309,13 @@ const LeftSide = ({
         })}
       </div>
 
-      {/* 모달 창 */}
-      {modalContent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="p-6 bg-white rounded-lg shadow-lg w-96">
-            <h2 className="mb-4 text-lg font-bold">{modalContent.title}</h2>
-            <ul className="pl-5 list-disc">
-              {modalContent.content.map((sentence, index) => (
-                <li key={index} className="mb-2 text-sm">
-                  {sentence}
-                </li>
-              ))}
-            </ul>
-            <button
-              className="px-4 py-2 mt-4 text-white bg-blue-500 rounded-md"
-              onClick={closeModal}
-            >
-              닫기
-            </button>
-          </div>
-        </div>
+      {/* 선택된 레스토랑 정보를 전달 */}
+      {selectedRestaurant && (
+        <RestaurantOverlay
+          restaurant={selectedRestaurant}
+          onClose={() => setSelectedRestaurant(null)}
+          source="list"
+        />
       )}
     </div>
   );

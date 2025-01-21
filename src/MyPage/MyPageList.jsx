@@ -15,7 +15,6 @@ export default function MyPageList({ bookmarks, setBookmarks }) {
       alert("북마크 삭제에 실패했습니다.");
     }
   };
-  
 
   return (
     <div className="list-container font-['Song Myung']">

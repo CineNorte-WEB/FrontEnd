@@ -1,47 +1,47 @@
 .profile-container {
-    text-align: center;
-    padding: 2rem;
-    background-color: white;
-    border-radius: 1rem;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    margin: 0 auto;
-  }
-  
-  .profile-title {
-    font-family: "Nanum Gothic", sans-serif;
-    font-size: 2rem;
-    color: #c02231;
-    margin: 1rem;
-  }
-  
-  .profile-content {
-    font-family: "Nanum Gothic", sans-serif;
-    font-size: 1.5rem;
-    color: #333;
-  }
-  
-  .profile-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #ddd;
-    padding: 0.5rem 0;
-  }
-  
-  .profile-label {
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .profile-value {
-    color: #777;
-  }
-  
-  .profile-buttons {
-    margin-top: 2rem;
-    display: flex;
-    justify-content: space-around;
-  }
+  text-align: center;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
+}
+
+.profile-title {
+  font-family: "Nanum Gothic", sans-serif;
+  font-size: 2rem;
+  color: #c02231;
+  margin: 1rem;
+}
+
+.profile-content {
+  font-family: "Nanum Gothic", sans-serif;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
+  padding: 0.5rem 0;
+}
+
+.profile-label {
+  font-weight: bold;
+  color: #555;
+}
+
+.profile-value {
+  color: #777;
+}
+
+.profile-buttons {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-around;
+}
 
 .edit-button,
 .logout-button {
@@ -147,4 +147,3 @@
 .cancel-button:hover {
   background-color: #d32f2f;
 }
-  

@@ -8,9 +8,10 @@ export default {
       fontFamily: {
         yeonsung: ["YeonSung", ...defaultTheme.fontFamily.sans],
         petemoss: ["Petemoss", ...defaultTheme.fontFamily.sans],
+        nanum: ['"Nanum Gothic"', "sans-serif"],
       },
       width: {
-        '35': '70px',
+        35: "70px",
       },
     },
   },

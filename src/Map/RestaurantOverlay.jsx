@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const RestaurantOverlay = ({ restaurant, onClose, source }) => {
   if (!restaurant) return null;
 
+  // 디버깅 로그 추가
+  console.log("Received restaurant data:", restaurant);
+  console.log(
+    "Representative Sentence Map:",
+    restaurant.representativeSentenceMap
+  );
   const formatPrice = (price) => {
     if (
       price === 0 ||
@@ -20,11 +26,10 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
     try {
       let points = [];
       if (typeof likePoints === "string") {
-        points = JSON.parse(likePoints);
+        points = JSON.parse(likePoints); // JSON 문자열 파싱
       } else {
         points = likePoints || [];
       }
-      // 항목없음 카테고리 제외하고 반환
       return points.filter(
         (point) =>
           point.category !== "항목 없음" && point.category.trim() !== ""
@@ -59,14 +64,12 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
           />
         </div>
         <div className="flex justify-between mb-2">
-          <h3 className="text-lg font-bold font-['Song Myung']">
-            {restaurant.name}
-          </h3>
+          <h3 className="text-lg font-bold font-nanum">{restaurant.name}</h3>
         </div>
-        <p className="mb-2 text-sm text-gray-600 font-['Song Myung']">
+        <p className="mb-2 text-sm text-gray-600 font-nanum">
           <strong>주소:</strong> {restaurant.address}
         </p>
-        <p className="text-sm text-gray-600 font-['Song Myung']">
+        <p className="text-sm text-gray-600 font-nanum">
           <strong>영업시간:</strong> {restaurant.hours || "정보 없음"}
         </p>
       </div>
@@ -80,15 +83,13 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
       onClick={(e) => e.stopPropagation()}
     >
       <div className="sticky top-0 z-10 flex justify-between p-3 bg-white border-2 border-gray-200">
-        <h2 className="text-2xl font-bold font-['Song Myung']">
-          {restaurant.name}
-        </h2>
+        <h2 className="text-2xl font-bold font-nanum">{restaurant.name}</h2>
         <button
           onClick={(e) => {
             e.stopPropagation();
             onClose();
           }}
-          className="text-2xl font-bold text-red-500 font-['Song Myung']"
+          className="text-2xl font-bold text-red-500 font-nanum"
         >
           ✕
         </button>
@@ -105,7 +106,7 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
               e.target.src = "/images/default-restaurant.png";
             }}
           />
-          <div className="grid gap-2 font-['Song Myung']">
+          <div className="grid gap-2 font-nanum">
             <div className="flex justify-between">
               <span className="font-bold">주소</span>
               <span className="flex-1 ml-4 text-right">
@@ -119,24 +120,80 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
           </div>
         </div>
 
+        {/* 상세 정보에 긍정/부정 리뷰 전체 표시 */}
+        <div className="mb-3 ">
+          <div className="p-2 mb-2 bg-white border-2 border-blue-500 rounded-lg">
+            <div className="flex mb-2 space-x-3">
+              {" "}
+              <img
+                src="/images/like.png"
+                alt="좋아요"
+                className="w-[40px] h-[40px]"
+              />
+              <h3 className="mt-2 text-xl font-bold">긍정 리뷰 :</h3>
+            </div>
+
+            {restaurant.representativeSentenceMap?.positiveSentences &&
+            Object.keys(restaurant.representativeSentenceMap.positiveSentences)
+              .length > 0 ? (
+              <ul>
+                {Object.entries(
+                  restaurant.representativeSentenceMap.positiveSentences
+                ).map(([category, sentence], index) => (
+                  <li key={index} className="mb-1">
+                    <strong>{category}:</strong> {sentence}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>긍정 리뷰가 없습니다.</p>
+            )}
+          </div>
+          <div className="p-2 bg-white border-2 border-red-400 rounded-lg">
+            <div className="flex mb-2 space-x-3">
+              <img
+                src="/images/dislike.png"
+                alt="싫어요"
+                className="w-[40px] h-[40px]"
+              />
+              <h3 className="mt-1 text-xl font-bold ">부정 리뷰 :</h3>
+            </div>
+            {restaurant.representativeSentenceMap?.negativeSentences &&
+            Object.keys(restaurant.representativeSentenceMap.negativeSentences)
+              .length > 0 ? (
+              <ul>
+                {Object.entries(
+                  restaurant.representativeSentenceMap.negativeSentences
+                ).map(([category, sentence], index) => (
+                  <li key={index} className="mb-1">
+                    <strong>{category}:</strong> {sentence}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>부정 리뷰가 없습니다.</p>
+            )}
+          </div>
+        </div>
+
         {/* 메뉴 정보 */}
         {validMenus.length > 0 && (
           <div className="mb-6">
-            <h3 className="mb-3 text-xl font-bold font-['Song Myung']">메뉴</h3>
+            <h3 className="mb-3 text-xl font-bold font-nanum">메뉴</h3>
             <div className="grid gap-3">
               {validMenus.map((menu) => (
                 <div
                   key={menu.id || menu.name}
                   className="p-3 rounded-lg bg-gray-50"
                 >
-                  <div className="flex items-center justify-between mb-1 font-['Song Myung']">
+                  <div className="flex items-center justify-between mb-1 font-nanum">
                     <span className="text-lg font-medium">{menu.name}</span>
                     <span className="font-bold text-blue-600">
                       {formatPrice(menu.price)}
                     </span>
                   </div>
                   {menu.description && menu.description !== "설명 없음" && (
-                    <p className="text-sm text-gray-600 font-['Song Myung']">
+                    <p className="text-sm text-gray-600 font-nanum">
                       {menu.description}
                     </p>
                   )}
@@ -149,12 +206,10 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
         {/* 좋아요 포인트 */}
         {restaurant.likePoints && restaurant.likePoints.length > 0 && (
           <div className="mb-6">
-            <h3 className="mb-3 text-xl font-bold font-['Song Myung']">
-              좋아요 포인트
-            </h3>
+            <h3 className="mb-3 text-xl font-bold font-nanum">좋아요 포인트</h3>
             <div className="p-4 space-y-4 rounded-lg bg-gray-50">
               {formatLikePoints(restaurant.likePoints).map((point, index) => (
-                <div key={index} className="font-['Song Myung']">
+                <div key={index} className="font-nanum">
                   <div className="flex items-center justify-between mb-1">
                     <span>{point.category}</span>
                     <span className="text-sm text-gray-600">{point.score}</span>
@@ -176,11 +231,11 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
         {/* 리뷰 섹션 */}
         {restaurant.reviews && restaurant.reviews.length > 0 && (
           <div className="mb-6">
-            <h3 className="mb-3 text-xl font-bold font-['Song Myung']">리뷰</h3>
+            <h3 className="mb-3 text-xl font-bold font-nanum">리뷰</h3>
             <div className="grid gap-3">
               {restaurant.reviews.map((review, index) => (
                 <div key={index} className="p-4 rounded-lg bg-gray-50">
-                  <div className="flex items-center justify-between mb-2 font-['Song Myung']">
+                  <div className="flex items-center justify-between mb-2 font-nanum">
                     <span className="font-medium">
                       {review.author || "익명"}
                     </span>
@@ -188,10 +243,8 @@ const RestaurantOverlay = ({ restaurant, onClose, source }) => {
                       {"⭐".repeat(Math.round(review.rating))}
                     </span>
                   </div>
-                  <p className="text-gray-700 font-['Song Myung']">
-                    {review.content}
-                  </p>
-                  <p className="mt-2 text-sm text-gray-500 font-['Song Myung']">
+                  <p className="text-gray-700 font-nanum">{review.content}</p>
+                  <p className="mt-2 text-sm text-gray-500 font-nanum">
                     {review.date}
                   </p>
                 </div>

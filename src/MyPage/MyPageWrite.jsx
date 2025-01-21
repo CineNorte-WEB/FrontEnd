@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import "./MyPageWrite.css";
 import apiClient from "../api/axios";
 
-export default function MyPageWrite({ boards, totalPages, currentPage, onPageChange, setBoards }) {
+export default function MyPageWrite({
+  boards,
+  totalPages,
+  currentPage,
+  onPageChange,
+  setBoards,
+}) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentBoardIndex, setCurrentBoardIndex] = useState(null);
@@ -55,12 +61,10 @@ export default function MyPageWrite({ boards, totalPages, currentPage, onPageCha
     setCurrentBoardIndex(null);
   };
 
-
   const cancelDelete = () => {
     setIsDeleteModalOpen(false);
     setCurrentBoardIndex(null);
   };
-  
 
   return (
     <div className="write-container font-yeonsung">
@@ -75,7 +79,9 @@ export default function MyPageWrite({ boards, totalPages, currentPage, onPageCha
           {boards.map((board, index) => (
             <div className="write-item font-yeonsung" key={index}>
               <div className="write-info">
-                <h2 className="write-post-title font-yeonsung">{board.title}</h2>
+                <h2 className="write-post-title font-yeonsung">
+                  {board.title}
+                </h2>
                 <p className="write-post-category font-yeonsung">
                   {board.category}
                 </p>
@@ -84,7 +90,6 @@ export default function MyPageWrite({ boards, totalPages, currentPage, onPageCha
                 </p>
               </div>
               <div className="write-actions">
-                
                 <button
                   className="delete-button"
                   onClick={() => handleDeleteClick(index)}
@@ -101,8 +106,9 @@ export default function MyPageWrite({ boards, totalPages, currentPage, onPageCha
           <button
             key={index}
             onClick={() => onPageChange(index)}
-            className={`pagination-button ${index === currentPage ? "active" : ""
-              }`}
+            className={`pagination-button ${
+              index === currentPage ? "active" : ""
+            }`}
           >
             {index + 1}
           </button>
@@ -123,7 +129,6 @@ export default function MyPageWrite({ boards, totalPages, currentPage, onPageCha
           </div>
         </div>
       )}
-
     </div>
   );
 }

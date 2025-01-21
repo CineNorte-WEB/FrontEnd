@@ -123,7 +123,7 @@ function SignUp() {
           CamChelin
         </h1>
         <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <p className="ml-3 font-bold font-yeonsung">아이디</p>
+          <p className="ml-3 font-bold font-nanum">아이디</p>
           <div className="relative">
             <MdOutlinePermIdentity className="absolute mx-3 mt-3 text-2xl" />
             <input
@@ -138,15 +138,15 @@ function SignUp() {
                 },
               })}
               placeholder="아이디(이메일 주소)"
-              className="block w-full px-10 py-3 mt-1 border border-black rounded-md shadow-md font-yeonsung focus:border-indigo-500 focus:ring-indigo-500"
+              className="block w-full px-10 py-3 mt-1 border border-black rounded-md shadow-md font-nanum focus:border-indigo-500 focus:ring-indigo-500"
             />
             {errors.email && (
-              <p className="mt-2 text-red-500 font-yeonsung">
+              <p className="mt-2 text-red-500 font-nanum">
                 {errors.email.message}
               </p>
             )}
           </div>
-          <p className="mb-3 ml-3 font-bold font-yeonsung">비밀번호</p>
+          <p className="mb-3 ml-3 font-bold font-nanum">비밀번호</p>
           <div className="relative mb-7">
             <IoIosLock className="absolute mt-3 ml-3 text-2xl" />
             <input
@@ -160,7 +160,7 @@ function SignUp() {
                 },
               })}
               placeholder="비밀번호"
-              className="block w-full px-10 py-3 mt-1 border border-black rounded-md shadow-md font-yeonsung focus:border-indigo-500 focus:ring-indigo-500"
+              className="block w-full px-10 py-3 mt-1 border border-black rounded-md shadow-md font-nanum focus:border-indigo-500 focus:ring-indigo-500"
             />
             {password ? (
               <IoMdEyeOff
@@ -174,40 +174,40 @@ function SignUp() {
               />
             )}
             {errors.password && (
-              <p className="mt-2 text-red-500 font-yeonsung">
+              <p className="mt-2 text-red-500 font-nanum">
                 {errors.password.message}
               </p>
             )}
           </div>
           {errorMessage && (
-            <p className="text-red-500 font-yeonsung">{errorMessage}</p>
+            <p className="text-red-500 font-nanum">{errorMessage}</p>
           )}
           <button
             type="submit"
-            className="w-full px-4 py-2 text-2xl font-bold text-white border border-white rounded-md shadow-lg font-yeonsung bg-rose-700 hover:bg-rose-400"
+            className="w-full px-4 py-2 text-2xl font-bold text-white border border-white rounded-md shadow-lg font-nanum bg-rose-700 hover:bg-rose-400"
           >
             로그인
           </button>
         </form>
         <div className="flex mt-4 text-center">
           <hr className="flex-grow border-gray-500" />
-          <p className="text-xl font-bold text-gray-600 font-yeonsung">OR</p>
+          <p className="text-xl font-bold text-gray-600 font-nanum">OR</p>
           <hr className="flex-grow border-gray-500" />
         </div>
         <p
-          className="block mt-3 font-bold text-center cursor-pointer font-yeonsung hover:underline"
+          className="block mt-3 font-bold text-center cursor-pointer font-nanum hover:underline"
           onClick={() => navigate("/password")}
         >
           비밀번호를 잊으셨나요?
         </p>
         <div className="relative flex mt-5">
           <FaUserGraduate className="ml-3 text-2xl" />
-          <p className="absolute block text-xl font-bold text-black left-12 font-yeonsung">
+          <p className="absolute block ml-2 text-xl font-bold text-black left-8 font-nanum">
             아직 계정이 없으신가요?
           </p>
           <p
             onClick={() => navigate("/signin")}
-            className="absolute font-bold cursor-pointer right-8 text-rose-400 hover:underline hover:text-rose-600 font-yeonsung"
+            className="absolute mt-1 font-bold cursor-pointer right-1 text-rose-400 hover:underline hover:text-rose-600 font-nanum"
           >
             지금, 바로 가입해보세요!
           </p>
