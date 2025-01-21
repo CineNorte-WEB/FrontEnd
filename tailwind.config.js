@@ -11,7 +11,7 @@ export default {
         petemoss: ["Petemoss", ...defaultTheme.fontFamily.sans],
       },
       width: {
-        35: "70px",
+        35: "5.3rem",
       },
     },
   },
