@@ -35,64 +35,52 @@ const Common = () => {
   return (
     <>
       <nav
-   Map-KaKaoMap
-        className="fixed z-50 flex flex-col items-center mt-20 text-center bg-white border rounded-lg shadow-lg right-2 border-slate-500 w-35"
-        style={{ top: "32%", transform: "translateY(-100%)" }}
-      >
-        <label
-          onClick={() => onHandleClick(0)}
-          className={`block my-2 hover:text-slate-500 hover:cursor-pointer ${
-            click === 0 ? "text-black font-bold" : "text-gray-500 opacity-50"
-          }`}
-        >
-          <img
-            src="/images/지도.png"
-            alt="지도"
-            className="w-[40px] h-[40px]"
-          />
-          <p className="text-xl font-nanum">지도</p>
-        </label>
-        <hr className="w-full border border-slate-400" />
-        <label
-          onClick={() => onHandleClick(1)}
-          className={`block my-2 hover:text-slate-500 hover:cursor-pointer ${
-            click === 1 ? "text-black font-bold" : "text-gray-500 opacity-50"
-          }`}
-        >
-          <img
-            src="/images/커뮤니티.png"
-            alt="커뮤니티"
-            className="w-[40px] h-[40px] ml-3"
-          />
-          <p
-            className="px-2 text-xl font-bold font-nanum"
-            style={{ fontStyle: "normal" }}
-          >
-            커뮤니티
-          </p>
-        </label>
-        <hr className="w-full border border-slate-400" />
-        <label
-          onClick={() => onHandleClick(2)}
-          className={`block my-2 hover:text-slate-500 hover:cursor-pointer ${
-            click === 2 ? "text-black font-bold" : "text-gray-500 opacity-50"
-          }`}
-        >
-          <img
-            src="/images/사람.png"
-            alt="사람"
-            className="w-[40px] h-[40px] ml-4"
-          />
-        Map-KaKaoMap
-          <p
-            className="text-lg font-bold font-nanum "
-            style={{ fontStyle: "normal" }}
-          >
-            마이페이지
-          </p>
+  className="fixed z-50 flex flex-col items-center justify-center py-2 text-center bg-white border rounded-lg shadow-lg right-2 border-slate-500 w-35"
+  style={{ top: "11rem", transform: "translateY(-50%)" }}
+>
+  <label
+    onClick={() => onHandleClick(0)}
+    className={`flex flex-col items-center my-2 hover:text-slate-500 hover:cursor-pointer ${
+      click === 0 ? "text-black font-bold" : "text-gray-500 opacity-50"
+    }`}
+  >
+    <img
+      src="/images/지도.png"
+      alt="지도"
+      className="w-8 h-8 mb-1" // 이미지 크기와 간격 조정
+    />
+    <p className="text-lg font-nanum">지도</p>
+  </label>
+  <hr className="w-full border border-slate-400" />
+  <label
+    onClick={() => onHandleClick(1)}
+    className={`flex flex-col items-center my-1 hover:text-slate-500 hover:cursor-pointer ${
+      click === 1 ? "text-black font-bold" : "text-gray-500 opacity-50"
+    }`}
+  >
+    <img
+      src="/images/커뮤니티.png"
+      alt="커뮤니티"
+      className="w-8 h-8 mb-1"
+    />
+    <p className="text-lg font-bold font-nanum">커뮤니티</p>
+  </label>
+  <hr className="w-full border border-slate-400" />
+  <label
+    onClick={() => onHandleClick(2)}
+    className={`flex flex-col items-center my-2 hover:text-slate-500 hover:cursor-pointer ${
+      click === 2 ? "text-black font-bold" : "text-gray-500 opacity-50"
+    }`}
+  >
+    <img
+      src="/images/사람.png"
+      alt="마이페이지"
+      className="w-8 h-8 mb-1"
+    />
+    <p className="text-base font-bold font-nanum">마이페이지</p>
+  </label>
+</nav>
 
-        </label>
-      </nav>
     </>
   );
 };

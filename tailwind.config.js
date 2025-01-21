@@ -11,7 +11,7 @@ export default {
         nanum: ['"Nanum Gothic"', "sans-serif"],
       },
       width: {
-        35: "70px",
+        35: "5.3rem",
       },
     },
   },

@@ -55,7 +55,6 @@ const Community = () => {
       });
       setPosts(response.data.content); // 게시글 데이터 설정
       setCommunityTotalPages(response.data.totalPages); // 전체 페이지 수 설정
-
       const formattedData = response.data.content.map((post) => ({
         id: post.id,
         title: post.title,
@@ -63,6 +62,7 @@ const Community = () => {
         author: post.userNickname,
         createdAt: post.createdAt,
         category: selectedCategory,
+
       }));
 
       setPosts(formattedData);
