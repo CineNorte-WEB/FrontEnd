@@ -35,6 +35,7 @@ const Common = () => {
   return (
     <>
       <nav
+   Map-KaKaoMap
         className="fixed z-50 flex flex-col items-center mt-20 text-center bg-white border rounded-lg shadow-lg right-2 border-slate-500 w-35"
         style={{ top: "32%", transform: "translateY(-100%)" }}
       >
@@ -82,12 +83,14 @@ const Common = () => {
             alt="사람"
             className="w-[40px] h-[40px] ml-4"
           />
+        Map-KaKaoMap
           <p
             className="text-lg font-bold font-nanum "
             style={{ fontStyle: "normal" }}
           >
             마이페이지
           </p>
+
         </label>
       </nav>
     </>
