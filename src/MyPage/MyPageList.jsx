@@ -17,7 +17,11 @@ export default function MyPageList({ bookmarks, setBookmarks }) {
   };
 
   return (
-    <div className="list-container font-['Song Myung']">
+    <div className="list-container font-['Song Myung']" style={{
+      height: "100%",
+      overflowY: "auto", // 스크롤 가능 설정
+      padding: "16px", // 컨테이너 위쪽 패딩 추가
+    }}>
       {bookmarks.length === 0 ? (
         <div className="empty-message">
           찜한 리스트가 존재하지 않습니다.
@@ -26,24 +30,24 @@ export default function MyPageList({ bookmarks, setBookmarks }) {
         </div>
       ) : (
         <div className="list-content">
-          {bookmarks.map((bookmark, index) => (
-            <div className="list-item font-['Song Myung']" key={index}>
+          {bookmarks.map((bookmark) => (
+            <div className="list-item font-['Song Myung']" key={bookmark.id}>
+              {/* 이미지 */}
               <img
-                src={bookmark.image}
-                alt={bookmark.title}
+                src={bookmark.imageUrl || "/images/default.png"}
+                alt={bookmark.name}
                 className="list-item-image"
               />
+              {/* 레스토랑 정보 */}
               <div className="list-item-info">
                 <h2 className="list-item-title font-['Song Myung']">
-                  {bookmark.title}
+                  {bookmark.name}
                 </h2>
-                <p className="list-item-menu font-['Song Myung']">
-                  메뉴: {bookmark.menu}
-                </p>
                 <p className="list-item-summary font-['Song Myung']">
-                  {bookmark.summary}
+                  {bookmark.representativeSentenceMap?.topSentence || "설명 없음"}
                 </p>
               </div>
+              {/* 하트 아이콘 */}
               <div
                 className="list-item-heart font-['Song Myung']"
                 onClick={() => handleDeleteBookmark(bookmark.id)}
