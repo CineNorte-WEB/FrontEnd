@@ -60,63 +60,61 @@ function SignUp() {
 
   return (
     <div className="flex items-center justify-end min-h-screen bg-rose-800">
-      <div className="mx-12">
-        <p className="text-5xl text-white font-yeonsung">
-          신촌과 회기역 주변 대학가의
-        </p>
-        <p className="text-5xl text-white font-yeonsung">
-          숨겨진 맛집을 캠슐랭에서 발견하세요!
-        </p>
-        <div className="flex mt-12 space-x-4">
-          <img src="/images/연대.png" alt="연세대학교" className="w-32 h-32" />
-          <img
-            src="/images/서강대.png"
-            alt="서강대학교"
-            className="w-32 h-32"
-          />
-          <img
-            src="/images/이대.png"
-            alt="이화여자대학교"
-            className="w-32 h-32"
-          />
+      <div className="mx-6">
+        <p className="mt-2 text-white text-9xl font-petemoss">CamChelin</p>
+        <div className="ml-2 space-y-8 ">
+          <div className="flex mt-6 space-x-6">
+            <img
+              src="/images/연대.png"
+              alt="연세대학교"
+              className="w-32 h-32"
+            />
+            <img
+              src="/images/서강대.png"
+              alt="서강대학교"
+              className="w-32 h-32"
+            />
+            <img
+              src="/images/이대.png"
+              alt="이화여자대학교"
+              className="w-32 h-32"
+            />
+          </div>
+          <div className="flex justify-start ml-24 space-x-6">
+            <img
+              src="/images/시립대.png"
+              alt="서울시립대학교"
+              className="w-32 h-32"
+            />
+            <img
+              src="/images/경희대.png"
+              alt="경희대학교"
+              className="w-32 h-32"
+            />
+            <img
+              src="/images/외대.png"
+              alt="한국외국어대학교"
+              className="w-32 h-32"
+            />
+          </div>
+          <div className="flex ml-16 space-x-6">
+            <img
+              src="/images/flower.png"
+              alt="스타"
+              className="w-[100px] h-[100px]"
+            />
+            <img
+              src="/images/flower.png"
+              alt="스타"
+              className="w-[100px] h-[100px]"
+            />
+            <img
+              src="/images/flower.png"
+              alt="스타"
+              className="w-[100px] h-[100px]"
+            />
+          </div>
         </div>
-        <div className="flex ml-14 space-x-7">
-          <img
-            src="/images/시립대.png"
-            alt="서울시립대학교"
-            className="w-32 h-32"
-          />
-          <img
-            src="/images/경희대.png"
-            alt="경희대학교"
-            className="w-32 h-32"
-          />
-          <img
-            src="/images/외대.png"
-            alt="한국외국어대학교"
-            className="w-32 h-32"
-          />
-        </div>
-        <div className="flex mt-12 space-x-4 ml-28">
-          <img
-            src="/images/flower.png"
-            alt="스타"
-            className="w-[100px] h-[100px]"
-          />
-          <img
-            src="/images/flower.png"
-            alt="스타"
-            className="w-[100px] h-[100px]"
-          />
-          <img
-            src="/images/flower.png"
-            alt="스타"
-            className="w-[100px] h-[100px]"
-          />
-        </div>
-        <h1 className="font-normal text-white ml-36 text-8xl font-petemoss">
-          CamChelin
-        </h1>
       </div>
       <div className="p-6 mr-48 bg-white rounded-lg shadow-lg h-[600px] w-[500px]">
         <h1 className="mt-3 mb-5 font-normal text-center text-8xl font-petemoss">

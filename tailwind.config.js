@@ -6,9 +6,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        pacifico: ["Pacifico", "cursive"], // Pacifico 폰트 추가
         yeonsung: ["YeonSung", ...defaultTheme.fontFamily.sans],
         petemoss: ["Petemoss", ...defaultTheme.fontFamily.sans],
-        nanum: ['"Nanum Gothic"', "sans-serif"],
       },
       width: {
         35: "70px",

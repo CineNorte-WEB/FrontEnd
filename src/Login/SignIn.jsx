@@ -107,14 +107,6 @@ function SignIn() {
               className="w-[100px] h-[100px]"
             />
           </div>
-          <div className="ml-4 space-y-3">
-            <p className="text-4xl font-bold text-white font-yeonsung">
-              신촌과 회기역 주변 대학가의
-            </p>
-            <p className="text-4xl font-bold text-white font-yeonsung">
-              숨겨진 맛집을 캠슐랭에서 발견하세요!
-            </p>
-          </div>
         </div>
       </div>
 

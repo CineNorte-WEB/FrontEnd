@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import RestaurantOverlay from "./RestaurantOverlay"; // RestaurantOverlay 컴포넌트 import
-
+import axios from "axios";
 const LeftSide = ({
   restaurantData,
   onSelectRestaurant,
@@ -12,6 +12,7 @@ const LeftSide = ({
   const [fetchedData, setFetchedData] = useState({});
   const restaurantRefs = useRef({});
   const [likeStatus, setLikeStatus] = useState({}); // 찜 상태 관리
+  const [isLoading, setIsLoading] = useState(true);
 
   const universities = {
     연대: "/images/연대.png",
@@ -22,11 +23,35 @@ const LeftSide = ({
     외대: "/images/외대.png",
   };
 
-  const toggleLike = (restaurantId) => {
-    setLikeStatus((prevState) => ({
-      ...prevState,
-      [restaurantId]: !prevState[restaurantId], // 현재 상태를 토글
-    }));
+  const toggleLike = async (restaurantId) => {
+    const isLiked = likeStatus[restaurantId];
+
+    try {
+      if (!isLiked) {
+        // 찜 추가 요청
+        await apiClient.post(`/users/bookmarks/${restaurantId}`, {});
+
+        setLikeStatus((prevState) => ({
+          ...prevState,
+          [restaurantId]: true, // 찜 상태를 true로 업데이트
+        }));
+
+        console.log(`Bookmark added for restaurant ${restaurantId}`);
+      } else {
+        // 찜 삭제 요청
+        await apiClient.delete(`/users/bookmarks/${restaurantId}`);
+
+        setLikeStatus((prevState) => ({
+          ...prevState,
+          [restaurantId]: false, // 찜 상태를 false로 업데이트
+        }));
+
+        console.log(`Bookmark removed for restaurant ${restaurantId}`);
+      }
+    } catch (error) {
+      console.error("Error updating like status:", error);
+      alert("찜하기 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
   };
 
   useEffect(() => {
@@ -102,6 +127,47 @@ const LeftSide = ({
 
     fetchData();
   }, [restaurantData]);
+
+  useEffect(() => {
+    const fetchLikedPlaces = async () => {
+      try {
+        const response = await fetch(`/users/bookmarks`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch bookmarked places.");
+        }
+
+        const likedPlaces = await response.json();
+
+        // 서버 응답 데이터가 예상 형식인지 확인
+        console.log("Fetched liked places:", likedPlaces);
+
+        const initialLikeStatus = likedPlaces.reduce((acc, place) => {
+          acc[place.placeId] = true; // placeId 기반으로 true 설정
+          return acc;
+        }, {});
+
+        setLikeStatus(initialLikeStatus);
+      } catch (error) {
+        console.error("Error fetching liked places:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (restaurantData.length > 0) {
+      fetchLikedPlaces();
+    }
+  }, [restaurantData]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   const handleRestaurantClick = (restaurant) => {
     const restaurantDetails = fetchedData[restaurant.id] || {}; // fetchedData에서 추가 데이터 가져오기
@@ -244,10 +310,10 @@ const LeftSide = ({
                     <p className="text-xl font-bold text-red-600">찜하기 : </p>
                     <img
                       src={
-                        likeStatus[restaurant.id]
+                        likeStatus[restaurant.id] === true
                           ? "/images/love.png"
                           : "/images/empty.png"
-                      } // 상태에 따라 이미지 변경
+                      }
                       alt="찜 상태"
                       className="w-[40px] h-[40px] cursor-pointer"
                       onClick={(e) => {

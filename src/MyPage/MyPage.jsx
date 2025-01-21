@@ -7,6 +7,7 @@ import MyPageWrite from "./MyPageWrite";
 import Common from "../components/Common";
 import Brand from "../components/Brand";
 import apiClient from "../api/axios";
+// 자동으로 헤더 포함됨 코드드, api/client
 import axios from "axios";
 
 const MyPage = () => {
