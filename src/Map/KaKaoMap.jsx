@@ -21,6 +21,7 @@ const API = {
   PLACES: {
     BY_ID: (id) => `${BASE_URL}/places/id/${id}`,
   },
+  
   REVIEWS: {
     BY_PLACE: (placeId) => `${BASE_URL}/review_posts/place/${placeId}`,
   },
@@ -290,8 +291,9 @@ function KakaoMap() {
           return;
         }
 
+        // Kakao Maps API 스크립트 동적으로 추가
         const script = document.createElement("script");
-        script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&libraries=services&autoload=false`;
+        script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_APP_KEY}&libraries=services&autoload=false`;
         script.async = true;
 
         script.onload = () => {
