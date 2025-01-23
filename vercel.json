@@ -3,10 +3,6 @@
     {
       "source": "/api/:path*",
       "destination": "http://3.36.90.46:8080/:path*"
-    },
-    {
-      "source": "/v2/maps/sdk.js",
-      "destination": "https://dapi.kakao.com/v2/maps/sdk.js"
     }
   ]
 }
