@@ -95,7 +95,7 @@ const MyPage = () => {
   const renderComponent = () => {
     switch (currentComponent) {
       case "profile":
-        return <MyPageProfile profile={profile} setProfile={setProfile} boards={combinedBoards} totalPosts={totalPosts}/>;
+        return <MyPageProfile bookmarks={bookmarks} profile={profile} setProfile={setProfile} boards={combinedBoards} totalPosts={totalPosts}/>;
       case "mylist":
         return <MyPageList bookmarks={bookmarks} setBookmarks={setBookmarks} />;
       case "write":

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Common from "../components/Common";
 import LeftSide from "./LeftSide";
 import RestaurantOverlay from "./RestaurantOverlay";
+import apiClient, { fetchData } from "../api/axios"; // 새 apiClient를 가져옴
 
 const BASE_URL = "http://3.36.90.46:8080";
 
@@ -17,40 +18,29 @@ const universityLocations = {
 const API = {
   UNIVS: `${BASE_URL}/univs`,
   UNIV_PLACES: (univId) => `${BASE_URL}/univs/${univId}/places`,
-  UNIV_BY_NAME: (name) => `${BASE_URL}/univs/name/${name}`,
-  UNIV_BY_ID: (id) => `${BASE_URL}/univs/id/${id}`,
   PLACES: {
-    BY_NAME: (name) => `${BASE_URL}/places/name/${name}`,
     BY_ID: (id) => `${BASE_URL}/places/id/${id}`,
   },
   REVIEWS: {
-    ALL: `${BASE_URL}/review_posts`,
-    BY_ID: (id) => `${BASE_URL}/review_posts/${id}`,
     BY_PLACE: (placeId) => `${BASE_URL}/review_posts/place/${placeId}`,
   },
   ANALYSIS: {
-    ALL: `${BASE_URL}/review-analysis`,
     BY_PLACE: (placeId) => `${BASE_URL}/review-analysis/${placeId}`,
-  },
-  USER: {
-    BOOKMARKS: `${BASE_URL}/users/bookmarks`,
-    REVIEWS: `${BASE_URL}/users/reviews`,
-    BOARDS: `${BASE_URL}/users/boards`,
   },
 };
 
 function KakaoMap() {
+  const [markerClick, setMarkerClick] = useState(false); // 상태 선언
+  const [selectedUniversity, setSelectedUniversity] = useState("연대"); // 초기값 설정
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
-  const [markerClick, setMarkerClick] = useState(false);
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [universityOverlays, setUniversityOverlays] = useState([]);
   const [restaurantData, setRestaurantData] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedUniversity, setSelectedUniversity] = useState("연대");
-  const [reviewData, setReviewData] = useState({});
-  const [analysisData, setAnalysisData] = useState({});
+
+  
 
   const fetchWithErrorHandling = async (url) => {
     try {
@@ -93,32 +83,13 @@ function KakaoMap() {
 
   const fetchReviewData = async (placeId) => {
     try {
-      console.log(`📊 Fetching review data for place ID: ${placeId}`);
-
       const [reviews, analysis] = await Promise.all([
-        fetchWithErrorHandling(API.REVIEWS.BY_PLACE(placeId)),
-        fetchWithErrorHandling(API.ANALYSIS.BY_PLACE(placeId)),
+        fetchData(API.REVIEWS.BY_PLACE(placeId)),
+        fetchData(API.ANALYSIS.BY_PLACE(placeId)),
       ]);
-
-      if (!reviews.data) {
-        console.warn(`⚠️ No review data received for place ID: ${placeId}`);
-      }
-      if (!analysis.data) {
-        console.warn(`⚠️ No analysis data received for place ID: ${placeId}`);
-      }
-
-      setReviewData((prev) => ({
-        ...prev,
-        [placeId]: reviews.data || [],
-      }));
-      setAnalysisData((prev) => ({
-        ...prev,
-        [placeId]: analysis.data || null,
-      }));
+      // 데이터를 처리
     } catch (error) {
-      console.error(`❌ Error fetching data for place ID ${placeId}:`, error);
-      setReviewData((prev) => ({ ...prev, [placeId]: [] }));
-      setAnalysisData((prev) => ({ ...prev, [placeId]: null }));
+      console.error("Error fetching review data:", error);
     }
   };
 
@@ -567,63 +538,28 @@ function KakaoMap() {
     [map]
   );
 
+  const fetchAllData = async () => {
+    setIsLoading(true);
+    try {
+      const universities = await fetchData(API.UNIVS);
+      const placesPromises = universities.map((univ) =>
+        fetchData(API.UNIV_PLACES(univ.id))
+      );
+      const allPlacesData = await Promise.all(placesPromises);
+      const placeDetailsPromises = allPlacesData.flat().map((place) =>
+        fetchData(API.PLACES.BY_ID(place.id))
+      );
+      const placeDetails = await Promise.all(placeDetailsPromises);
+
+      setRestaurantData(placeDetails.map(transformPlaceData));
+    } catch (error) {
+      console.error("Error fetching all data:", error);
+      setError("데이터를 불러오는 데 실패했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchAllData = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        console.log("🏁 Starting to fetch all data...");
-
-        const universities = await fetchWithErrorHandling(API.UNIVS);
-        if (!Array.isArray(universities)) {
-          console.error("❌ Universities data is not an array:", universities);
-          throw new Error("Universities data is not an array");
-        }
-        console.log(`📚 Found ${universities.length} universities`);
-
-        console.log("🏪 Fetching places for each university...");
-        const placesPromises = universities.map((univ) =>
-          fetchWithErrorHandling(API.UNIV_PLACES(univ.id))
-        );
-        const allPlacesData = await Promise.all(placesPromises);
-        const validPlacesData = allPlacesData.filter(Array.isArray).flat();
-        console.log(`📍 Found ${validPlacesData.length} total places`);
-
-        console.log("🔍 Fetching details for each place...");
-        const placeDetailsPromises = validPlacesData.map(async (place) => {
-          console.log(`📌 Fetching details for place ID: ${place.id}`);
-          const details = await fetchWithErrorHandling(
-            API.PLACES.BY_ID(place.id)
-          );
-          await fetchReviewData(place.id);
-          return details;
-        });
-
-        const placeDetails = await Promise.all(placeDetailsPromises);
-        const transformedData = placeDetails
-          .filter((place) => {
-            if (!place || !place.id) {
-              console.warn("⚠️ Found invalid place data:", place);
-              return false;
-            }
-            return true;
-          })
-          .map(transformPlaceData);
-
-        console.log(
-          `✅ Successfully processed ${transformedData.length} places`
-        );
-        setRestaurantData(transformedData);
-      } catch (error) {
-        console.error("🔥 Error in fetchAllData:", error);
-        setError(
-          "데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요."
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchAllData();
   }, []);
 
@@ -665,14 +601,11 @@ function KakaoMap() {
     <div className="relative flex w-full h-screen bg-gray-100">
       <div className="w-1/4 h-full bg-white border-r-2 border-gray-300">
         <div className="relative h-full overflow-hidden border-2 border-black rounded-r-xl">
-          <LeftSide
-            restaurantData={restaurantData}
-            onSelectRestaurant={handleListClick}
-            onUniversityChange={handleUniversityChange}
-            isLoading={isLoading}
-            error={error}
-            selectedUniversity={selectedUniversity}
-          />
+        <LeftSide
+          selectedUniversity={selectedUniversity}
+          onUniversityChange={handleUniversityChange}
+          restaurantData={restaurantData}
+        />
         </div>
       </div>
       <div className="relative w-3/4 h-full">
