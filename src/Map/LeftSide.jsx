@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import RestaurantOverlay from "./RestaurantOverlay"; // RestaurantOverlay 컴포넌트 import
-import axios from "axios";
 import apiClient from "../api/axios";
 const LeftSide = ({
   restaurantData,
   onSelectRestaurant,
   onUniversityChange,
+  selectedUniversity, // 상위 컴포넌트에서 전달받은 상태 사용
+
 }) => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
-  const [selectedUniversity, setSelectedUniversity] = useState("연대");
   const [searchQuery, setSearchQuery] = useState("");
   const [fetchedData, setFetchedData] = useState({});
   const restaurantRefs = useRef({});
@@ -127,31 +127,22 @@ const LeftSide = ({
 
     fetchData();
   }, [restaurantData]);
-
   useEffect(() => {
     const fetchLikedPlaces = async () => {
       try {
-        const response = await fetch(`/users/bookmarks`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch bookmarked places.");
-        }
-
-        const likedPlaces = await response.json();
-
-        // 서버 응답 데이터가 예상 형식인지 확인
+        // API 호출
+        const response = await apiClient.get(`/users/bookmarks`);
+  
+        // 서버 응답 데이터 확인
+        const likedPlaces = response.data; // Axios는 JSON 응답을 자동으로 파싱
         console.log("Fetched liked places:", likedPlaces);
-
+  
+        // 초기 상태 설정
         const initialLikeStatus = likedPlaces.reduce((acc, place) => {
-          acc[place.placeId] = true; // placeId 기반으로 true 설정
+          acc[place.placeId] = true; // placeId를 기반으로 true 설정
           return acc;
         }, {});
-
+  
         setLikeStatus(initialLikeStatus);
       } catch (error) {
         console.error("Error fetching liked places:", error);
@@ -159,11 +150,12 @@ const LeftSide = ({
         setIsLoading(false);
       }
     };
-
+  
     if (restaurantData.length > 0) {
       fetchLikedPlaces();
     }
   }, [restaurantData]);
+  
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -235,7 +227,7 @@ const LeftSide = ({
           <select
             className="ml-2 font-bold text-center border border-black rounded-md w-4/7"
             value={selectedUniversity}
-            onChange={handleUniversityChange}
+            onChange={(e) => onUniversityChange(e.target.value)}
           >
             <option value="서강대">서강대학교</option>
             <option value="시립대">서울시립대학교</option>
