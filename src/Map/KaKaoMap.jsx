@@ -4,7 +4,7 @@ import LeftSide from "./LeftSide";
 import RestaurantOverlay from "./RestaurantOverlay";
 import apiClient, { fetchData } from "../api/axios"; // 새 apiClient를 가져옴
 
-const BASE_URL = "http://3.36.90.46:8080";
+const BASE_URL = "https://camchelin.xyz";
 
 const universityLocations = {
   서강대: { lat: 37.551292, lng: 126.940108 },
