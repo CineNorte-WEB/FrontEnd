@@ -17,7 +17,7 @@ export default defineConfig({
       },
       // 백엔드 API 프록시 추가
       "/api": {
-        target: "https://3.36.90.46:8080", // 백엔드 서버 URL
+        target: "https://camchelin.xyz", // 백엔드 서버 URL
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""), // "/api" 제거
       },
