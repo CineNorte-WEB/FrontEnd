@@ -62,7 +62,7 @@ const LeftSide = ({
           restaurantData.map(async (restaurant) => {
             try {
               const response = await fetch(
-                `http://3.36.90.46:8080/places/name/${encodeURIComponent(
+                `https://camchelin.xyz/places/name/${encodeURIComponent(
                   restaurant.name
                 )}`
               );
