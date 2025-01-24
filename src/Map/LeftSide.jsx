@@ -61,11 +61,7 @@ const LeftSide = ({
         await Promise.allSettled(
           restaurantData.map(async (restaurant) => {
             try {
-              const response = await fetch(
-                `https://camchelin.xyz/places/name/${encodeURIComponent(
-                  restaurant.name
-                )}`
-              );
+              const response = await apiClient.get(`/places/name/${encodeURIComponent(restaurant.name)}`);
 
               if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
