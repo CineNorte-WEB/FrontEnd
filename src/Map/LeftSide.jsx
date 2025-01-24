@@ -61,26 +61,19 @@ const LeftSide = ({
         await Promise.allSettled(
           restaurantData.map(async (restaurant) => {
             try {
-              const response = await apiClient.get(`/places/name/${encodeURIComponent(restaurant.name)}`);
-
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-
-              const contentType = response.headers.get("Content-Type") || "";
-              if (!contentType.includes("application/json")) {
-                throw new Error(
-                  "Invalid content type received from the server."
-                );
-              }
-
-              const data = await response.json();
-
+              const response = await apiClient.get(
+                `/places/name/${encodeURIComponent(restaurant.name)}`
+              );
+  
+              // API 응답 데이터
+              const data = response.data;
+  
+              // likePoints 처리
               let likePoints = [];
               if (data.likePoints && typeof data.likePoints === "string") {
                 try {
                   const parsedPoints = JSON.parse(
-                    data.likePoints.replace(/'/g, '"')
+                    data.likePoints.replace(/'/g, '"') // 문자열을 JSON 형식으로 변환
                   );
                   likePoints = Array.isArray(parsedPoints)
                     ? parsedPoints.filter(
@@ -94,7 +87,8 @@ const LeftSide = ({
                   console.warn("likePoints 파싱 오류:", e);
                 }
               }
-
+  
+              // 데이터 맵에 저장
               dataMap[restaurant.id] = {
                 ...data,
                 likePoints,
@@ -113,16 +107,18 @@ const LeftSide = ({
             }
           })
         );
-
-        setFetchedData(dataMap);
+  
+        setFetchedData(dataMap); // 최종 데이터 설정
         console.log("Fetched Data Map:", dataMap); // 디버깅용 로그
       } catch (error) {
         console.error("데이터 가져오기 중 오류:", error);
       }
     };
-
+  
     fetchData();
   }, [restaurantData]);
+  
+  
   useEffect(() => {
     const fetchLikedPlaces = async () => {
       try {
