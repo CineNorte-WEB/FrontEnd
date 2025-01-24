@@ -83,7 +83,7 @@ export default function MyPageWrite({
                   {board.title}
                 </h2>
                 <p className="write-post-category font-yeonsung">
-                  {board.category}
+                  {board.type === "review" ? "리뷰게시판" : "자유게시판"}
                 </p>
                 <p className="write-post-author font-yeonsung">
                   작성일자: {board.createdAt}
